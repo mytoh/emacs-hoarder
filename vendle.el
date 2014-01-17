@@ -49,8 +49,14 @@
   (if (file-directory-p (expand-file-name ".git" p))
       t nil))
 
-(cl-defun vendle:add-to-list (var path)
-  (add-to-list var path))
+(cl-defun vendle:add-to-load-path (path)
+  (add-to-list 'load-path path))
+
+(cl-defun vendle:add-to-theme-path (path)
+  (add-to-list 'custom-theme-load-path path))
+
+(cl-defun vendle:add-to-package-list (path)
+  (add-to-list '*vendle-package-list* path))
 
 ;;; utilily functions
 
@@ -118,29 +124,29 @@
 ;;;; register
 (cl-defun vendle:register (source &optional info)
   (cl-letf* ((package (vendle:make-package source info)))
-    (vendle:add-to-list 'load-path
-                        (vendle:package-path package))
-    (add-to-list '*vendle-package-list* package)))
+    (vendle:add-to-load-path
+     (vendle:package-path package))
+    (vendle:add-to-package-list package)))
 
 (cl-defun vendle:register-local (source &optional info)
   (cl-letf* ((path (expand-file-name source))
              (package (vendle:make-package-local path info)))
-    (vendle:add-to-list 'load-path
-                        (vendle:package-path package))
-    (add-to-list '*vendle-package-list* package)))
+    (vendle:add-to-load-path
+     (vendle:package-path package))
+    (vendle:add-to-package-list package)))
 
 (cl-defun vendle:register-theme (source &optional info)
   (cl-letf* ((package (vendle:make-package source info)))
-    (vendle:add-to-list 'custom-theme-load-path
-                        (vendle:package-path package))
-    (add-to-list '*vendle-package-list* package)))
+    (vendle:add-to-theme-path
+     (vendle:package-path package))
+    (vendle:add-to-package-list package)))
 
 (cl-defun vendle:register-theme-local (source &optional info)
   (cl-letf* ((path (expand-file-name source))
              (package (vendle:make-package-local path info)))
-    (vendle:add-to-list 'custom-theme-load-path
-                        (vendle:package-path package))
-    (add-to-list '*vendle-package-list* package)))
+    (vendle:add-to-theme-path
+     (vendle:package-path package))
+    (vendle:add-to-package-list package)))
 
 ;;;; clean
 (cl-defun vendle:clean-packages ()
