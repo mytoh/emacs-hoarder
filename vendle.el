@@ -64,12 +64,6 @@
 
 ;;;; install
 
-(cl-defun vendle:install-packages ()
-  (cl-mapc
-   (lambda (package)
-     (vendle:install-package package))
-   *vendle-package-list*))
-
 (cl-defun vendle:install-package (package)
   (unless (or (cl-equalp 'local (vendle:package-type package))
               (file-exists-p (vendle:package-path package)))
@@ -82,6 +76,13 @@
                           (vendle:concat-path *vendle-directory* (vendle:package-name package)))
                  *vendle-directory*)
   (byte-recompile-directory (vendle:package-path package)  0))
+
+;;;; check
+(cl-defun vendle:check ()
+  (cl-mapc
+   (lambda (package)
+     (vendle:install-package package))
+   *vendle-package-list*))
 
 
 ;;;; register
@@ -128,10 +129,10 @@
 
 
 ;; commands
-(cl-defun vendle-install ()
+(cl-defun vendle-check ()
   "Install packages using `vendle:install-packages'"
   (interactive)
-  (vendle:install-packages))
+  (vendle:check))
 
 (cl-defun vendle-update ()
   (interactive)
