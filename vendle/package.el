@@ -62,7 +62,7 @@
                                             name  "/"  path)
                           name))
                     (vendle:make-package-name source info))))
-    (expand-file-name path *vendle-directory*)))
+    (expand-file-name path vendle-directory)))
 
 (cl-defun vendle:make-package-url-local (source info)
   (if info

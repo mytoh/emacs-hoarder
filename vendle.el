@@ -30,27 +30,27 @@
 
 ;;;; initialize
 
-(defvar *vendle-directory* (expand-file-name (file-name-as-directory "vendle") user-emacs-directory))
+(defvar vendle-directory (expand-file-name (file-name-as-directory "vendle") user-emacs-directory))
 (defvar *vendle-package-list* '())
 
 (cl-defun vendle:initialize (&optional path)
   (setq *vendle-package-list* nil)
   (when path
-    (setq *vendle-directory* path))
-  (unless (file-exists-p *vendle-directory*)
-    (make-directory *vendle-directory*))
-  *vendle-directory*)
+    (setq vendle-directory path))
+  (unless (file-exists-p vendle-directory)
+    (make-directory vendle-directory))
+  vendle-directory)
 
 ;;;; update
 
 (cl-defun vendle:update-packages ()
-  (when (file-exists-p *vendle-directory*)
+  (when (file-exists-p vendle-directory)
     (cl-mapc
      'vendle:update-package
      *vendle-package-list*)))
 
 (cl-defun vendle:update-package (package)
-  (cl-letf ((path (vendle:concat-path *vendle-directory* (vendle:package-name package))))
+  (cl-letf ((path (vendle:concat-path vendle-directory (vendle:package-name package))))
     (when (and (or (cl-equalp 'git (vendle:package-type package))
                    (cl-equalp 'github (vendle:package-type package)))
                (not (file-symlink-p path)))
@@ -73,8 +73,8 @@
 (cl-defun vendle:install-package-github (package)
   (message "vendle: installing package %s" (vendle:package-name package))
   (shell-command (concat  "git clone " (vendle:package-url package) " "
-                          (vendle:concat-path *vendle-directory* (vendle:package-name package)))
-                 *vendle-directory*)
+                          (vendle:concat-path vendle-directory (vendle:package-name package)))
+                 vendle-directory)
   (byte-recompile-directory (vendle:package-path package)  0))
 
 ;;;; check
@@ -86,6 +86,7 @@
 
 
 ;;;; register
+
 (cl-defun vendle:register (source &optional info)
   (cl-letf* ((package (vendle:make-package source info)))
     (vendle:add-to-load-path
@@ -120,25 +121,29 @@
                            (lambda (p)
                              (and (not (cl-equalp 'local (vendle:package-type p)))
                                   (cl-equalp d (expand-file-name (vendle:package-name p)
-                                                                 *vendle-directory*))))
+                                                                 vendle-directory))))
                            *vendle-package-list*)
                           t nil))
-                    (directory-files *vendle-directory*  'absolute (rx (not (any ".")))))))
+                    (directory-files vendle-directory 'absolute (rx (not (any ".")))))))
     (cl-mapc (lambda (p) (delete-directory p t))
              paths)))
 
 
 ;; commands
+
+;;;###autoload
 (cl-defun vendle-check ()
   "Install packages using `vendle:install-packages'"
   (interactive)
   (vendle:check))
 
+;;;###autoload
 (cl-defun vendle-update ()
   (interactive)
   (vendle:update-packages)
   (message "vendle: package update finished."))
 
+;;;###autoload
 (cl-defun vendle-clean ()
   (interactive)
   (vendle:clean-packages))
