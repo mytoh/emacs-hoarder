@@ -8,7 +8,7 @@
 (require 'vendle-source-git "vendle/source/git")
 (require 'vendle-package "vendle/package")
 
-;;; internal functions
+;;;; internal functions
 
 (cl-defun vendle:directory-git-p (p)
   (if (file-directory-p (expand-file-name ".git" p))
@@ -23,10 +23,31 @@
 (cl-defun vendle:add-to-package-list (package)
   (add-to-list '*vendle-package-list* package))
 
-;;; utilily functions
+;;;; utilily functions
 
 (cl-defun vendle:concat-path (&rest parts)
   (cl-reduce (lambda (a b) (expand-file-name b a)) parts))
+
+(cl-defun vendle:compile (package path)
+  (if (vendle:package-compile package)
+      (byte-recompile-directory path 0)))
+
+(cl-defun vendle:message (fmt &rest text)
+  (apply 'message (cl-concatenate 'string "vendle: " fmt)
+         text))
+
+;;;; search
+(cl-defun vendle:search-registered (_key _term)
+  (cl-remove-if-not
+   (lambda (p)
+     (cl-case _term
+       (name
+        (cl-equalp _key (vendle:package-name p)))
+       (type
+        (cl-equalp _key (vendle:package-type p)))
+       (path
+        (cl-equalp _key (vendle:package-path p)))))
+   *vendle-package-list*))
 
 ;;;; initialize
 
@@ -56,11 +77,11 @@
                (not (file-symlink-p path)))
       (progn
         (cd-absolute path)
-        (message "vendle: updating vendle package %s.." path)
+        (vendle:message "updating vendle package %s.." path)
         (shell-command "git pull")
         (cd-absolute user-emacs-directory)
-        (byte-recompile-directory path 0)
-        (message "vendle: updating vendle package %s.. done" path)))))
+        (vendle:compile package path)
+        (vendle:message "updating vendle package %s.. done" path)))))
 
 ;;;; install
 
@@ -75,15 +96,14 @@
   (shell-command (concat  "git clone " (vendle:package-url package) " "
                           (vendle:concat-path vendle-directory (vendle:package-name package)))
                  vendle-directory)
-  (byte-recompile-directory (vendle:package-path package)  0))
+  (vendle:compile package (vendle:package-path package)))
 
 ;;;; check
-(cl-defun vendle:check ()
+(cl-defun vendle:check-packages ()
   (cl-mapc
    (lambda (package)
      (vendle:install-package package))
    *vendle-package-list*))
-
 
 ;;;; register
 
@@ -116,39 +136,36 @@
 ;;;; clean
 (cl-defun vendle:clean-packages ()
   (cl-letf ((paths (cl-remove-if
-                    (lambda (d)
-                      (if (cl-member-if
-                           (lambda (p)
-                             (and (not (cl-equalp 'local (vendle:package-type p)))
-                                  (cl-equalp d (expand-file-name (vendle:package-name p)
-                                                                 vendle-directory))))
-                           *vendle-package-list*)
-                          t nil))
+                    (lambda (dir)
+                      (vendle:search-registered dir 'path))
                     (directory-files vendle-directory 'absolute (rx (not (any ".")))))))
-    (cl-mapc (lambda (p) (delete-directory p t))
-             paths)))
+    (if paths
+        (cl-mapc
+         (lambda (p)
+           (message "vendle: clean %s" p)
+           (delete-directory p t))
+         paths))))
 
-
-;; commands
+;;;; commands
 
 ;;;###autoload
 (cl-defun vendle-check ()
   "Install packages using `vendle:install-packages'"
   (interactive)
-  (vendle:check))
+  (vendle:check-packages))
 
 ;;;###autoload
 (cl-defun vendle-update ()
   (interactive)
   (vendle:update-packages)
-  (message "vendle: package update finished."))
+  (vendle:message "package update finished."))
 
 ;;;###autoload
 (cl-defun vendle-clean ()
   (interactive)
   (vendle:clean-packages))
 
-;; font-lock
+;;;; font-lock
 (cl-defun vendle:turn-on-font-lock ()
   (cl-flet ((add-keywords (face-name keyword-rules)
                           (cl-letf* ((keyword-list (cl-mapcar (lambda (x)
