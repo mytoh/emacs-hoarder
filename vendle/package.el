@@ -9,7 +9,7 @@
 ;;;; package
 
 (cl-defstruct vendle:package
-  type name url path)
+  type name url path compile)
 
 (cl-defun vendle:make-package (source info)
   (cond ((vendle:source-github-p source)
@@ -20,13 +20,17 @@
   (make-vendle:package :type 'github
                        :name (vendle:make-package-name source info)
                        :path (vendle:make-package-path source info)
-                       :url (cl-concatenate 'string "git://github.com/" source)))
+                       :url (cl-concatenate 'string "git://github.com/" source)
+                       :compile (if info
+                                    (cl-getf info :compile)
+                                  t)))
 
 (cl-defun vendle:make-package-local (source info)
   (make-vendle:package :type 'local
                        :name (vendle:make-package-name-local source info)
                        :path source
-                       :url (vendle:make-package-url-local source info)))
+                       :url nil
+                       :compile nil))
 
 (cl-defun vendle:make-package-name (source info)
   (cond ((vendle:source-github-p source)
