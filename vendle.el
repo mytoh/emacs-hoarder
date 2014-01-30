@@ -92,7 +92,7 @@
            (vendle:install-package-github package)))))
 
 (cl-defun vendle:install-package-github (package)
-  (message "vendle: installing package %s" (vendle:package-name package))
+  (vendle:message "installing package %s" (vendle:package-name package))
   (shell-command (concat  "git clone " (vendle:package-url package) " "
                           (vendle:concat-path vendle-directory (vendle:package-name package)))
                  vendle-directory)
@@ -142,7 +142,7 @@
     (if paths
         (cl-mapc
          (lambda (p)
-           (message "vendle: clean %s" p)
+           (vendle:message "clean %s" p)
            (delete-directory p t))
          paths))))
 
