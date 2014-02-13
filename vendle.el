@@ -4,7 +4,7 @@
 (eval-when-compile
   (require 'cl-lib))
 
-(require 'vendle-source-github "vendle/source/github")
+(require 'vendle-site-github "vendle/site/github")
 (require 'vendle-source-git "vendle/source/git")
 (require 'vendle-package "vendle/package")
 
@@ -24,7 +24,6 @@
   (add-to-list '*vendle-package-list* package))
 
 ;;;; utilily functions
-
 (cl-defun vendle:concat-path (&rest parts)
   (cl-reduce (lambda (a b) (expand-file-name b a)) parts))
 
@@ -33,7 +32,10 @@
       (byte-recompile-directory path 0)))
 
 (cl-defun vendle:message (fmt &rest text)
-  (apply 'message (cl-concatenate 'string "vendle: " fmt)
+  (apply 'message (format "[%s] %s"
+                          (propertize "vendle"
+                                      'face '(:foreground "#539b8f"))
+                          fmt)
          text))
 
 ;;;; search
@@ -50,8 +52,9 @@
    *vendle-package-list*))
 
 ;;;; initialize
-
-(defvar vendle-directory (expand-file-name (file-name-as-directory "vendle") user-emacs-directory))
+(defcustom vendle-directory
+  (vendle:concat-path user-emacs-directory (file-name-as-directory "vendle"))
+  "default install directory")
 (defvar *vendle-package-list* '())
 
 (cl-defun vendle:initialize (&optional path)
@@ -70,17 +73,16 @@
      'vendle:update-package
      *vendle-package-list*)))
 
-(cl-defun vendle:update-package (package)
-  (cl-letf ((path (vendle:concat-path vendle-directory (vendle:package-name package))))
-    (when (and (or (cl-equalp 'git (vendle:package-type package))
-                   (cl-equalp 'github (vendle:package-type package)))
+(cl-defun vendle:update-package (_package)
+  (cl-letf ((path (vendle:concat-path vendle-directory (vendle:package-name _package))))
+    (when (and (cl-equalp 'git (vendle:package-type _package))
                (not (file-symlink-p path)))
       (progn
         (cd-absolute path)
         (vendle:message "updating vendle package %s.." path)
         (shell-command "git pull")
         (cd-absolute user-emacs-directory)
-        (vendle:compile package path)
+        (vendle:compile _package path)
         (vendle:message "updating vendle package %s.. done" path)))))
 
 ;;;; install
@@ -88,15 +90,16 @@
 (cl-defun vendle:install-package (package)
   (unless (or (cl-equalp 'local (vendle:package-type package))
               (file-exists-p (vendle:package-path package)))
-    (cond ((cl-equalp 'github (vendle:package-type package))
-           (vendle:install-package-github package)))))
+    (cond ((cl-equalp 'git (vendle:package-type package))
+           (vendle:install-package-git package)))))
 
-(cl-defun vendle:install-package-github (package)
-  (vendle:message "installing package %s" (vendle:package-name package))
-  (shell-command (concat  "git clone " (vendle:package-url package) " "
-                          (vendle:concat-path vendle-directory (vendle:package-name package)))
+(cl-defun vendle:install-package-git (_package)
+  (vendle:message "installing package %s" (vendle:package-name _package))
+  (shell-command (concat  "git clone " (vendle:package-url _package) " "
+                          (vendle:concat-path vendle-directory (vendle:package-name _package)))
                  vendle-directory)
-  (vendle:compile package (vendle:package-path package)))
+  (vendle:message "compiling %s" (vendle:package-name _package))
+  (vendle:compile _package (vendle:package-path _package)))
 
 ;;;; check
 (cl-defun vendle:check-packages ()
@@ -107,31 +110,35 @@
 
 ;;;; register
 
-(cl-defun vendle:register (source &optional info)
-  (cl-letf* ((package (vendle:make-package source info)))
+(cl-defun vendle:register (_source &optional _info)
+  (cl-letf* ((package (vendle:make-package _source _info)))
     (vendle:add-to-load-path
      (vendle:package-path package))
-    (vendle:add-to-package-list package)))
+    (vendle:add-to-package-list package)
+    (vendle:message "registered %s" (vendle:package-name package))))
 
 (cl-defun vendle:register-local (source &optional info)
   (cl-letf* ((path (expand-file-name source))
              (package (vendle:make-package-local path info)))
     (vendle:add-to-load-path
      (vendle:package-path package))
-    (vendle:add-to-package-list package)))
+    (vendle:add-to-package-list package)
+    (vendle:message "registered %s locally" (vendle:package-name package))))
 
 (cl-defun vendle:register-theme (source &optional info)
   (cl-letf* ((package (vendle:make-package source info)))
     (vendle:add-to-theme-path
      (vendle:package-path package))
-    (vendle:add-to-package-list package)))
+    (vendle:add-to-package-list package)
+    (vendle:message "registered %s as theme" (vendle:package-name package))))
 
-(cl-defun vendle:register-theme-local (source &optional info)
-  (cl-letf* ((path (expand-file-name source))
-             (package (vendle:make-package-local path info)))
+(cl-defun vendle:register-theme-local (_source &optional _info)
+  (cl-letf* ((path (expand-file-name _source))
+             (package (vendle:make-package-local path _info)))
     (vendle:add-to-theme-path
      (vendle:package-path package))
-    (vendle:add-to-package-list package)))
+    (vendle:add-to-package-list package)
+    (vendle:message "registered %s as local theme" (vendle:package-name package))))
 
 ;;;; clean
 (cl-defun vendle:clean-packages ()
@@ -152,7 +159,9 @@
 (cl-defun vendle-check ()
   "Install packages using `vendle:install-packages'"
   (interactive)
-  (vendle:check-packages))
+  (vendle:message "package check started")
+  (vendle:check-packages)
+  (vendle:message "package check finished"))
 
 ;;;###autoload
 (cl-defun vendle-update ()

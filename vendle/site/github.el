@@ -1,6 +1,6 @@
 ;;; github.el -*- lexical-binding: t -*-
 
-(cl-defun vendle:source-github-p (source)
+(cl-defun vendle:source-site-github-p (source)
   (cond ((string-match (rx "github:" (submatch (+ (or (syntax word) (syntax symbol)))
                                                "/"
                                                (+ (or (syntax word) (syntax symbol)))))
@@ -16,7 +16,7 @@
          t)
         (t nil)))
 
-(cl-defun vendle:source-format-github (source)
+(cl-defun vendle:source-site-format-github (source)
   (cond
    ((string-match (rx "github:" (submatch (+ (or (syntax word) (syntax symbol)))
                                           "/"
@@ -32,7 +32,7 @@
                   source)
     (match-string-no-properties 0 source))))
 
-(provide 'vendle-source-github)
+(provide 'vendle-site-github)
 
 ;; Local Variables:
 ;; coding: utf-8

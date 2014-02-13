@@ -3,21 +3,22 @@
 (eval-when-compile
   (require 'cl-lib))
 
-(require 'vendle-source-github "vendle/source/github")
+(require 'vendle-site-github "vendle/site/github")
 (require 'vendle-source-git "vendle/source/git")
 
 ;;;; package
 
 (cl-defstruct vendle:package
-  type name url path compile)
+  type name url path site compile)
 
 (cl-defun vendle:make-package (source info)
-  (cond ((vendle:source-github-p source)
+  (cond ((vendle:source-site-github-p source)
          (vendle:make-package-github
-          (vendle:source-format-github source) info))))
+          (vendle:source-site-format-github source) info))))
 
 (cl-defun vendle:make-package-github (source info)
-  (make-vendle:package :type 'github
+  (make-vendle:package :type 'git
+                       :site "github"
                        :name (vendle:make-package-name source info)
                        :path (vendle:make-package-path source info)
                        :url (cl-concatenate 'string "git://github.com/" source)
@@ -33,9 +34,9 @@
                        :compile nil))
 
 (cl-defun vendle:make-package-name (source info)
-  (cond ((vendle:source-github-p source)
+  (cond ((vendle:source-site-github-p source)
          (vendle:make-package-name-github
-          (vendle:source-format-github source) info))))
+          (vendle:source-site-format-github source) info))))
 
 (cl-defun vendle:make-package-name-github (source info)
   (if info
@@ -54,8 +55,8 @@
     (file-name-nondirectory source)))
 
 (cl-defun vendle:make-package-path (source info)
-  (cond ((vendle:source-github-p source)
-         (vendle:make-package-path-github (vendle:source-format-github source) info))))
+  (cond ((vendle:source-site-github-p source)
+         (vendle:make-package-path-github (vendle:source-site-format-github source) info))))
 
 (cl-defun vendle:make-package-path-github (source info)
   (cl-letf ((path (if info
