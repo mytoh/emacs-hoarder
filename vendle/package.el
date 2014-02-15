@@ -8,9 +8,6 @@
 
 ;;;; package
 
-;; (cl-defstruct vendle:package
-;;   type name url path site compile)
-
 (defclass vendle:package ()
   ((type :initarg :type
          :type symbol
