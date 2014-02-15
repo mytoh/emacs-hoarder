@@ -8,8 +8,34 @@
 
 ;;;; package
 
-(cl-defstruct vendle:package
-  type name url path site compile)
+;; (cl-defstruct vendle:package
+;;   type name url path site compile)
+
+(defclass vendle:package ()
+  ((type :initarg :type
+         :type symbol
+         :initform nil
+         :accessor vendle:package-type)
+   (name :initarg :name
+         :type string
+         :initform ""
+         :accessor vendle:package-name)
+   (url :initarg :url
+        :type string
+        :initform ""
+        :accessor vendle:package-url)
+   (path :initarg :path
+         :type string
+         :initform ""
+         :accessor vendle:package-path)
+   (site :initarg :site
+         :type string
+         :initform ""
+         :accessor vendle:package-site)
+   (compile :initarg :compile
+            :type symbol
+            :initform nil
+            :accessor vendle:package-compile)))
 
 (cl-defun vendle:make-package (source info)
   (cond ((vendle:source-site-github-p source)
@@ -17,21 +43,25 @@
           (vendle:source-site-format-github source) info))))
 
 (cl-defun vendle:make-package-github (source info)
-  (make-vendle:package :type 'git
-                       :site "github"
-                       :name (vendle:make-package-name source info)
-                       :path (vendle:make-package-path source info)
-                       :url (cl-concatenate 'string "git://github.com/" source)
-                       :compile (if info
-                                    (cl-getf info :compile)
-                                  t)))
+  (cl-letf ((name (vendle:make-package-name source info)))
+    (vendle:package name
+                    :type 'git
+                    :site "github"
+                    :name name
+                    :path (vendle:make-package-path source info)
+                    :url (cl-concatenate 'string "git://github.com/" source)
+                    :compile (if info
+                                 (cl-getf info :compile)
+                               t))))
 
 (cl-defun vendle:make-package-local (source info)
-  (make-vendle:package :type 'local
-                       :name (vendle:make-package-name-local source info)
-                       :path source
-                       :url nil
-                       :compile nil))
+  (cl-letf ((name (vendle:make-package-name-local source info)))
+    (vendle:package name
+                    :type 'local
+                    :name name
+                    :path source
+                    :url ""
+                    :compile nil)))
 
 (cl-defun vendle:make-package-name (source info)
   (cond ((vendle:source-site-github-p source)
@@ -74,8 +104,8 @@
       (cl-letf ((url (cl-getf info :url)))
         (if url
             url
-          nil))
-    nil))
+          ""))
+    ""))
 
 
 (provide 'vendle-package)

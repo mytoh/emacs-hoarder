@@ -95,7 +95,8 @@
 
 (cl-defun vendle:install-package-git (_package)
   (vendle:message "installing package %s" (vendle:package-name _package))
-  (shell-command (concat  "git clone " (vendle:package-url _package) " "
+  (shell-command (concat  "git clone " (vendle:package-url _package)
+                          " "
                           (vendle:concat-path vendle-directory (vendle:package-name _package)))
                  vendle-directory)
   (vendle:message "compiling %s" (vendle:package-name _package))
@@ -112,10 +113,9 @@
 
 (cl-defun vendle:register (_source &optional _info)
   (cl-letf* ((package (vendle:make-package _source _info)))
-    (vendle:add-to-load-path
-     (vendle:package-path package))
+    (vendle:add-to-load-path (vendle:package-path package))
     (vendle:add-to-package-list package)
-    (vendle:message "registered %s" (vendle:package-name package))))
+    (vendle:message "registered %s"    (vendle:package-name package))))
 
 (cl-defun vendle:register-local (source &optional info)
   (cl-letf* ((path (expand-file-name source))
@@ -123,14 +123,16 @@
     (vendle:add-to-load-path
      (vendle:package-path package))
     (vendle:add-to-package-list package)
-    (vendle:message "registered %s locally" (vendle:package-name package))))
+    (vendle:message "registered %s locally"
+                    (vendle:package-name package))))
 
 (cl-defun vendle:register-theme (source &optional info)
   (cl-letf* ((package (vendle:make-package source info)))
     (vendle:add-to-theme-path
      (vendle:package-path package))
     (vendle:add-to-package-list package)
-    (vendle:message "registered %s as theme" (vendle:package-name package))))
+    (vendle:message "registered %s as theme"
+                    (vendle:package-name package))))
 
 (cl-defun vendle:register-theme-local (_source &optional _info)
   (cl-letf* ((path (expand-file-name _source))
@@ -138,7 +140,8 @@
     (vendle:add-to-theme-path
      (vendle:package-path package))
     (vendle:add-to-package-list package)
-    (vendle:message "registered %s as local theme" (vendle:package-name package))))
+    (vendle:message "registered %s as local theme"
+                    (vendle:package-name package))))
 
 ;;;; clean
 (cl-defun vendle:clean-packages ()
