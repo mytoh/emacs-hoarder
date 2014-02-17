@@ -27,7 +27,7 @@
 (cl-defun vendle:concat-path (&rest parts)
   (cl-reduce (lambda (a b) (expand-file-name b a)) parts))
 
-(cl-defun vendle:compile (package path)
+(defmethod vendle:compile ((package vendle:package) path)
   (if (vendle:package-compile package)
       (byte-recompile-directory path 0)))
 
@@ -73,7 +73,7 @@
      'vendle:update-package
      *vendle-package-list*)))
 
-(cl-defun vendle:update-package (_package)
+(defmethod vendle:update-package ((_package vendle:package))
   (cl-letf ((path (vendle:concat-path vendle-directory (vendle:package-name _package))))
     (when (and (cl-equalp 'git (vendle:package-type _package))
                (not (file-symlink-p path)))
@@ -87,13 +87,13 @@
 
 ;;;; install
 
-(cl-defun vendle:install-package (package)
+(defmethod vendle:install-package ((package vendle:package))
   (unless (or (cl-equalp 'local (vendle:package-type package))
               (file-exists-p (vendle:package-path package)))
     (cond ((cl-equalp 'git (vendle:package-type package))
            (vendle:install-package-git package)))))
 
-(cl-defun vendle:install-package-git (_package)
+(defmethod vendle:install-package-git ((_package vendle:package))
   (vendle:message "installing package %s" (vendle:package-name _package))
   (shell-command (concat  "git clone " (vendle:package-url _package)
                           " "
