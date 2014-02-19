@@ -14,13 +14,13 @@
   (if (file-directory-p (expand-file-name ".git" p))
       t nil))
 
-(cl-defun vendle:add-to-load-path (path)
-  (add-to-list 'load-path path))
+(defmethod vendle:add-to-load-path ((package vendle:package))
+  (add-to-list 'load-path (vendle:package-path package)))
 
-(cl-defun vendle:add-to-theme-path (path)
-  (add-to-list 'custom-theme-load-path path))
+(defmethod vendle:add-to-theme-path ((package vendle:package))
+  (add-to-list 'custom-theme-load-path (vendle:package-path package)))
 
-(cl-defun vendle:add-to-package-list (package)
+(defmethod vendle:add-to-package-list ((package vendle:package))
   (add-to-list '*vendle-package-list* package))
 
 ;;;; utilily functions
@@ -113,23 +113,21 @@
 
 (cl-defun vendle:register (_source &optional _info)
   (cl-letf* ((package (vendle:make-package _source _info)))
-    (vendle:add-to-load-path (vendle:package-path package))
+    (vendle:add-to-load-path package)
     (vendle:add-to-package-list package)
     (vendle:message "registered %s"    (vendle:package-name package))))
 
 (cl-defun vendle:register-local (source &optional info)
   (cl-letf* ((path (expand-file-name source))
              (package (vendle:make-package-local path info)))
-    (vendle:add-to-load-path
-     (vendle:package-path package))
+    (vendle:add-to-load-path package)
     (vendle:add-to-package-list package)
     (vendle:message "registered %s locally"
                     (vendle:package-name package))))
 
 (cl-defun vendle:register-theme (source &optional info)
   (cl-letf* ((package (vendle:make-package source info)))
-    (vendle:add-to-theme-path
-     (vendle:package-path package))
+    (vendle:add-to-theme-path package)
     (vendle:add-to-package-list package)
     (vendle:message "registered %s as theme"
                     (vendle:package-name package))))
@@ -137,8 +135,7 @@
 (cl-defun vendle:register-theme-local (_source &optional _info)
   (cl-letf* ((path (expand-file-name _source))
              (package (vendle:make-package-local path _info)))
-    (vendle:add-to-theme-path
-     (vendle:package-path package))
+    (vendle:add-to-theme-path package)
     (vendle:add-to-package-list package)
     (vendle:message "registered %s as local theme"
                     (vendle:package-name package))))
