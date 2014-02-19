@@ -38,6 +38,9 @@
                           fmt)
          text))
 
+(cl-defun vendle:map-package-list (fn)
+  (cl-mapc fn *vendle-package-list*))
+
 ;;;; search
 (cl-defun vendle:search-registered (_key _term)
   (cl-remove-if-not
@@ -69,9 +72,7 @@
 
 (cl-defun vendle:update-packages ()
   (when (file-exists-p vendle-directory)
-    (cl-mapc
-     'vendle:update-package
-     *vendle-package-list*)))
+    (vendle:map-package-list 'vendle:update-package)))
 
 (defmethod vendle:update-package ((_package vendle:package))
   (cl-letf ((path (vendle:concat-path vendle-directory (vendle:package-name _package))))
@@ -104,10 +105,7 @@
 
 ;;;; check
 (cl-defun vendle:check-packages ()
-  (cl-mapc
-   (lambda (package)
-     (vendle:install-package package))
-   *vendle-package-list*))
+  (vendle:map-package-list 'vendle:install-package))
 
 ;;;; register
 
