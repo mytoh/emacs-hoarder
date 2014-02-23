@@ -15,13 +15,13 @@
       t nil))
 
 (defmethod vendle:add-to-load-path ((package vendle:package))
-  (add-to-list 'load-path (vendle:package-path package)))
+  (cl-pushnew (vendle:package-path package) load-path))
 
 (defmethod vendle:add-to-theme-path ((package vendle:package))
-  (add-to-list 'custom-theme-load-path (vendle:package-path package)))
+  (cl-pushnew (vendle:package-path package) custom-theme-load-path))
 
 (defmethod vendle:add-to-package-list ((package vendle:package))
-  (add-to-list '*vendle-package-list* package))
+  (cl-pushnew package *vendle-package-list*))
 
 ;;;; utilily functions
 (cl-defun vendle:concat-path (&rest parts)
@@ -157,20 +157,23 @@
 (cl-defun vendle-check ()
   "Install packages using `vendle:install-packages'"
   (interactive)
-  (vendle:message "package check started")
+  (vendle:message "package check start")
   (vendle:check-packages)
-  (vendle:message "package check finished"))
+  (vendle:message "package check finish"))
 
 ;;;###autoload
 (cl-defun vendle-update ()
   (interactive)
+  (vendle:message "package update start")
   (vendle:update-packages)
-  (vendle:message "package update finished."))
+  (vendle:message "package update finish"))
 
 ;;;###autoload
 (cl-defun vendle-clean ()
   (interactive)
-  (vendle:clean-packages))
+  (vendle:message "package clean start")
+  (vendle:clean-packages)
+  (vendle:message "package clean finish"))
 
 ;;;; font-lock
 (cl-defun vendle:turn-on-font-lock ()
