@@ -75,12 +75,14 @@
     (vendle:map-package-list 'vendle:update-package)))
 
 (defmethod vendle:update-package ((_package vendle:package))
-  (cl-letf ((path (vendle:concat-path vendle-directory (vendle:package-name _package))))
+  (cl-letf ((name (vendle:package-name _package))
+            (path (vendle:concat-path vendle-directory (vendle:package-name _package))))
     (when (and (cl-equalp 'git (vendle:package-type _package))
                (not (file-symlink-p path)))
       (progn
         (cd-absolute path)
-        (vendle:message "updating vendle package %s.." path)
+        (vendle:message "updating vendle package %s.."
+                        (propertize name 'face 'font-lock-type-face))
         (shell-command "git pull")
         (cd-absolute user-emacs-directory)
         (vendle:compile _package path)
@@ -176,6 +178,16 @@
   (vendle:message "package clean finish"))
 
 ;;;; font-lock
+
+(defcustom vendle:font-lock-keywords
+  '(vendle:initialize
+    vendle:turn-on-font-lock
+    vendle:register
+    vendle:register-local
+    vendle:register-theme
+    vendle:register-theme-local)
+  "vendle keywords")
+
 (cl-defun vendle:turn-on-font-lock ()
   (cl-flet ((add-keywords (face-name keyword-rules)
                           (cl-letf* ((keyword-list (cl-mapcar (lambda (x)
@@ -194,12 +206,10 @@
 
     (add-keywords
      'font-lock-builtin-face
-     '((1 . vendle:initialize)
-       (1 . vendle:turn-on-font-lock)
-       (1 . vendle:register)
-       (1 . vendle:register-local)
-       (1 . vendle:register-theme)
-       (1 . vendle:register-theme-local)))))
+     (cl-mapcar
+      (lambda (key)
+        (cons 1 key))
+      vendle:font-lock-keywords))))
 
 ;;; provide
 (provide 'vendle)
