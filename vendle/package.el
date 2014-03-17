@@ -25,6 +25,10 @@
          :type string
          :initform ""
          :accessor vendle:package-path)
+   (load-path :initarg :load-path
+              :type string
+              :initform ""
+              :accessor vendle:package-load-path)
    (site :initarg :site
          :type string
          :initform ""
@@ -40,23 +44,28 @@
           (vendle:source-site-format-github source) info))))
 
 (cl-defun vendle:make-package-github (source info)
-  (cl-letf ((name (vendle:make-package-name source info)))
+  (cl-letf ((name (vendle:make-package-name source info))
+            (path (vendle:make-package-path source info))
+            (load-path (vendle:make-package-load-path source info)))
     (vendle:package name
                     :type 'git
                     :site "github"
                     :name name
-                    :path (vendle:make-package-path source info)
+                    :path path
+                    :load-path load-path
                     :url (cl-concatenate 'string "git://github.com/" source)
                     :compile (if info
                                  (cl-getf info :compile)
                                t))))
 
 (cl-defun vendle:make-package-local (source info)
-  (cl-letf ((name (vendle:make-package-name-local source info)))
+  (cl-letf ((name (vendle:make-package-name-local source info))
+            (load-path (vendle:make-package-load-path-local source info)))
     (vendle:package name
                     :type 'local
                     :name name
                     :path source
+                    :load-path load-path
                     :url ""
                     :compile nil)))
 
@@ -81,9 +90,33 @@
           (file-name-nondirectory source)))
     (file-name-nondirectory source)))
 
+(cl-defun vendle:make-package-load-path (source info)
+  (cond ((vendle:source-site-github-p source)
+         (vendle:make-package-load-path-github (vendle:source-site-format-github source) info))))
+
+(cl-defun vendle:make-package-load-path-github (source info)
+  (cl-letf ((path (if info
+                      (cl-letf ((path (cl-getf info :load-path))
+                                (name (vendle:make-package-name source info)))
+                        (if path
+                            (cl-concatenate 'string
+                                            name  "/"  path)
+                          name))
+                    (vendle:make-package-name source info))))
+    (expand-file-name path vendle-directory)))
+
+(cl-defun vendle:make-package-load-path-local (source info)
+  (cl-letf ((local-path (if info
+                            (cl-letf ((path (cl-getf info :load-path)))
+                              (if path
+                                  (expand-file-name path source)
+                                source))
+                          source)))
+    local-path))
+
 (cl-defun vendle:make-package-path (source info)
   (cond ((vendle:source-site-github-p source)
-         (vendle:make-package-path-github (vendle:source-site-format-github source) info))))
+         (vendle:make-package-load-path-github (vendle:source-site-format-github source) info))))
 
 (cl-defun vendle:make-package-path-github (source info)
   (cl-letf ((path (if info
@@ -96,6 +129,7 @@
                     (vendle:make-package-name source info))))
     (expand-file-name path vendle-directory)))
 
+
 (cl-defun vendle:make-package-url-local (source info)
   (if info
       (cl-letf ((url (cl-getf info :url)))
@@ -103,6 +137,8 @@
             url
           ""))
     ""))
+
+
 
 
 (provide 'vendle-package)

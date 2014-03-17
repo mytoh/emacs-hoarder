@@ -15,10 +15,10 @@
       t nil))
 
 (defmethod vendle:add-to-load-path ((package vendle:package))
-  (cl-pushnew (vendle:package-path package) load-path))
+  (cl-pushnew (vendle:package-load-path package) load-path))
 
 (defmethod vendle:add-to-theme-path ((package vendle:package))
-  (cl-pushnew (vendle:package-path package) custom-theme-load-path))
+  (cl-pushnew (vendle:package-load-path package) custom-theme-load-path))
 
 (defmethod vendle:add-to-package-list ((package vendle:package))
   (cl-pushnew package *vendle-package-list*))
@@ -51,7 +51,9 @@
        (type
         (cl-equalp _key (vendle:package-type p)))
        (path
-        (cl-equalp _key (vendle:package-path p)))))
+        (cl-equalp _key (vendle:package-path p)))
+       (load-path
+        (cl-equalp _key (vendle:package-load-path p)))))
    *vendle-package-list*))
 
 ;;;; initialize
@@ -185,7 +187,8 @@
     vendle:register
     vendle:register-local
     vendle:register-theme
-    vendle:register-theme-local)
+    vendle:register-theme-local
+    vendle:check-packages)
   "vendle keywords")
 
 (cl-defun vendle:turn-on-font-lock ()
