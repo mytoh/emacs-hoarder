@@ -81,14 +81,14 @@
             (path (vendle:concat-path vendle-directory (vendle:package-name _package))))
     (when (and (cl-equalp 'git (vendle:package-type _package))
                (not (file-symlink-p path)))
-      (progn
-        (cd-absolute path)
-        (vendle:message "updating vendle package %s.."
-                        (propertize name 'face 'font-lock-type-face))
-        (shell-command "git pull")
-        (cd-absolute user-emacs-directory)
-        (vendle:compile _package path)
-        (vendle:message "updating vendle package %s.. done" path)))))
+      (cl-locally
+       (cd-absolute path)
+       (vendle:message "updating vendle package %s.."
+                       (propertize name 'face 'font-lock-type-face))
+       (shell-command "git pull")
+       (cd-absolute user-emacs-directory)
+       (vendle:compile _package path)
+       (vendle:message "updating vendle package %s.. done" path)))))
 
 ;;;; install
 
