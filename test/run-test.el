@@ -26,7 +26,16 @@
 (ert-deftest vendle-test-register ()
   (vendle:initialize)
   (vendle:register "mytoh/fish-mode")
-  (should (locate-library "fish-mode")))
+  (should (vendle:search-registered "fish-mode" 'name))
+  (when (file-exists-p vendle-test-directory)
+    (delete-directory vendle-test-directory 'recursive)))
+
+(ert-deftest vendle-test-register-theme ()
+  (vendle:initialize)
+  (vendle:register-theme "sabof/hyperplane-theme")
+  (should (vendle:search-registered "hyperplane-theme" 'name))
+  (when (file-exists-p vendle-test-directory)
+    (delete-directory vendle-test-directory 'recursive)))
 
 (cl-defun main ()
   (ert-run-tests-batch-and-exit))
