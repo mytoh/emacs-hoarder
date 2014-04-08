@@ -1,0 +1,3 @@
+
+* Build Status
+  [[https://travis-ci.org/mytoh/emacs-vendle][file:https://travis-ci.org/mytoh/emacs-vendle.svg?branch=master]]
