@@ -59,7 +59,7 @@
 
 (cl-defun vendle:registered-p (name)
   (if (vendle:search-registered name 'name)
-      #t #f))
+      t nil))
 
 ;;;; initialize
 (defcustom vendle-directory
