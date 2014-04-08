@@ -2,7 +2,8 @@
 
 ;;; requirements
 (eval-when-compile
-  (require 'cl-lib))
+  (require 'cl-lib)
+  (require 'eieio))
 
 (require 'vendle-site-github "vendle/site/github")
 (require 'vendle-source-git "vendle/source/git")

@@ -1,0 +1,16 @@
+language: emacs-lisp
+env:
+  matrix:
+    - EMACS=emacs-snapshot
+before_install:
+    - if [ "$EMACS" = 'emacs-snapshot' ]; then
+      sudo add-apt-repository -y ppa:cassou/emacs &&
+      sudo apt-get update -qq;
+      fi
+install:
+    - if [ "$EMACS" = 'emacs-snapshot' ]; then
+      sudo apt-get install -qq
+          emacs-snapshot-el emacs-snapshot-gtk emacs-snapshot texinfo;
+      fi
+script:
+  ./test/run-travis.sh
