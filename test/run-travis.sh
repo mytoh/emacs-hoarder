@@ -2,7 +2,5 @@
 
 EMACS=${EMACS:-$(which emacs)}
 
-git clone git://github.com/mytoh/vendle /home/travis/vendle
-
 ${EMACS} --version
-${EMACS} -Q --script test/run-test.el
+${EMACS} -Q --batch --load test/run-test.el --funcall main

@@ -6,7 +6,11 @@
 (require 'vendle)
 
 (ert-deftest vendle-test-vendle-path ()
-  (should (string-equal vendle-directory "~/.emacs.d/vendle")))
+  (should vendle-directory)
+  (should (string-equal vendle-directory (file-name-as-directory (expand-file-name "~/.emacs.d/vendle")))))
+
+(cl-defun main ()
+  (ert-run-tests-batch-and-exit))
 
 ;; Local Variables:
 ;; coding: utf-8
