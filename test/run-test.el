@@ -14,6 +14,15 @@
   (when (file-exists-p vendle-directory)
     (delete-directory vendle-directory 'recursive)))
 
+(ert-deftest vendle-test-initialize-with-custom-directory ()
+  (cl-letf ((vendle-test-directory "~/vendle-testing"))
+    (vendle:initialize vendle-test-directory)
+    (should (string-equal vendle-directory vendle-test-directory))
+    (should (file-exists-p vendle-test-directory))
+    (should (file-directory-p vendle-test-directory))
+    (when (file-exists-p vendle-test-directory)
+      (delete-directory vendle-test-directory 'recursive))))
+
 (cl-defun main ()
   (ert-run-tests-batch-and-exit))
 
