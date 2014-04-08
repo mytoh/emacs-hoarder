@@ -26,14 +26,27 @@
 (ert-deftest vendle-test-register ()
   (vendle:initialize)
   (vendle:register "mytoh/fish-mode")
-  (should (vendle:search-registered "fish-mode" 'name))
+  (should (vendle:registered-p "fish-mode"))
+  (when (file-exists-p vendle-directory)
+    (delete-directory vendle-directory 'recursive)))
+
+(ert-deftest vendle-test-register-github ()
+  (vendle:initialize)
+  (vendle:register "mytoh/fish-mode")
+  (should (vendle:registered-p "fish-mode"))
+  (should (cl-equalp 'git
+                     (vendle:package-type
+                      (car (vendle:search-registered "fish-mode" 'name)))))
+  (should (cl-equalp "github"
+                     (vendle:package-site
+                      (car (vendle:search-registered "fish-mode" 'name)))))
   (when (file-exists-p vendle-directory)
     (delete-directory vendle-directory 'recursive)))
 
 (ert-deftest vendle-test-register-theme ()
   (vendle:initialize)
   (vendle:register-theme "sabof/hyperplane-theme")
-  (should (vendle:search-registered "hyperplane-theme" 'name))
+  (should (vendle:registered-p "hyperplane-theme"))
   (when (file-exists-p vendle-directory)
     (delete-directory vendle-directory 'recursive)))
 

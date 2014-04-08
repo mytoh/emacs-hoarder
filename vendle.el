@@ -57,6 +57,10 @@
         (cl-equalp _key (vendle:package-load-path p)))))
    *vendle-package-list*))
 
+(cl-defun vendle:registered-p (name)
+  (if (vendle:search-registered name 'name)
+      #t #f))
+
 ;;;; initialize
 (defcustom vendle-directory
   (vendle:concat-path user-emacs-directory (file-name-as-directory "vendle"))
