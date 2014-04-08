@@ -23,6 +23,11 @@
     (when (file-exists-p vendle-test-directory)
       (delete-directory vendle-test-directory 'recursive))))
 
+(ert-deftest vendle-test-register ()
+  (vendle:initialize)
+  (vendle:register "mytoh/fish-mode")
+  (should (locate-library "fish-mode")))
+
 (cl-defun main ()
   (ert-run-tests-batch-and-exit))
 
