@@ -68,7 +68,7 @@
   (when path
     (setq vendle-directory path))
   (unless (file-exists-p vendle-directory)
-    (make-directory vendle-directory))
+    (make-directory vendle-directory 'recursive))
   vendle-directory)
 
 ;;;; update
