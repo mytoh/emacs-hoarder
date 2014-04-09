@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 
 EMACS=${EMACS:-$(which emacs)}
+SCRIPT="test/vendle-test.el"
+FUNCTION="main"
 
 ${EMACS} --version
-${EMACS} -Q --batch --load test/run-test.el --funcall main
+${EMACS} -Q --batch --load ${SCRIPT} --funcall ${FUNCTION}
