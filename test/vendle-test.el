@@ -1,4 +1,4 @@
-;;; run-test.el -*- lexical-binding: t -*-
+;;; vendle-test.el -*- lexical-binding: t -*-
 
 (require 'ert)
 (require 'cl-lib)
