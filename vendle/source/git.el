@@ -6,6 +6,52 @@
          t)
         (t nil)))
 
+(cl-defun vendle:make-package-git (source info)
+  (cl-letf ((name (vendle:make-package-name-git source info))
+            (path (vendle:make-package-path-git source info))
+            (load-path (vendle:make-package-load-path-git source info)))
+    (vendle:package name
+                    :type 'git
+                    :site ""
+                    :name name
+                    :path path
+                    :load-path load-path
+                    :url source
+                    :compile (if info
+                                 (cl-getf info :compile)
+                               t))))
+
+(cl-defun vendle:make-package-name-git (source info)
+  (if info
+      (cl-letf ((name (cl-getf info :name)))
+        (if name
+            name
+          (file-name-base source)))
+    (file-name-base source)))
+
+(cl-defun vendle:make-package-path-git (source info)
+  (cl-letf ((path (if info
+                      (cl-letf ((p (cl-getf info :path))
+                                (name (vendle:make-package-name-git source info)))
+                        (if p
+                            (cl-concatenate 'string
+                                            name "/" p)
+                          name))
+                    (vendle:make-package-name-git source info))))
+    (expand-file-name path vendle-directory)))
+
+(cl-defun vendle:make-package-load-path-git (source info)
+  (cl-letf ((path (if info
+                      (cl-letf ((path (cl-getf info :load-path))
+                                (name (vendle:make-package-name-git source info)))
+                        (if path
+                            (cl-concatenate 'string
+                                            name  "/"  path)
+                          name))
+                    (vendle:make-package-name-git source info))))
+    (expand-file-name path vendle-directory)))
+
+
 (provide 'vendle-source-git)
 
 ;; Local Variables:

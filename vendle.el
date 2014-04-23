@@ -5,7 +5,7 @@
   (require 'cl-lib)
   (require 'eieio))
 
-(require 'vendle-site-github "vendle/site/github")
+(require 'vendle-source-github "vendle/source/github")
 (require 'vendle-source-git "vendle/source/git")
 (require 'vendle-package "vendle/package")
 
@@ -87,13 +87,13 @@
     (when (and (cl-equalp 'git (vendle:package-type _package))
                (not (file-symlink-p path)))
       (cl-locally
-       (cd-absolute path)
-       (vendle:message "updating vendle package %s.."
-                       (propertize name 'face 'font-lock-type-face))
-       (shell-command "git pull")
-       (cd-absolute user-emacs-directory)
-       (vendle:compile _package path)
-       (vendle:message "updating vendle package %s.. done" path)))))
+          (cd-absolute path)
+        (vendle:message "updating vendle package %s.."
+                        (propertize name 'face 'font-lock-type-face))
+        (shell-command "git pull")
+        (cd-absolute user-emacs-directory)
+        (vendle:compile _package path)
+        (vendle:message "updating vendle package %s.. done" path)))))
 
 ;;;; install
 
@@ -198,19 +198,19 @@
 
 (cl-defun vendle:turn-on-font-lock ()
   (cl-flet ((add-keywords (face-name keyword-rules)
-                          (cl-letf* ((keyword-list (cl-mapcar (lambda (x)
-                                                                (symbol-name (cdr x)))
-                                                              keyword-rules))
-                                     (keyword-regexp (concat "(\\("
-                                                             (regexp-opt keyword-list)
-                                                             "\\)\\>")))
-                            (font-lock-add-keywords  'emacs-lisp-mode
-                                                     `((,keyword-regexp 1 ',face-name))))
-                          (cl-mapc (lambda (x)
-                                     (put (cdr x)
-                                          'scheme-indent-function
-                                          (car x)))
-                                   keyword-rules)))
+              (cl-letf* ((keyword-list (cl-mapcar (lambda (x)
+                                                    (symbol-name (cdr x)))
+                                                  keyword-rules))
+                         (keyword-regexp (concat "(\\("
+                                                 (regexp-opt keyword-list)
+                                                 "\\)\\>")))
+                (font-lock-add-keywords  'emacs-lisp-mode
+                                         `((,keyword-regexp 1 ',face-name))))
+              (cl-mapc (lambda (x)
+                         (put (cdr x)
+                              'scheme-indent-function
+                              (car x)))
+                       keyword-rules)))
 
     (add-keywords
      'font-lock-builtin-face
