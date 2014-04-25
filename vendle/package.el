@@ -26,7 +26,7 @@
          :initform ""
          :accessor vendle:package-path)
    (load-path :initarg :load-path
-              :type string
+              :type (or list string)
               :initform ""
               :accessor vendle:package-load-path)
    (site :initarg :site

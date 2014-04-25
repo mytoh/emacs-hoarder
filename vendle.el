@@ -15,14 +15,28 @@
   (if (file-directory-p (expand-file-name ".git" p))
       t nil))
 
+(cl-defun vendle:append-to-list (var elem)
+  (if (listp elem)
+      (cl-mapcar
+       (lambda (e) (add-to-list var e 'append))
+       elem)
+    (add-to-list var elem 'append)))
+
+(cl-defun vendle:add-to-list (var elem)
+  (if (listp elem)
+      (cl-mapcar
+       (lambda (e) (add-to-list var e))
+       elem)
+    (add-to-list var elem)))
+
 (defmethod vendle:add-to-load-path ((package vendle:package))
-  (cl-pushnew (vendle:package-load-path package) load-path))
+  (vendle:add-to-list 'load-path (vendle:package-load-path package)))
 
 (defmethod vendle:add-to-theme-path ((package vendle:package))
-  (cl-pushnew (vendle:package-load-path package) custom-theme-load-path))
+  (vendle:add-to-list  'custom-theme-load-path (vendle:package-load-path package)))
 
 (defmethod vendle:add-to-package-list ((package vendle:package))
-  (cl-pushnew package *vendle-package-list*))
+  (vendle:append-to-list  '*vendle-package-list* package))
 
 ;;;; utilily functions
 (cl-defun vendle:concat-path (&rest parts)
@@ -105,7 +119,7 @@
 
 (defmethod vendle:install-package-git ((_package vendle:package))
   (vendle:message "installing package %s" (vendle:package-name _package))
-  (shell-command (concat  "git clone " (vendle:package-url _package)
+  (shell-command (concat  "git clone --depth 1 " (vendle:package-url _package)
                           " "
                           (vendle:concat-path vendle-directory (vendle:package-name _package)))
                  vendle-directory)

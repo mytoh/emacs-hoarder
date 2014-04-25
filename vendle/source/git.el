@@ -45,11 +45,20 @@
                       (cl-letf ((path (cl-getf info :load-path))
                                 (name (vendle:make-package-name-git source info)))
                         (if path
-                            (cl-concatenate 'string
-                                            name  "/"  path)
+                            (if (listp path)
+                                (cl-mapcar
+                                 (lambda (p) (cl-concatenate 'string
+                                                        name  "/" p))
+                                 path)
+                              (cl-concatenate 'string
+                                              name  "/"  path))
                           name))
                     (vendle:make-package-name-git source info))))
-    (expand-file-name path vendle-directory)))
+    (if (listp path)
+        (cl-mapcar
+         (lambda (p) (expand-file-name p vendle-directory))
+         path)
+      (expand-file-name path vendle-directory))))
 
 
 (provide 'vendle-source-git)

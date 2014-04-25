@@ -59,8 +59,13 @@
                       (cl-letf ((path (cl-getf info :load-path))
                                 (name (vendle:make-package-name-github source info)))
                         (if path
-                            (cl-concatenate 'string
-                                            name  "/"  path)
+                            (if (listp path)
+                                (cl-mapcar
+                                 (lambda (p) (cl-concatenate 'string
+                                                        name  "/" p))
+                                 path)
+                              (cl-concatenate 'string
+                                              name  "/"  path))
                           name))
                     (vendle:make-package-name-github source info))))
     (expand-file-name path vendle-directory)))
