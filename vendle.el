@@ -102,12 +102,12 @@
                (not (file-symlink-p path)))
       (cl-locally
           (cd-absolute path)
-        (vendle:message "updating vendle package %s.."
+        (vendle:message "updating package %s..."
                         (propertize name 'face 'font-lock-type-face))
-        (shell-command "git pull")
+        (shell-command "git pull --quiet")
         (cd-absolute user-emacs-directory)
         (vendle:compile _package path)
-        (vendle:message "updating vendle package %s.. done" path)))))
+        (vendle:message "updating package %s... done" path)))))
 
 ;;;; install
 
@@ -119,7 +119,7 @@
 
 (defmethod vendle:install-package-git ((_package vendle:package))
   (vendle:message "installing package %s" (vendle:package-name _package))
-  (shell-command (concat  "git clone --depth 1 " (vendle:package-url _package)
+  (shell-command (concat  "git clone --quiet " (vendle:package-url _package)
                           " "
                           (vendle:concat-path vendle-directory (vendle:package-name _package)))
                  vendle-directory)
