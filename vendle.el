@@ -126,6 +126,22 @@
   (vendle:message "compiling %s" (vendle:package-name _package))
   (vendle:compile _package (vendle:package-path _package)))
 
+;;;; uninstall
+(defmethod vendle:uninstall-package ((package vendle:package))
+  (when (and (not (cl-equalp 'local (vendle:package-type package)))
+             (file-exists-p (vendle:package-path package)))
+    (vendle:message "unregister package info")
+    (cl-delete-if
+     (lambda (p) (cl-equalp (vendle:package-name package)
+                       (vendle:package-name p)))
+     *vendle-package-list*)
+    (vendle:message "removing files")
+    (delete-directory (vendle:package-path package) 'recursive)))
+
+(cl-defun vendle:uninstall-package-by-name (name)
+  (cl-letf ((target (vendle:search-registered "web-mode" 'name)))
+    (vendle:uninstall-package (car target))))
+
 ;;;; check
 (cl-defun vendle:check-packages ()
   (vendle:map-package-list 'vendle:install-package))
@@ -197,6 +213,13 @@
   (vendle:message "package clean start")
   (vendle:clean-packages)
   (vendle:message "package clean finish"))
+
+;;;###autoload
+(cl-defun vendle-reinstall ()
+  (interactive)
+  (vendle:message "package reinstall start")
+  (vendle:reinstall-package)
+  (vendle:message "package reinstall finish"))
 
 ;;;; font-lock
 
