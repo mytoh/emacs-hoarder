@@ -101,10 +101,11 @@
     (when (and (cl-equalp 'git (vendle:package-type _package))
                (not (file-symlink-p path)))
       (cl-locally
-          (cd-absolute path)
-        (vendle:message "updating package %s..."
-                        (propertize name 'face 'font-lock-type-face))
-        (shell-command "git pull --quiet")
+          (vendle:message "updating package %s..."
+                          (propertize name 'face 'font-lock-type-face))
+        (shell-command (concat
+                        "git pull --quiet"
+                        " -C " path))
         (cd-absolute user-emacs-directory)
         (vendle:compile _package path)
         (vendle:message "updating package %s... done" path)))))
