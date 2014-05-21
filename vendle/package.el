@@ -36,7 +36,11 @@
    (compile :initarg :compile
             :type symbol
             :initform nil
-            :accessor vendle:package-compile)))
+            :accessor vendle:package-compile)
+   (deps :initarg :deps
+         :type list
+         :initform nil
+         :accessor vendle:package-deps)))
 
 (cl-defun vendle:make-package (source info)
   (cond ((vendle:source-site-github-p source)
