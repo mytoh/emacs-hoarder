@@ -17,12 +17,8 @@
                     :path path
                     :load-path load-path
                     :url source
-                    :compile (if info
-                                 (cl-getf info :compile)
-                               t)
-                    :deps (if info
-                              (cl-getf info :deps)
-                            nil))))
+                    :compile (cl-getf info :compile t)
+                    :deps (cl-getf info :deps nil))))
 
 (cl-defun vendle:make-package-name-git (source info)
   (if info
