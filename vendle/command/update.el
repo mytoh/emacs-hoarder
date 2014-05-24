@@ -26,8 +26,8 @@
           (vendle:message "updating package %s..."
                           (propertize name 'face 'font-lock-type-face))
         (shell-command (concat
-                        "git pull --quiet"
-                        " -C " path))
+                        "git " " -C " path
+                        " pull "  " --quiet "))
         (cd-absolute user-emacs-directory)
         (vendle:compile _package path)
         (vendle:message "updating package %s... done" path)))))
