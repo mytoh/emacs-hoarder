@@ -31,6 +31,7 @@
 (cl-defun vendle:register-theme (source &optional info)
   (cl-letf* ((package (vendle:make-package source info)))
     (vendle:add-to-theme-path package)
+    (vendle:add-to-load-path package)
     (vendle:add-to-package-list package)
     (vendle:message "registered %s as theme"
                     (vendle:package-name package))))
