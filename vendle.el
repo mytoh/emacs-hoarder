@@ -17,6 +17,7 @@
 (require 'vendle-uninstall "vendle/command/uninstall")
 (require 'vendle-search "vendle/command/search")
 (require 'vendle-check "vendle/command/check")
+(require 'vendle-reinstall "vendle/command/reinstall")
 
 ;;;; initialize
 (defcustom vendle-directory
@@ -32,13 +33,6 @@
     (make-directory vendle-directory 'recursive))
   vendle-directory)
 
-
-;;;###autoload
-(cl-defun vendle-reinstall ()
-  (interactive)
-  (vendle:message "package reinstall start")
-  (vendle:reinstall-package)
-  (vendle:message "package reinstall finish"))
 
 ;;;; font-lock
 

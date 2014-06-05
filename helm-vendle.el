@@ -12,6 +12,9 @@
 (cl-defun helm-vendle-action-update (candidate)
   (vendle:update-package candidate))
 
+(cl-defun helm-vendle-action-reinstall (candidate)
+  (vendle:reinstall-package candidate))
+
 (cl-defun helm-vendle-source-name/mark (mark name)
   (cond ((window-system)
          (format " %s %s" mark name))
@@ -33,7 +36,8 @@
   `((name . ,(helm-vendle-source-name/mark "📦" "Packages"))
     (init . helm-vendle-init)
     (candidates . helm-vendle-candidates)
-    (action . (("Update" . helm-vendle-action-update)))
+    (action . (("Update" . helm-vendle-action-update)
+               ("Reinstall" . helm-vendle-action-reinstall)))
     (candidate-transformer
      helm-vendle-transformer-format)))
 
