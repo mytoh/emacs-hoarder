@@ -44,10 +44,6 @@
 (cl-defun vendle:concat-path (&rest parts)
   (cl-reduce (lambda (a b) (expand-file-name b a)) parts))
 
-(defmethod vendle:compile ((package vendle:package) path)
-  (if (vendle:package-compile package)
-      (byte-recompile-directory path 0)))
-
 (cl-defun vendle:message (fmt &rest text)
   (apply 'message (format "[%s] %s"
                           (propertize "vendle"

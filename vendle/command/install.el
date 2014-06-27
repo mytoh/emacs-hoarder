@@ -25,7 +25,8 @@
                           (vendle:concat-path vendle-directory (vendle:package-name package)))
                  vendle-directory)
   (vendle:message "compiling %s" (vendle:package-name package))
-  (vendle:compile package (vendle:package-path package)))
+  (vendle:option-compile package (vendle:package-path package))
+  (vendle:option-build package))
 
 (provide 'vendle-install)
 

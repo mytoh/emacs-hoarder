@@ -43,7 +43,8 @@
                     :load-path load-path
                     :url (cl-concatenate 'string "git://github.com/" source)
                     :compile (cl-getf info :compile t)
-                    :deps (cl-getf info :deps nil))))
+                    :deps (cl-getf info :deps nil)
+                    :build (cl-getf info :build nil))))
 
 (cl-defun vendle:make-package-name-github (source info)
   (if info

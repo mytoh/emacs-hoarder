@@ -10,6 +10,7 @@
 (require 'vendle-source-git "vendle/source/git")
 (require 'vendle-package "vendle/package")
 (require 'vendle-util "vendle/util")
+(require 'vendle-option "vendle/option")
 
 ;;;; update
 
@@ -31,7 +32,8 @@
                         "git " " -C " path
                         " pull "  " --quiet "))
         (cd-absolute user-emacs-directory)
-        (vendle:compile _package path)
+        (vendle:option-compile _package path)
+        (vendle:option-build _package)
         (vendle:message "updating package %s... done" path)))))
 
 ;;;###autoload
