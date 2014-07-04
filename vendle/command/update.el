@@ -28,12 +28,17 @@
       (cl-locally
           (vendle:message "updating package %s..."
                           (propertize name 'face 'font-lock-type-face))
-        (shell-command (concat
-                        "git " " -C " path
-                        " pull "  " --quiet "))
+        (cl-letf ((changedp (not (equalp
+                                  "Already up-to-date.
+"
+                                  (shell-command-to-string
+                                   (concat
+                                    "git " " -C " path
+                                    " pull"))))))
+          (when changedp
+            (vendle:option-compile _package path)
+            (vendle:option-build _package)))
         (cd-absolute user-emacs-directory)
-        (vendle:option-compile _package path)
-        (vendle:option-build _package)
         (vendle:message "updating package %s... done" path)))))
 
 ;;;###autoload
