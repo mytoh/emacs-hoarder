@@ -13,16 +13,15 @@
 
 ;;;; clean
 (cl-defun vendle:clean-packages ()
-  (cl-letf ((paths (cl-remove-if
-                    (lambda (dir)
-                      (vendle:search-registered dir 'path))
-                    (directory-files vendle-directory 'absolute (rx (not (any ".")))))))
-    (if paths
-        (cl-mapc
-         (lambda (p)
-           (vendle:message "clean %s" p)
-           (delete-directory p t))
-         paths))))
+  (if-let ((paths (cl-remove-if
+                   (lambda (dir)
+                     (vendle:search-registered dir 'path))
+                   (directory-files vendle-directory 'absolute (rx (not (any ".")))))))
+      (cl-mapc
+       (lambda (p)
+         (vendle:message "clean %s" p)
+         (delete-directory p t))
+       paths)))
 
 ;;;###autoload
 (cl-defun vendle-clean ()

@@ -68,27 +68,23 @@
 
 (cl-defun vendle:make-package-name-local (source info)
   (if info
-      (cl-letf ((name (cl-getf info :name)))
-        (if name
-            name
-          (file-name-nondirectory source)))
+      (thread-first info
+        (cl-getf :name)
+        (if name (file-name-nondirectory source)))
     (file-name-nondirectory source)))
 
 (cl-defun vendle:make-package-load-path-local (source info)
-  (cl-letf ((local-path (if info
-                            (cl-letf ((path (cl-getf info :load-path)))
-                              (if path
-                                  (expand-file-name path source)
-                                source))
-                          source)))
-    local-path))
+  (if info
+      (cl-letf ((path (cl-getf info :load-path)))
+        (if path
+            (expand-file-name path source)
+          source))
+    source))
 
 (cl-defun vendle:make-package-url-local (source info)
   (if info
-      (cl-letf ((url (cl-getf info :url)))
-        (if url
-            url
-          ""))
+      (if-let ((url (cl-getf info :url)))
+          url "")
     ""))
 
 (provide 'vendle-package)

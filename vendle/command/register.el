@@ -45,12 +45,11 @@
                     (vendle:package-name package))))
 
 (defmethod vendle:resolve-deps ((package vendle:package))
-  (cl-letf ((deps (vendle:package-deps package)))
-    (if deps
-        (cl-mapc
-         'vendle:install-dep
-         deps)
-      nil)))
+  (if-let ((deps (vendle:package-deps package)))
+      (cl-mapc
+       'vendle:install-dep
+       deps)
+    nil))
 
 (cl-defun vendle:install-dep (information)
   (cl-typecase information
