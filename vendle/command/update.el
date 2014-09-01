@@ -28,18 +28,26 @@
       (cl-locally
           (vendle:message "updating package %s..."
                           (propertize name 'face 'font-lock-type-face))
-        (cl-letf ((changedp (not (equalp
-                                  "Already up-to-date.
-"
-                                  (shell-command-to-string
-                                   (concat
-                                    "git " " -C " path
-                                    " pull"))))))
+        (cl-letf* ((git-msg (shell-command-to-string
+                             (concat
+                              "git " " -C " path
+                              " pull")))
+                   (changedp (vendle:git-updatedp git-msg)))
           (when changedp
             (vendle:option-compile _package path)
             (vendle:option-build _package)))
         (cd-absolute user-emacs-directory)
         (vendle:message "updating package %s... done" path)))))
+
+(cl-defun vendle:git-updatedp (msg)
+  (and (not (equalp
+             "Already up-to-date.
+"
+             msg))
+       (not (equalp
+             "fatal: Not a git repository (or any of the parent directories): .git
+"
+             msg))))
 
 ;;;###autoload
 (cl-defun vendle-update ()
