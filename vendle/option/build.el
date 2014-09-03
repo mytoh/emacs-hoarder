@@ -11,15 +11,14 @@
 
 (defmethod vendle:option-build ((package vendle:package))
   (when (vendle:package-build package)
-    (setq old-dir default-directory)
+
     (cl-letf ((commands (vendle:package-build package))
-              (path (vendle:package-path package)))
+              (path (file-name-as-directory (vendle:package-path package))))
       (mapc
        (lambda (c)
-         (cd path)
-         (shell-command c nil nil))
-       commands))
-    (setq default-directory old-dir)))
+         (cl-letf ((default-directory path))
+           (shell-command c nil nil)))
+       commands))))
 
 (provide 'vendle-option-build)
 
