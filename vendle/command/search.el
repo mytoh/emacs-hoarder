@@ -12,18 +12,18 @@
 (require 'vendle-util "vendle/util")
 
 ;;;; search
-(cl-defun vendle:search-registered (_key _term)
+(cl-defun vendle:search-registered (key term)
   (cl-remove-if-not
    (lambda (p)
-     (pcase _term
+     (pcase term
        (`name
-        (cl-equalp _key (vendle:package-name p)))
+        (cl-equalp key (vendle:package-name p)))
        (`type
-        (cl-equalp _key (vendle:package-type p)))
+        (cl-equalp key (vendle:package-type p)))
        (`path
-        (cl-equalp _key (vendle:package-path p)))
+        (cl-equalp key (vendle:package-path p)))
        (`load-path
-        (cl-equalp _key (vendle:package-load-path p)))))
+        (cl-equalp key (vendle:package-load-path p)))))
    *vendle-package-list*))
 
 (cl-defun vendle:registered-p (name)
