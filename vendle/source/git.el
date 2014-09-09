@@ -9,7 +9,8 @@
 (cl-defun vendle:make-package-git (source info)
   (cl-letf ((name (vendle:make-package-name-git source info))
             (path (vendle:make-package-path-git source info))
-            (load-path (vendle:make-package-load-path-git source info)))
+            (load-path (vendle:make-package-load-path-git source info))
+            (compile (vendle:make-package-compile-git source info)))
     (vendle:package name
                     :type 'git
                     :site ""
@@ -17,9 +18,14 @@
                     :path path
                     :load-path load-path
                     :url source
-                    :compile (cl-getf info :compile t)
+                    :compile compile
                     :deps (cl-getf info :deps nil)
                     :build (cl-getf info :build nil))))
+
+(cl-defun vendle:make-package-compile-git (source info)
+  (if (cl-getf info :build nil)
+      nil
+    (cl-getf info :compile t)))
 
 (cl-defun vendle:make-package-name-git (source info)
   (if info
@@ -59,7 +65,6 @@
          (lambda (p) (expand-file-name p vendle-directory))
          path)
       (expand-file-name path vendle-directory))))
-
 
 (provide 'vendle-source-git)
 
