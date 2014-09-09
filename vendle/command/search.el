@@ -15,14 +15,14 @@
 (cl-defun vendle:search-registered (_key _term)
   (cl-remove-if-not
    (lambda (p)
-     (cl-case _term
-       (name
+     (pcase _term
+       (`name
         (cl-equalp _key (vendle:package-name p)))
-       (type
+       (`type
         (cl-equalp _key (vendle:package-type p)))
-       (path
+       (`path
         (cl-equalp _key (vendle:package-path p)))
-       (load-path
+       (`load-path
         (cl-equalp _key (vendle:package-load-path p)))))
    *vendle-package-list*))
 
