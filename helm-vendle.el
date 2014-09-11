@@ -25,7 +25,7 @@
   (dired (vendle:package-path package)))
 
 (defun helm-vendle-action-find-file (package)
-  (helm-find-files-1 (vendle:package-path package)))
+  (helm-find-files-1 (file-name-as-directory (vendle:package-path package))))
 
 (cl-defun helm-vendle-action-view-readme-or-src (package)
   (cl-loop for file in (list "README.md" "README.org" "README")
