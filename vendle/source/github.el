@@ -44,7 +44,8 @@
                     :url (cl-concatenate 'string "git://github.com/" source)
                     :compile (cl-getf info :compile t)
                     :deps (cl-getf info :deps nil)
-                    :build (cl-getf info :build nil))))
+                    :build (cl-getf info :build nil)
+                    :info (cl-getf info :info nil))))
 
 (cl-defun vendle:make-package-name-github (source info)
   (if info

@@ -26,7 +26,8 @@
                  vendle-directory)
   (vendle:message "compiling %s" (vendle:package-name package))
   (vendle:option-compile package (vendle:package-path package))
-  (vendle:option-build package))
+  (vendle:option-build package)
+  (vendle:option-info package))
 
 (provide 'vendle-install)
 

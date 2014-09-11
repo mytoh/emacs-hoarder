@@ -10,6 +10,7 @@
 (require 'vendle-source-git "vendle/source/git")
 (require 'vendle-package "vendle/package")
 (require 'vendle-util "vendle/util")
+(require 'vendle-option "vendle/option")
 
 ;;;; register
 
@@ -18,6 +19,7 @@
     (vendle:resolve-deps package)
     (vendle:add-to-load-path package)
     (vendle:add-to-package-list package)
+    (vendle:option-info package)
     (vendle:message "registered %s"    (vendle:package-name package))))
 
 (cl-defun vendle:register-local (source &optional info)
@@ -25,6 +27,7 @@
              (package (vendle:make-package-local path info)))
     (vendle:add-to-load-path package)
     (vendle:add-to-package-list package)
+    (vendle:option-info package)
     (vendle:message "registered %s locally"
                     (vendle:package-name package))))
 

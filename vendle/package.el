@@ -44,7 +44,11 @@
    (build :initarg :build
           :type list
           :initform nil
-          :accessor vendle:package-build)))
+          :accessor vendle:package-build)
+   (info :initarg :info
+         :type list
+         :initform nil
+         :accessor vendle:package-info)))
 
 (cl-defun vendle:make-package (source info)
   (cond ((vendle:source-site-github-p source)
@@ -64,7 +68,8 @@
                     :load-path load-path
                     :url ""
                     :compile nil
-                    :build nil)))
+                    :build nil
+                    :info nil)))
 
 (cl-defun vendle:make-package-name-local (source info)
   (if info

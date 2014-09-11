@@ -20,7 +20,8 @@
                     :url source
                     :compile compile
                     :deps (cl-getf info :deps nil)
-                    :build (cl-getf info :build nil))))
+                    :build (cl-getf info :build nil)
+                    :info (cl-getf info :info nil))))
 
 (cl-defun vendle:make-package-compile-git (source info)
   (if (cl-getf info :build nil)
