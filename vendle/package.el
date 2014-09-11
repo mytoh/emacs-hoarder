@@ -43,11 +43,11 @@
          :initform nil
          :accessor vendle:package-deps)
    (build :initarg :build
-          :type list
+          :type (or list string)
           :initform nil
           :accessor vendle:package-build)
    (info :initarg :info
-         :type list
+         :type (or list string)
          :initform nil
          :accessor vendle:package-info)))
 
