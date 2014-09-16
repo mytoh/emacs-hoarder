@@ -15,14 +15,17 @@
       (list
        (cl-mapc
         (lambda (path)
-          (setenv "INFOPATH"
-                  (concat (expand-file-name path (vendle:package-path package)) ":"
-                          (getenv "INFOPATH"))))
+          (vendle:option-info-set-infopath
+           (expand-file-name path (vendle:package-path package))))
         (vendle:package-info package)))
       (string
-       (setenv "INFOPATH"
-               (concat (expand-file-name info (vendle:package-path package)) ":"
-                       (getenv "INFOPATH")))))))
+       (vendle:option-info-set-infopath
+        (expand-file-name info (vendle:package-path package)))))))
+
+(cl-defun vendle:option-info-set-infopath (path)
+  (setenv "INFOPATH"
+          (concat path ":"
+                  (getenv "INFOPATH"))))
 
 (provide 'vendle-option-info)
 
