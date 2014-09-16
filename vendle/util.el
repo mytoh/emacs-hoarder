@@ -45,6 +45,13 @@
   (cl-reduce (lambda (a b) (expand-file-name b a)) parts))
 
 (cl-defun vendle:message (fmt &rest text)
+  (with-current-buffer (get-buffer-create "*vendle log*")
+    (insert (apply 'format (format "[%s] %s"
+                                   (propertize "vendle"
+                                               'face '(:foreground "#539b8f"))
+                                   fmt)
+                   text))
+    (insert "\n"))
   (apply 'message (format "[%s] %s"
                           (propertize "vendle"
                                       'face '(:foreground "#539b8f"))
