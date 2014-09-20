@@ -13,7 +13,7 @@
                     :url ""
                     :compile nil
                     :build nil
-                    :info nil)))
+                    :info (cl-getf info :info nil))))
 
 (cl-defun vendle:make-package-name-local (source info)
   (if info
