@@ -14,34 +14,34 @@
 
 ;;;; register
 
-(cl-defun vendle:register (_source &optional _info)
-  (cl-letf* ((package (vendle:make-package _source _info)))
+(cl-defun vendle:register (_source &optional option)
+  (cl-letf* ((package (vendle:make-package _source option)))
     (vendle:resolve-deps package)
     (vendle:add-to-load-path package)
     (vendle:add-to-package-list package)
     (vendle:option-info package)
     (vendle:message "registered %s"    (vendle:package-name package))))
 
-(cl-defun vendle:register-local (source &optional info)
+(cl-defun vendle:register-local (source &optional option)
   (cl-letf* ((path (expand-file-name source))
-             (package (vendle:make-package-local path info)))
+             (package (vendle:make-package-local path option)))
     (vendle:add-to-load-path package)
     (vendle:add-to-package-list package)
     (vendle:option-info package)
     (vendle:message "registered %s locally"
                     (vendle:package-name package))))
 
-(cl-defun vendle:register-theme (source &optional info)
-  (cl-letf* ((package (vendle:make-package source info)))
+(cl-defun vendle:register-theme (source &optional option)
+  (cl-letf* ((package (vendle:make-package source option)))
     (vendle:add-to-theme-path package)
     (vendle:add-to-load-path package)
     (vendle:add-to-package-list package)
     (vendle:message "registered %s as theme"
                     (vendle:package-name package))))
 
-(cl-defun vendle:register-theme-local (_source &optional _info)
+(cl-defun vendle:register-theme-local (_source &optional option)
   (cl-letf* ((path (expand-file-name _source))
-             (package (vendle:make-package-local path _info)))
+             (package (vendle:make-package-local path option)))
     (vendle:add-to-theme-path package)
     (vendle:add-to-package-list package)
     (vendle:message "registered %s as local theme"
