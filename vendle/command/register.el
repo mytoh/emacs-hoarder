@@ -54,13 +54,13 @@
        deps)
     nil))
 
-(cl-defun vendle:install-dep (information)
-  (cl-typecase information
+(cl-defun vendle:install-dep (deps)
+  (cl-typecase deps
     (list
-     (vendle:register (car information)
-                      (cdr information)))
+     (vendle:register (car deps)
+                      (cdr deps)))
     (string
-     (vendle:register information nil))))
+     (vendle:register deps nil))))
 
 (provide 'vendle-register)
 
