@@ -17,10 +17,12 @@
         (lambda (path)
           (vendle:option-info-set-infopath
            (expand-file-name path (vendle:package-path package))))
-        (vendle:package-info package)))
+        info))
       (string
-       (vendle:option-info-set-infopath
-        (expand-file-name info (vendle:package-path package)))))))
+       (cl-letf ((path (expand-file-name info (vendle:package-path package))))
+         (vendle:message "add directory %s to INFOPATH" path)
+         (vendle:option-info-set-infopath
+          path))))))
 
 (cl-defun vendle:option-info-set-infopath (path)
   (setenv "INFOPATH"
