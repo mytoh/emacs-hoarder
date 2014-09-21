@@ -17,7 +17,7 @@
 
 ;; http://rubikitch.com/2014/09/02/helm-quelpa/
 (cl-defun helm-vendle-action-magit-log (package)
-  (cl-letf ((default-directory (vendle:package-path package)))
+  (cl-letf ((default-directory (file-name-as-directory (vendle:package-path package))))
     (magit-status ".")
     (magit-log)))
 
