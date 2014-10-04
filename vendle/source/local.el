@@ -2,9 +2,9 @@
 
 ;;; Code:
 
-(cl-defun vendle:make-package-local (source info)
-  (cl-letf ((name (vendle:make-package-name-local source info))
-            (load-path (vendle:make-package-load-path-local source info)))
+(cl-defun vendle:make-package-local (source option)
+  (cl-letf ((name (vendle:make-package-name-local source option))
+            (load-path (vendle:make-package-load-path-local source option)))
     (vendle:package name
                     :type 'local
                     :name name
@@ -13,26 +13,26 @@
                     :url ""
                     :compile nil
                     :build nil
-                    :info (cl-getf info :info nil))))
+                    :info (cl-getf option :info nil))))
 
-(cl-defun vendle:make-package-name-local (source info)
-  (if info
-      (thread-first info
+(cl-defun vendle:make-package-name-local (source option)
+  (if option
+      (thread-first option
         (cl-getf :name)
         (if name (file-name-nondirectory source)))
     (file-name-nondirectory source)))
 
-(cl-defun vendle:make-package-load-path-local (source info)
-  (if info
-      (cl-letf ((path (cl-getf info :load-path)))
+(cl-defun vendle:make-package-load-path-local (source option)
+  (if option
+      (cl-letf ((path (cl-getf option :load-path)))
         (if path
             (expand-file-name path source)
           source))
     source))
 
-(cl-defun vendle:make-package-url-local (source info)
-  (if info
-      (if-let ((url (cl-getf info :url)))
+(cl-defun vendle:make-package-url-local (source option)
+  (if option
+      (if-let ((url (cl-getf option :url)))
           url "")
     ""))
 

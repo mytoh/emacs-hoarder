@@ -55,14 +55,14 @@
            :initform ""
            :accessor vendle:package-origin)))
 
-(cl-defun vendle:make-package (source info)
+(cl-defun vendle:make-package (source option)
   (cl-letf ((s (string-trim source)))
     (cond ((vendle:source-site-github-p s)
            (vendle:make-package-github
-            (vendle:source-site-format-github s) info))
+            (vendle:source-site-format-github s) option))
           ((vendle:source-git-p s)
            (vendle:make-package-git
-            s info)))))
+            s option)))))
 
 (provide 'vendle-package)
 
