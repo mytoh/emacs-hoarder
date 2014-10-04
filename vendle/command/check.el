@@ -13,7 +13,7 @@
 
 ;;;; check
 (cl-defun vendle:check-packages ()
-  (vendle:map-package-list 'vendle:install-package))
+  (vendle:foreach-package-list 'vendle:install-package))
 
 ;;;; commands
 

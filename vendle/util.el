@@ -59,7 +59,7 @@
                           fmt)
          text))
 
-(cl-defun vendle:map-package-list (fn)
+(cl-defun vendle:foreach-package-list (fn)
   (cl-mapc fn *vendle-package-list*))
 
 (provide 'vendle-util)
