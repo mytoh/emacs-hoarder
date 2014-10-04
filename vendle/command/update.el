@@ -20,11 +20,11 @@
 
 
 
-(defmethod vendle:update-package ((_package vendle:package))
-  (cl-letf ((name (vendle:package-name _package))
+(defmethod vendle:update-package ((package vendle:package))
+  (cl-letf ((name (vendle:package-name package))
             (path (vendle:concat-path vendle-directory
-                                      (vendle:package-origin _package))))
-    (when (and (cl-equalp 'git (vendle:package-type _package))
+                                      (vendle:package-origin package))))
+    (when (and (cl-equalp 'git (vendle:package-type package))
                (not (file-symlink-p path)))
       (cl-locally
           (vendle:message "updating package %s..."
@@ -35,8 +35,8 @@
                               " pull")))
                    (changedp (vendle:git-updatedp git-msg)))
           (when changedp
-            (vendle:option-compile _package path)
-            (vendle:option-build _package)))
+            (vendle:option-compile package path)
+            (vendle:option-build package)))
         (cd-absolute user-emacs-directory)
         (vendle:message "updating package %s... done" path)))))
 
