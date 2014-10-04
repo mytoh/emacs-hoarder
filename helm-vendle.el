@@ -43,10 +43,13 @@
   (cl-mapcar
    (lambda (package)
      (cons (format
-            "%s"
+            "%s\t%s"
             (propertize (vendle:package-name package)
                         'face
-                        'font-lock-keyword-face))
+                        'font-lock-keyword-face)
+            (propertize (vendle:package-origin package)
+                        'face
+                        'font-lock-variable-name-face))
            package))
    candidates))
 

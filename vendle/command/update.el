@@ -22,7 +22,8 @@
 
 (defmethod vendle:update-package ((_package vendle:package))
   (cl-letf ((name (vendle:package-name _package))
-            (path (vendle:concat-path vendle-directory (vendle:package-name _package))))
+            (path (vendle:concat-path vendle-directory
+                                      (vendle:package-origin _package))))
     (when (and (cl-equalp 'git (vendle:package-type _package))
                (not (file-symlink-p path)))
       (cl-locally

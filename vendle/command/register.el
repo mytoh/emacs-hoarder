@@ -14,8 +14,8 @@
 
 ;;;; register
 
-(cl-defun vendle:register (_source &optional option)
-  (cl-letf* ((package (vendle:make-package _source option)))
+(cl-defun vendle:register (source &optional option)
+  (cl-letf* ((package (vendle:make-package source option)))
     (vendle:resolve-deps package)
     (vendle:add-to-load-path package)
     (vendle:add-to-package-list package)
@@ -39,8 +39,8 @@
     (vendle:message "registered %s as theme"
                     (vendle:package-name package))))
 
-(cl-defun vendle:register-theme-local (_source &optional option)
-  (cl-letf* ((path (expand-file-name _source))
+(cl-defun vendle:register-theme-local (source &optional option)
+  (cl-letf* ((path (expand-file-name source))
              (package (vendle:make-package-local path option)))
     (vendle:add-to-theme-path package)
     (vendle:add-to-package-list package)

@@ -18,11 +18,24 @@
     (cond ((cl-equalp 'git (vendle:package-type package))
            (vendle:install-package-git package)))))
 
+;; (defmethod vendle:install-package-git ((package vendle:package))
+;;   (vendle:message "installing package %s" (vendle:package-name package))
+;;   (shell-command (concat  "git clone --recursive --quiet " (vendle:package-url package)
+;;                           " "
+;;                           (vendle:concat-path vendle-directory
+;;                                               (vendle:package-name package)))
+;;                  vendle-directory)
+;;   (vendle:message "compiling %s" (vendle:package-name package))
+;;   (vendle:option-compile package (vendle:package-path package))
+;;   (vendle:option-build package)
+;;   (vendle:option-info package))
+
 (defmethod vendle:install-package-git ((package vendle:package))
   (vendle:message "installing package %s" (vendle:package-name package))
   (shell-command (concat  "git clone --recursive --quiet " (vendle:package-url package)
                           " "
-                          (vendle:concat-path vendle-directory (vendle:package-name package)))
+                          (vendle:concat-path vendle-directory
+                                              (vendle:package-origin package)))
                  vendle-directory)
   (vendle:message "compiling %s" (vendle:package-name package))
   (vendle:option-compile package (vendle:package-path package))

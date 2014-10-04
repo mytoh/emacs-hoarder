@@ -34,7 +34,8 @@
 (cl-defun vendle:make-package-github (source info)
   (cl-letf ((name (vendle:make-package-name-github source info))
             (path (vendle:make-package-path-github source info))
-            (load-path (vendle:make-package-load-path-github source info)))
+            (load-path (vendle:make-package-load-path-github source info))
+            (origin (vendle:make-package-origin-github source info)))
     (vendle:package name
                     :type 'git
                     :site "github"
@@ -45,7 +46,8 @@
                     :compile (cl-getf info :compile t)
                     :deps (cl-getf info :deps nil)
                     :build (cl-getf info :build nil)
-                    :info (cl-getf info :info nil))))
+                    :info (cl-getf info :info nil)
+                    :origin origin)))
 
 (cl-defun vendle:make-package-name-github (source info)
   (if info
@@ -56,31 +58,52 @@
     (cadr (split-string source "/"))))
 
 (cl-defun vendle:make-package-load-path-github (source info)
-  (cl-letf ((path (if info
-                      (cl-letf ((path (cl-getf info :load-path))
-                                (name (vendle:make-package-name-github source info)))
-                        (if path
-                            (if (listp path)
-                                (cl-mapcar
-                                 (lambda (p) (cl-concatenate 'string
-                                                        name  "/" p))
-                                 path)
-                              (cl-concatenate 'string
-                                              name  "/"  path))
-                          name))
-                    (vendle:make-package-name-github source info))))
-    (expand-file-name path vendle-directory)))
+  (cl-letf ((path (cl-getf info :load-path nil))
+            (origin (vendle:make-package-origin-github source info)))
+    (if path
+        (if (listp path)
+            (cl-mapcar
+             (lambda (p)
+               (vendle:concat-path vendle-directory origin p))
+             path)
+          (vendle:concat-path vendle-directory origin path))
+      (vendle:concat-path vendle-directory origin))))
 
 (cl-defun vendle:make-package-path-github (source info)
-  (cl-letf ((path (if info
-                      (cl-letf ((path (cl-getf info :path))
-                                (name (vendle:make-package-name-github source info)))
-                        (if path
-                            (cl-concatenate 'string
-                                            name  "/"  path)
-                          name))
-                    (vendle:make-package-name-github source info))))
-    (expand-file-name path vendle-directory)))
+  (cl-letf ((path (cl-getf info :path))
+            (origin (vendle:make-package-origin-github source info)))
+    (if path
+        (vendle:concat-path vendle-directory path)
+      (vendle:concat-path vendle-directory origin))))
+
+(cl-defun vendle:make-package-origin-github (source info)
+  (cl-letf ((origin (cl-getf info :origin nil)))
+    (if origin
+        origin
+      (cond
+        ((string-match (rx line-start
+                           "github:"
+                           (submatch (one-or-more (not (in "/"))))
+                           "/"
+                           (submatch (one-or-more (not (in "/"))))
+                           line-end)
+                       source)
+         (concat
+          "github.com/"
+          (match-string-no-properties 1 source)
+          "/"
+          (match-string-no-properties 2 source)))
+        ((string-match (rx   line-start
+                             (submatch (one-or-more (not (in "/"))))
+                             "/"
+                             (submatch (one-or-more (not (in "/"))))
+                             line-end)
+                       source)
+         (concat
+          "github.com/"
+          (match-string-no-properties 1 source)
+          "/"
+          (match-string-no-properties 2 source)))))))
 
 (provide 'vendle-source-github)
 

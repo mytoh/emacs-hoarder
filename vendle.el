@@ -18,6 +18,7 @@
 (require 'vendle-search "vendle/command/search")
 (require 'vendle-check "vendle/command/check")
 (require 'vendle-reinstall "vendle/command/reinstall")
+(require 'vendle-fetch "vendle/command/fetch")
 
 ;;;; initialize
 (defcustom vendle-directory
@@ -33,7 +34,6 @@
     (make-directory vendle-directory 'recursive))
   vendle-directory)
 
-
 ;;;; font-lock
 
 (defcustom vendle:font-lock-keywords
@@ -43,7 +43,9 @@
     vendle:register-local
     vendle:register-theme
     vendle:register-theme-local
-    vendle:check-packages)
+    vendle:check-packages
+    vendle:fetch
+    )
   "vendle keywords")
 
 (cl-defun vendle:turn-on-font-lock ()

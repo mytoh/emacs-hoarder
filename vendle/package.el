@@ -49,15 +49,20 @@
    (info :initarg :info
          :type (or list string)
          :initform nil
-         :accessor vendle:package-info)))
+         :accessor vendle:package-info)
+   (origin :initarg :origin
+           :type string
+           :initform ""
+           :accessor vendle:package-origin)))
 
 (cl-defun vendle:make-package (source info)
-  (cond ((vendle:source-site-github-p source)
-         (vendle:make-package-github
-          (vendle:source-site-format-github source) info))
-        ((vendle:source-git-p source)
-         (vendle:make-package-git
-          source info))))
+  (cl-letf ((s (string-trim source)))
+    (cond ((vendle:source-site-github-p s)
+           (vendle:make-package-github
+            (vendle:source-site-format-github s) info))
+          ((vendle:source-git-p s)
+           (vendle:make-package-git
+            s info)))))
 
 (provide 'vendle-package)
 
