@@ -35,7 +35,7 @@
           (when changedp
             (vendle:option-compile package path)
             (vendle:option-build package)))
-        (cd-absolute user-emacs-directory)
+        ;; (cd-absolute user-emacs-directory)
         (vendle:message "updating package %s... done" path)))))
 
 (cl-defun vendle:git-updatedp (msg)

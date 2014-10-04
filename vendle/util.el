@@ -13,6 +13,18 @@
 
 ;;;; internal functions
 
+(cl-defun vendle:package-compare-fn (p1 p2)
+  (and (cl-equalp (vendle:package-name p1)
+                  (vendle:package-name p2))
+       (cl-equalp (vendle:package-origin p1)
+                  (vendle:package-origin p2))))
+
+(defmethod vendle:installed? ((package vendle:package))
+  (and (file-exists-p (vendle:package-path package))
+       (cl-remove-if-not
+        (lambda (p) (vendle:package-compare-fn p package))
+        *vendle-package-list*)))
+
 (cl-defun vendle:directory-git-p (p)
   (if (file-directory-p (expand-file-name ".git" p))
       t nil))
