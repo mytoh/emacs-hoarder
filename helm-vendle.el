@@ -42,15 +42,17 @@
 (cl-defun helm-vendle-transformer-format (candidates)
   (cl-mapcar
    (lambda (package)
-     (cons (format
-            "%s\t%s"
-            (propertize (vendle:package-name package)
-                        'face
-                        'font-lock-keyword-face)
-            (propertize (vendle:package-origin package)
-                        'face
-                        'font-lock-variable-name-face))
-           package))
+     (cl-letf ((tag (vendle:package-tag package)))
+       (cons (format
+              "%s%s\t%s"
+              (propertize (vendle:package-name package)
+                          'face
+                          'font-lock-keyword-face)
+              (if tag (concat "\t" tag) "")
+              (propertize (vendle:package-origin package)
+                          'face
+                          'font-lock-variable-name-face))
+             package)))
    candidates))
 
 (defvar helm-source-vendle-list

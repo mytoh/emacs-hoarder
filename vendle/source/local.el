@@ -13,7 +13,9 @@
                     :url ""
                     :compile nil
                     :build nil
-                    :info (cl-getf option :info nil))))
+                    :info (cl-getf option :info nil)
+                    :origin (cl-getf option :origin source)
+                    :tag (cl-getf option :tag nil))))
 
 (cl-defun vendle:make-package-name-local (source option)
   (if option

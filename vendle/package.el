@@ -53,7 +53,11 @@
    (origin :initarg :origin
            :type string
            :initform ""
-           :accessor vendle:package-origin)))
+           :accessor vendle:package-origin)
+   (tag :initarg :tag
+        :type (or list string)
+        :initform nil
+        :accessor vendle:package-tag)))
 
 (cl-defun vendle:make-package (source option)
   (cl-letf ((s (string-trim source)))

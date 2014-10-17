@@ -23,7 +23,8 @@
                     :deps (cl-getf option :deps nil)
                     :build (cl-getf option :build nil)
                     :info (cl-getf option :info nil)
-                    :origin origin)))
+                    :origin origin
+                    :tag (cl-getf option :tag nil))))
 
 (cl-defun vendle:make-package-compile-git (source option)
   (if (cl-getf option :build nil)
