@@ -42,7 +42,7 @@
 (cl-defun helm-vendle-transformer-format (candidates)
   (cl-mapcar
    (lambda (package)
-     (cl-letf ((tag (vendle:package-tag package)))
+     (cl-letf ((tag (helm-vendle-format-tag package 'font-lock-doc-face)))
        (cons (format
               "%s%s\t%s"
               (propertize (vendle:package-name package)
@@ -54,6 +54,16 @@
                           'font-lock-variable-name-face))
              package)))
    candidates))
+
+(cl-defun helm-vendle-format-tag (package face)
+  (cl-letf ((tag (vendle:package-tag package)))
+    (if tag
+        (if (stringp tag)
+            (propertize tag 'face face)
+          (string-join
+           (cl-mapcar (lambda (t) (propertize t 'face face)) tag)
+           ","))
+      nil)))
 
 (defvar helm-source-vendle-list
   `((name . ,(helm-vendle-source-name/mark "📦" "Packages"))
