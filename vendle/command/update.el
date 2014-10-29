@@ -24,9 +24,9 @@
                                       (vendle:package-origin package))))
     (when (and (cl-equalp 'git (vendle:package-type package))
                (not (file-symlink-p path)))
-      (cl-locally
-          (vendle:message "updating package %s..."
-                          (propertize name 'face 'font-lock-type-face))
+      (cl-letf ((reporter (make-progress-reporter
+                           (format  "updating package %s..."
+                                    (propertize name 'face 'font-lock-type-face)))))
         (cl-letf* ((git-msg (shell-command-to-string
                              (concat
                               "git " " -C " path
@@ -35,7 +35,8 @@
           (when changedp
             (vendle:option-compile package path)
             (vendle:option-build package)))
-        (vendle:message "updating package %s... done" path)))))
+        (progress-reporter-done reporter)
+        (vendle:message "updated %s" path)))))
 
 (cl-defun vendle:git-updatedp (msg)
   (and (not (equalp
