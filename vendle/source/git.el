@@ -24,7 +24,8 @@
                     :build (cl-getf option :build nil)
                     :info (cl-getf option :info nil)
                     :origin origin
-                    :tag (cl-getf option :tag nil))))
+                    :tag (cl-getf option :tag nil)
+                    :desc (cl-getf option :desc ""))))
 
 (cl-defun vendle:make-package-compile-git (source option)
   (if (cl-getf option :build nil)

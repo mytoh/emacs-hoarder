@@ -15,7 +15,8 @@
                     :build nil
                     :info (cl-getf option :info nil)
                     :origin (cl-getf option :origin source)
-                    :tag (cl-getf option :tag nil))))
+                    :tag (cl-getf option :tag nil)
+                    :desc (cl-getf option :desc ""))))
 
 (cl-defun vendle:make-package-name-local (source option)
   (if option
