@@ -30,7 +30,7 @@
         (cl-letf* ((git-msg (shell-command-to-string
                              (concat
                               "git " " -C " path
-                              " pull --ff --ff-only")))
+                              " pull ")))
                    (changedp (vendle:git-updatedp git-msg)))
           (when changedp
             (vendle:option-compile package path)
@@ -48,7 +48,7 @@
 "
              msg))))
 
-;;;###autoload
+;; ###autoload
 (cl-defun vendle-update ()
   (interactive)
   (vendle:message "package update start")
