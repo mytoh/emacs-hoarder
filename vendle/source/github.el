@@ -34,14 +34,14 @@
 (cl-defun vendle:make-package-github (source option)
   (cl-letf ((name (vendle:make-package-name-github source option))
             (path (vendle:make-package-path-github source option))
-            (load-path (vendle:make-package-load-path-github source option))
+            (lpath (vendle:make-package-load-path-github source option))
             (origin (vendle:make-package-origin-github source option)))
     (vendle:package name
                     :type 'git
                     :site "github"
                     :name name
                     :path path
-                    :load-path load-path
+                    :load-path lpath
                     :url (cl-concatenate 'string "git@github.com:" source)
                     :compile (cl-getf option :compile t)
                     :deps (cl-getf option :deps nil)
