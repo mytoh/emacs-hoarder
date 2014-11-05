@@ -42,7 +42,7 @@
                     :name name
                     :path path
                     :load-path load-path
-                    :url (cl-concatenate 'string "git://github.com/" source)
+                    :url (cl-concatenate 'string "git@github.com:" source)
                     :compile (cl-getf option :compile t)
                     :deps (cl-getf option :deps nil)
                     :build (cl-getf option :build nil)
