@@ -33,7 +33,8 @@
                     (vendle:package-name package))))
 
 (cl-defun vendle:register-theme (source &optional option)
-  (cl-letf* ((package (vendle:make-package source option)))
+  (cl-letf* ((mod-option (vendle:register-theme-default-tag option))
+             (package (vendle:make-package source mod-option)))
     (unless (vendle:installed? package)
       (vendle:add-to-theme-path package)
       (vendle:add-to-load-path package)
@@ -48,6 +49,18 @@
     (vendle:add-to-package-list package)
     (vendle:message "registered %s as local theme"
                     (vendle:package-name package))))
+
+
+(cl-defun vendle:register-theme-default-tag (option)
+  (cl-letf ((o (cl-getf option :tag nil)))
+    (if o
+        (cond ((cl-equalp "theme" o)
+               option)
+              ((cl-find "theme" o :test 'cl-equalp)
+               option)
+              (t option))
+      (cons :tag (cons "theme" option)))))
+
 
 (defmethod vendle:resolve-deps ((package vendle:package))
   (if-let ((deps (vendle:package-deps package)))
