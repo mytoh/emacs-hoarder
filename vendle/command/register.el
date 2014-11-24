@@ -73,7 +73,7 @@
   (cl-typecase dep
     (list
      (vendle:register (car dep)
-                      (cdr dep)))
+                      (cadr dep)))
     (string
      (vendle:register dep nil))))
 
