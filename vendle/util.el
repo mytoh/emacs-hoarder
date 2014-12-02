@@ -5,7 +5,8 @@
 ;;;; requirements
 (eval-when-compile
   (require 'cl-lib)
-  (require 'eieio))
+  (require 'eieio)
+  (require 'subr-x))
 
 (require 'vendle-source-github "vendle/source/github")
 (require 'vendle-source-git "vendle/source/git")
@@ -21,7 +22,7 @@
 
 (defmethod vendle:installed? ((package vendle:package))
   (and (file-exists-p (vendle:package-path package))
-       (cl-remove-if-not
+       (filter
         (lambda (p) (vendle:package-compare-fn p package))
         *vendle-package-list*)))
 
