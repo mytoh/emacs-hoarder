@@ -22,7 +22,7 @@
 
 (defmethod vendle:installed? ((package vendle:package))
   (and (file-exists-p (vendle:package-path package))
-       (filter
+       (cl-remove-if-not
         (lambda (p) (vendle:package-compare-fn p package))
         *vendle-package-list*)))
 

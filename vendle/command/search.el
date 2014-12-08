@@ -14,7 +14,7 @@
 
 ;;;; search
 (cl-defun vendle:search-registered (key term)
-  (filter
+  (cl-remove-if-not
    (lambda (p)
      (pcase term
        (`name
