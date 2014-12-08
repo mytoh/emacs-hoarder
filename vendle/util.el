@@ -60,16 +60,16 @@
 (cl-defun vendle:message (fmt &rest text)
   (with-current-buffer (get-buffer-create "*vendle log*")
     (goto-char (point-max))
-    (insert (apply 'format (format "[%s] %s"
-                                   (propertize "vendle"
-                                               'face '(:foreground "#539b8f"))
-                                   fmt)
+    (insert (apply #'format (format "[%s] %s"
+                                    (propertize "vendle"
+                                                'face '(:foreground "#539b8f"))
+                                    fmt)
                    text))
     (insert "\n"))
-  (apply 'message (format "[%s] %s"
-                          (propertize "vendle"
-                                      'face '(:foreground "#539b8f"))
-                          fmt)
+  (apply #'message (format "[%s] %s"
+                           (propertize "vendle"
+                                       'face '(:foreground "#539b8f"))
+                           fmt)
          text))
 
 (cl-defun vendle:foreach-package-list (fn)

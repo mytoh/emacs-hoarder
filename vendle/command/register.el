@@ -56,7 +56,7 @@
     (if o
         (cond ((cl-equalp "theme" o)
                option)
-              ((cl-find "theme" o :test 'cl-equalp)
+              ((cl-find "theme" o :test #'cl-equalp)
                option)
               (t option))
       (cons :tag (cons "theme" option)))))
@@ -65,7 +65,7 @@
 (defmethod vendle:resolve-deps ((package vendle:package))
   (if-let ((deps (vendle:package-deps package)))
       (cl-mapc
-       'vendle:install-dep
+       #'vendle:install-dep
        deps)
     nil))
 
@@ -73,9 +73,9 @@
   (cl-typecase dep
     (list
      (vendle:register (car dep)
-		      (if (cdr dep)
-			  (cadr dep)
-			nil)))
+                      (if (cdr dep)
+                          (cadr dep)
+                        nil)))
     (string
      (vendle:register dep nil))))
 
