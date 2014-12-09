@@ -65,24 +65,31 @@
            ","))
       nil)))
 
-(defvar helm-source-vendle-list
-  `((name . ,(helm-vendle-source-name/mark "📦" "Packages"))
-    (init . helm-vendle-init)
-    (candidates . helm-vendle-candidates)
-    (action . (("Update" . helm-vendle-action-update)
-               ("Reinstall" . helm-vendle-action-reinstall)
-               ("Magit log" . helm-vendle-action-magit-log)
-               ("View README or source" . helm-vendle-action-view-readme-or-src)
-               ("Open directory" . helm-vendle-action-open-dired)
-               ("Find file" . helm-vendle-action-find-file)))
-    (candidate-transformer
-     helm-vendle-transformer-format)))
+(cl-defun helm-vendle-make-source-name ()
+  (helm-vendle-source-name/mark "📦" "Packages"))
+
+(defclass helm-source-vendle-package-list (helm-source-sync)
+  ((name :initform helm-vendle-make-source-name)
+   (init :initform  helm-vendle-init)
+   (candidates :initform helm-vendle-candidates)
+   (action :initform
+           (helm-make-actions
+            "Update"  'helm-vendle-action-update
+            "Reinstall"  'helm-vendle-action-reinstall
+            "Magit log"  'helm-vendle-action-magit-log
+            "View README or source"  'helm-vendle-action-view-readme-or-src
+            "Open directory" 'helm-vendle-action-open-dired
+            "Find file"  'helm-vendle-action-find-file))
+   (candidate-transformer :initform helm-vendle-transformer-format)))
 
 ;;;###autoload
 (cl-defun helm-vendle ()
   "Preconfigured `helm' for vendle package list source. "
   (interactive)
-  (helm :sources '(helm-source-vendle-list)
+  (unless helm-source-vendle-list
+    (setq helm-source-vendle-list
+          (helm-make-source "Vendle Package List" 'helm-source-vendle-package-list)))
+  (helm :sources 'helm-source-vendle-list
         :buffer "*helm vendle*"))
 
 
