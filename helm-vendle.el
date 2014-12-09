@@ -2,6 +2,7 @@
 
 (eval-when-compile
   (require 'cl-lib))
+(require 'eieio)
 (require 'helm)
 (require 'vendle)
 
