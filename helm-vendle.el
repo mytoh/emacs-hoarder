@@ -83,14 +83,14 @@
             "Find file"  'helm-vendle-action-find-file))
    (candidate-transformer :initform helm-vendle-transformer-format)))
 
+(defvar helm-source-vendle-list
+  (helm-make-source "Vendle Package List" 'helm-source-vendle-package-list))
+
 ;;;###autoload
 (cl-defun helm-vendle ()
   "Preconfigured `helm' for vendle package list source. "
   (interactive)
-  (unless helm-source-vendle-list
-    (setq helm-source-vendle-list
-          (helm-make-source "Vendle Package List" 'helm-source-vendle-package-list)))
-  (helm :sources 'helm-source-vendle-list
+  (helm :sources (list 'helm-source-vendle-list)
         :buffer "*helm vendle*"))
 
 
