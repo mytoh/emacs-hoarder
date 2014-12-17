@@ -1,5 +1,7 @@
 ;;; git.el -*- lexical-binding: t -*-
 
+(require 'seq)
+
 (cl-defun vendle:source-git-p (source)
   (cond ((or (string-match (rx "git://") source)
              (string-match (rx ".git" (zero-or-one "/") line-end) source))
@@ -52,7 +54,7 @@
             (origin (vendle:make-package-origin-git source option)))
     (if path
         (if (listp path)
-            (cl-mapcar
+            (seq-map
              (lambda (p)
                (vendle:concat-path vendle-directory origin p))
              path)

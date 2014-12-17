@@ -5,6 +5,7 @@
 (require 'eieio)
 (require 'helm)
 (require 'vendle)
+(require 'seq)
 
 (cl-defun helm-vendle-init ()
   (setq helm-vendle-candidates
@@ -41,7 +42,7 @@
          name)))
 
 (cl-defun helm-vendle-transformer-format (candidates)
-  (cl-mapcar
+  (seq-map
    (lambda (package)
      (cl-letf ((tag (helm-vendle-format-tag package 'font-lock-doc-face)))
        (cons (format
@@ -62,7 +63,7 @@
         (if (stringp tag)
             (propertize tag 'face face)
           (string-join
-           (cl-mapcar (lambda (t) (propertize t 'face face)) tag)
+           (seq-map (lambda (t) (propertize t 'face face)) tag)
            ","))
       nil)))
 

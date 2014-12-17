@@ -4,6 +4,7 @@
 (eval-when-compile
   (require 'cl-lib)
   (require 'eieio))
+(require 'seq)
 
 (require 'vendle-source-github "vendle/source/github")
 (require 'vendle-source-git "vendle/source/git")
@@ -50,9 +51,9 @@
 
 (cl-defun vendle:turn-on-font-lock ()
   (cl-flet ((add-keywords (face-name keyword-rules)
-              (cl-letf* ((keyword-list (cl-mapcar (lambda (x)
-                                                    (symbol-name (cdr x)))
-                                                  keyword-rules))
+              (cl-letf* ((keyword-list (seq-map (lambda (x)
+                                                  (symbol-name (cdr x)))
+                                                keyword-rules))
                          (keyword-regexp (concat "(\\("
                                                  (regexp-opt keyword-list)
                                                  "\\)\\>")))
@@ -66,7 +67,7 @@
 
     (add-keywords
      'font-lock-builtin-face
-     (cl-mapcar
+     (seq-map
       (lambda (key)
         (cons 1 key))
       vendle:font-lock-keywords))))

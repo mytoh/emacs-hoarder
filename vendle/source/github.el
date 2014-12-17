@@ -1,5 +1,7 @@
 ;;; github.el -*- lexical-binding: t -*-
 
+(require 'seq)
+
 (cl-defun vendle:source-site-github-p (source)
   (cond
     ((string-match (rx "github:" (submatch (+ (not (in "/")))
@@ -64,7 +66,7 @@
             (origin (vendle:make-package-origin-github source option)))
     (if path
         (if (listp path)
-            (cl-mapcar
+            (seq-map
              (lambda (p)
                (vendle:concat-path vendle-directory origin p))
              path)

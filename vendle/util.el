@@ -7,6 +7,7 @@
   (require 'cl-lib)
   (require 'eieio)
   (require 'subr-x))
+(require 'seq)
 
 (require 'vendle-source-github "vendle/source/github")
 (require 'vendle-source-git "vendle/source/git")
@@ -32,14 +33,14 @@
 
 (cl-defun vendle:append-to-list (var elem)
   (if (listp elem)
-      (cl-mapcar
+      (seq-map
        (lambda (e) (add-to-list var e 'append))
        elem)
     (add-to-list var elem 'append)))
 
 (cl-defun vendle:add-to-list (var elem)
   (if (listp elem)
-      (cl-mapcar
+      (seq-map
        (lambda (e) (add-to-list var e))
        elem)
     (add-to-list var elem)))
