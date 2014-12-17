@@ -5,6 +5,7 @@
 (eval-when-compile
   (require 'cl-lib)
   (require 'eieio))
+(require 'seq)
 
 (require 'vendle-source-github "vendle/source/github")
 (require 'vendle-source-git "vendle/source/git")
@@ -17,7 +18,7 @@
                    (lambda (dir)
                      (vendle:search-registered dir 'path))
                    (directory-files vendle-directory 'absolute (rx (not (any ".")))))))
-      (cl-mapc
+      (seq-each
        (lambda (p)
          (vendle:message "clean %s" p)
          (delete-directory p t))

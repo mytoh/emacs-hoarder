@@ -59,11 +59,11 @@
                                                  "\\)\\>")))
                 (font-lock-add-keywords  'emacs-lisp-mode
                                          `((,keyword-regexp 1 ',face-name))))
-              (cl-mapc (lambda (x)
-                         (put (cdr x)
-                              'scheme-indent-function
-                              (car x)))
-                       keyword-rules)))
+              (seq-each (lambda (x)
+                          (put (cdr x)
+                               'scheme-indent-function
+                               (car x)))
+                        keyword-rules)))
 
     (add-keywords
      'font-lock-builtin-face

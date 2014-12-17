@@ -6,6 +6,7 @@
 (eval-when-compile
   (require 'cl-lib)
   (require 'eieio))
+(require 'seq)
 
 (require 'vendle-package "vendle/package")
 
@@ -13,7 +14,7 @@
   (cl-letf ((info (vendle:package-info package)))
     (cl-typecase info
       (list
-       (cl-mapc
+       (seq-each
         (lambda (path)
           (vendle:option-info-set-infopath
            (expand-file-name path (vendle:package-path package))))

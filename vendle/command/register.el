@@ -5,6 +5,7 @@
 (eval-when-compile
   (require 'cl-lib)
   (require 'eieio))
+(require 'seq)
 
 (require 'vendle-source-github "vendle/source/github")
 (require 'vendle-source-git "vendle/source/git")
@@ -64,7 +65,7 @@
 
 (defmethod vendle:resolve-deps ((package vendle:package))
   (if-let ((deps (vendle:package-deps package)))
-      (cl-mapc
+      (seq-each
        #'vendle:install-dep
        deps)
     nil))

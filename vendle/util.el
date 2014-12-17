@@ -74,7 +74,7 @@
          text))
 
 (cl-defun vendle:foreach-package-list (fn)
-  (cl-mapc fn *vendle-package-list*))
+  (seq-each fn *vendle-package-list*))
 
 (provide 'vendle-util)
 
