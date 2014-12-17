@@ -56,7 +56,8 @@
 
 ;;;; utilily functions
 (cl-defun vendle:concat-path (&rest parts)
-  (cl-reduce (lambda (a b) (expand-file-name b a)) parts))
+  (seq-reduce (lambda (a b) (expand-file-name b a)) parts
+              "/"))
 
 (cl-defun vendle:message (fmt &rest text)
   (with-current-buffer (get-buffer-create "*vendle log*")
