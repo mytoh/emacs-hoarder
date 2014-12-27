@@ -6,6 +6,7 @@
   (require 'cl-lib)
   (require 'eieio)
   (require 'subr-x))
+(require 'seq)
 
 (require 'vendle-source-github "vendle/source/github")
 (require 'vendle-source-git "vendle/source/git")
@@ -14,7 +15,7 @@
 
 ;;;; search
 (cl-defun vendle:search-registered (key term)
-  (cl-remove-if-not
+  (seq-filter
    (lambda (p)
      (pcase term
        (`name
