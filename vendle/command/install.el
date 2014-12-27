@@ -15,8 +15,8 @@
 (defmethod vendle:install-package ((package vendle:package))
   (unless (or (cl-equalp 'local (vendle:package-type package))
               (file-exists-p (vendle:package-path package)))
-    (cond ((cl-equalp 'git (vendle:package-type package))
-           (vendle:install-package-git package)))))
+    (pcase (vendle:package-type package)
+      ('git (vendle:install-package-git package)))))
 
 (defmethod vendle:install-package-git ((package vendle:package))
   (vendle:message "installing package %s" (vendle:package-name package))
