@@ -77,6 +77,18 @@
 (cl-defun vendle:foreach-package-list (fn)
   (seq-each fn *vendle-package-list*))
 
+
+(cl-defun vendle:find-duplicate-packages ()
+  (seq-filter
+   (lambda (p)
+     (cl-find-if (lambda (v) (equalp (vendle:package-name v)
+                                p))
+                 *vendle-package-list*))
+   (seq-map
+    (lambda (p) (format "%s" p))
+    package-activated-list)))
+
+
 (provide 'vendle-util)
 
 ;;; util.el ends here
