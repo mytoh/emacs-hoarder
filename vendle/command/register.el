@@ -16,6 +16,17 @@
 ;;;; register
 
 (cl-defun vendle:register (source &optional option)
+  (vendle:handle-register source option))
+
+(cl-defun vendle:handle-register (source option)
+  (cond
+    ((and (file-name-absolute-p source)
+          (file-exists-p source))
+     (vendle:register-local source option))
+    (t
+     (vendle:register-register source option))))
+
+(cl-defun vendle:register-register (source &optional option)
   (cl-letf* ((package (vendle:make-package source option)))
     (vendle:resolve-deps package)
     (unless (vendle:installed? package)
