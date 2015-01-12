@@ -26,6 +26,17 @@
     (t
      (vendle:register-register source option))))
 
+(defmethod vendle:message-register ((package vendle:package))
+  (vendle:message (concat (vendle:package-name package) "\n%s")
+                  (string-join
+                   (seq-map
+                    (lambda (s)
+                      (format "%s: %s"
+                              (symbol-name s)
+                              (slot-value package s)))
+                    (object-slots package))
+                   "\n")))
+
 (cl-defun vendle:register-register (source &optional option)
   (cl-letf* ((package (vendle:make-package source option)))
     (vendle:resolve-deps package)
@@ -33,7 +44,9 @@
       (vendle:add-to-load-path package)
       (vendle:add-to-package-list package)
       (vendle:option-info package)
-      (vendle:message "registered %s"  (vendle:package-name package)))))
+      (vendle:message "registered %s"  (vendle:package-name package))
+      (vendle:message-register package)
+      )))
 
 (cl-defun vendle:register-local (source &optional option)
   (cl-letf* ((path (expand-file-name source))
@@ -42,7 +55,9 @@
     (vendle:add-to-package-list package)
     (vendle:option-info package)
     (vendle:message "registered %s locally"
-                    (vendle:package-name package))))
+                    (vendle:package-name package))
+    (vendle:message-register package)
+    ))
 
 (cl-defun vendle:register-theme (source &optional option)
   (cl-letf* ((mod-option (vendle:register-theme-default-tag option))
@@ -52,7 +67,9 @@
       (vendle:add-to-load-path package)
       (vendle:add-to-package-list package)
       (vendle:message "registered %s as theme"
-                      (vendle:package-name package)))))
+                      (vendle:package-name package))
+      (vendle:message-register package)
+      )))
 
 (cl-defun vendle:register-theme-local (source &optional option)
   (cl-letf* ((path (expand-file-name source))
@@ -60,7 +77,9 @@
     (vendle:add-to-theme-path package)
     (vendle:add-to-package-list package)
     (vendle:message "registered %s as local theme"
-                    (vendle:package-name package))))
+                    (vendle:package-name package))
+    (vendle:message-register package)
+    ))
 
 
 (cl-defun vendle:register-theme-default-tag (option)
