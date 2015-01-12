@@ -15,6 +15,9 @@
 
 ;;;; internal functions
 
+(defconst vendle:log-buffer-name
+  "*vendle log*")
+
 (cl-defun vendle:package-compare-fn (p1 p2)
   (and (cl-equalp (vendle:package-name p1)
                   (vendle:package-name p2))
@@ -60,7 +63,7 @@
               "/"))
 
 (cl-defun vendle:message (fmt &rest text)
-  (with-current-buffer (get-buffer-create "*vendle log*")
+  (with-current-buffer (get-buffer-create vendle:log-buffer-name)
     (goto-char (point-max))
     (insert (apply #'format (format "[%s] %s"
                                     (propertize "vendle"
@@ -73,6 +76,12 @@
                                        'face '(:foreground "#539b8f"))
                            fmt)
          text))
+
+(cl-defun vendle:log (fmt &rest texts)
+  (with-current-buffer (get-buffer-create vendle:log-buffer-name)
+    (goto-char (point-max))
+    (insert (apply #'format fmt texts))
+    (insert "\n")))
 
 (cl-defun vendle:foreach-package-list (fn)
   (seq-each fn *vendle-package-list*))
