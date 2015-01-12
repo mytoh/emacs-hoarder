@@ -65,11 +65,7 @@
 (cl-defun vendle:message (fmt &rest text)
   (with-current-buffer (get-buffer-create vendle:log-buffer-name)
     (goto-char (point-max))
-    (insert (apply #'format (format "[%s] %s"
-                                    (propertize "vendle"
-                                                'face '(:foreground "#539b8f"))
-                                    fmt)
-                   text))
+    (insert (apply #'format fmt text))
     (insert "\n"))
   (apply #'message (format "[%s] %s"
                            (propertize "vendle"
