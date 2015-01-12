@@ -14,12 +14,24 @@
 
 ;;;; register
 
+(defmethod vendle:message-fetch ((package vendle:package))
+  (vendle:log (concat (vendle:package-name package) "\n%s")
+              (string-join
+               (seq-map
+                (lambda (s)
+                  (format "%s: %s"
+                          (symbol-name s)
+                          (slot-value package s)))
+                (object-slots package))
+               "\n")))
+
 (cl-defun vendle:fetch (source &optional option)
   (cl-letf* ((package (vendle:make-package source option)))
     (vendle:fetch-set-options package option)
     (vendle:add-to-package-list package)
     (vendle:option-info package)
-    (vendle:message "registered %s"    (vendle:package-name package))))
+    (vendle:message "registered %s"    (vendle:package-name package))
+    (vendle:message-fetch package)))
 
 (cl-defun vendle:fetch-has-option (option key)
   (cl-getf option key nil))
@@ -29,7 +41,7 @@
          (vendle:fetch-set-option package :compile nil))))
 
 (defmethod vendle:fetch-set-option ((package vendle:package) slot value)
-    (set-slot-value package slot value))
+  (set-slot-value package slot value))
 
 (provide 'vendle-fetch)
 
