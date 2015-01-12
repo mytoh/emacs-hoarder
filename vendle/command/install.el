@@ -20,7 +20,7 @@
 
 (defmethod vendle:install-package-git ((package vendle:package))
   (vendle:message "installing package %s" (vendle:package-name package))
-  (shell-command (concat  "git clone --recursive --quiet " (vendle:package-url package)
+  (shell-command (concat  "git clone --quiet " (vendle:package-url package)
                           " "
                           (vendle:concat-path vendle-directory
                                               (vendle:package-origin package)))
