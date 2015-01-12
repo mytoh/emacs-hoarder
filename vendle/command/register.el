@@ -27,15 +27,15 @@
      (vendle:register-register source option))))
 
 (defmethod vendle:message-register ((package vendle:package))
-  (vendle:message (concat (vendle:package-name package) "\n%s")
-                  (string-join
-                   (seq-map
-                    (lambda (s)
-                      (format "%s: %s"
-                              (symbol-name s)
-                              (slot-value package s)))
-                    (object-slots package))
-                   "\n")))
+  (vendle:log (concat (vendle:package-name package) "\n%s")
+              (string-join
+               (seq-map
+                (lambda (s)
+                  (format "%s: %s"
+                          (symbol-name s)
+                          (slot-value package s)))
+                (object-slots package))
+               "\n")))
 
 (cl-defun vendle:register-register (source &optional option)
   (cl-letf* ((package (vendle:make-package source option)))
