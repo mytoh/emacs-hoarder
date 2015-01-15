@@ -4,6 +4,7 @@
 
 (eval-when-compile
   (require 'cl-lib)
+  (require 'cl-generic)
   (require 'eieio))
 (require 'seq)
 
@@ -100,15 +101,14 @@
        deps)
     nil))
 
-(cl-defun vendle:install-dep (dep)
-  (cl-typecase dep
-    (list
-     (vendle:register (car dep)
-                      (if (cdr dep)
-                          (cadr dep)
-                        nil)))
-    (string
-     (vendle:register dep nil))))
+(cl-defmethod vendle:install-dep ((dep list))
+  (vendle:register (car dep)
+                   (if (cdr dep)
+                       (cadr dep)
+                     nil)))
+
+(cl-defmethod vendle:install-dep ((dep string))
+  (vendle:register dep nil))
 
 (provide 'vendle-register)
 
