@@ -27,7 +27,7 @@
     (t
      (vendle:register-register source option))))
 
-(defmethod vendle:message-register ((package vendle:package))
+(cl-defmethod vendle:message-register ((package vendle:package))
   (vendle:log (concat (vendle:package-name package) "\n%s")
               (string-join
                (seq-map
@@ -94,7 +94,7 @@
       (cons :tag (cons "theme" option)))))
 
 
-(defmethod vendle:resolve-deps ((package vendle:package))
+(cl-defmethod vendle:resolve-deps ((package vendle:package))
   (if-let ((deps (vendle:package-deps package)))
       (seq-each
        #'vendle:install-dep

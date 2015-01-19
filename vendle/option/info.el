@@ -10,7 +10,7 @@
 
 (require 'vendle-package "vendle/package")
 
-(defmethod vendle:option-info ((package vendle:package))
+(cl-defmethod vendle:option-info ((package vendle:package))
   (cl-letf ((info (vendle:package-info package)))
     (cl-typecase info
       (list

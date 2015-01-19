@@ -14,7 +14,7 @@
 (require 'vendle-clean "vendle/command/clean")
 
 ;;;; uninstall
-(defmethod vendle:uninstall-package ((package vendle:package))
+(cl-defmethod vendle:uninstall-package ((package vendle:package))
   (when (and (not (cl-equalp 'local (vendle:package-type package)))
              (file-exists-p (vendle:package-path package)))
     (vendle:message "unregister package info")

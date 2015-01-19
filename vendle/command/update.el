@@ -18,7 +18,7 @@
   (when (file-exists-p vendle-directory)
     (vendle:foreach-package-list #'vendle:update-package)))
 
-(defmethod vendle:update-package ((package vendle:package))
+(cl-defmethod vendle:update-package ((package vendle:package))
   (cl-letf ((name (vendle:package-name package))
             (path (vendle:concat-path vendle-directory
                                       (vendle:package-origin package))))
