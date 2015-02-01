@@ -18,18 +18,18 @@
   (vendle:reinstall-package candidate))
 
 ;; http://rubikitch.com/2014/09/02/helm-quelpa/
-(cl-defun helm-vendle-action-magit-log (package)
+(cl-defmethod helm-vendle-action-magit-log ((package vendle:package))
   (cl-letf ((default-directory (file-name-as-directory (vendle:package-path package))))
     (magit-status ".")
     (magit-log)))
 
-(cl-defun helm-vendle-action-open-dired (package)
+(cl-defmethod helm-vendle-action-open-dired ((package vendle:package))
   (dired (vendle:package-path package)))
 
-(defun helm-vendle-action-find-file (package)
+(cl-defmethod helm-vendle-action-find-file ((package vendle:package))
   (helm-find-files-1 (file-name-as-directory (vendle:package-path package))))
 
-(cl-defun helm-vendle-action-view-readme-or-src (package)
+(cl-defmethod helm-vendle-action-view-readme-or-src ((package vendle:package))
   (cl-loop for file in (list "README.md" "README.org" "README")
      for path = (expand-file-name file (vendle:package-path package))
      when (file-exists-p path)
@@ -43,21 +43,23 @@
 
 (cl-defun helm-vendle-transformer-format (candidates)
   (seq-map
-   (lambda (package)
-     (cl-letf ((tag (helm-vendle-format-tag package 'font-lock-doc-face)))
-       (cons (format
-              "%s%s\t%s"
-              (propertize (vendle:package-name package)
-                          'face
-                          'font-lock-keyword-face)
-              (if tag (concat "\t" tag) "")
-              (propertize (vendle:package-origin package)
-                          'face
-                          'font-lock-variable-name-face))
-             package)))
+   #'helm-vendle-transformer-format-1
    candidates))
 
-(cl-defun helm-vendle-format-tag (package face)
+(cl-defmethod helm-vendle-transformer-format-1 ((package vendle:package))
+  (cl-letf ((tag (helm-vendle-propertize-tag package 'font-lock-doc-face)))
+    (cons (format
+           "%s%s\t%s"
+           (propertize (vendle:package-name package)
+                       'face
+                       'font-lock-keyword-face)
+           (if tag (concat "\t" tag) "")
+           (propertize (vendle:package-origin package)
+                       'face
+                       'font-lock-variable-name-face))
+          package)))
+
+(cl-defmethod helm-vendle-propertize-tag ((package vendle:package) face)
   (cl-letf ((tag (vendle:package-tag package)))
     (if tag
         (if (stringp tag)
