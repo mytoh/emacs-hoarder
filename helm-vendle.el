@@ -73,8 +73,7 @@
   (helm-vendle-source-name/mark "📦" "Packages"))
 
 (defclass helm-source-vendle-package-list (helm-source-sync)
-  ((name :initform helm-vendle-make-source-name)
-   (init :initform  helm-vendle-init)
+  ((init :initform  helm-vendle-init)
    (candidates :initform helm-vendle-candidates)
    (action :initform
            (helm-make-actions
@@ -87,7 +86,8 @@
    (candidate-transformer :initform helm-vendle-transformer-format)))
 
 (defvar helm-source-vendle-list
-  (helm-make-source "Vendle Package List" 'helm-source-vendle-package-list))
+  (helm-make-source (helm-vendle-make-source-name)
+      'helm-source-vendle-package-list))
 
 ;;;###autoload
 (cl-defun helm-vendle ()
