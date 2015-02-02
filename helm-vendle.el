@@ -85,16 +85,16 @@
   (helm-vendle-source-name/mark "📦" "Packages"))
 
 (defclass helm-source-vendle-package-list (helm-source-sync)
-  ((init :initform  helm-vendle-init)
-   (candidates :initform helm-vendle-candidates)
+  ((init :initform #'helm-vendle-init)
+   (candidates :initform #'helm-vendle-candidates)
    (action :initform
            (helm-make-actions
-            "Update"  'helm-vendle-action-update
-            "Reinstall"  'helm-vendle-action-reinstall
-            "Magit log"  'helm-vendle-action-magit-log
-            "View README or source"  'helm-vendle-action-view-readme-or-src
-            "Open directory" 'helm-vendle-action-open-dired
-            "Find file"  'helm-vendle-action-find-file))
+            "Update"  #'helm-vendle-action-update
+            "Reinstall"  #'helm-vendle-action-reinstall
+            "Magit log"  #'helm-vendle-action-magit-log
+            "View README or source"  #'helm-vendle-action-view-readme-or-src
+            "Open directory" #'helm-vendle-action-open-dired
+            "Find file"  #'helm-vendle-action-find-file))
    (candidate-transformer :initform helm-vendle-transformer-format)))
 
 (defvar helm-source-vendle-list
