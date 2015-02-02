@@ -31,8 +31,8 @@
 
 ;; http://rubikitch.com/2014/09/02/helm-quelpa/
 (cl-defmethod helm-vendle-action-magit-log ((package vendle:package))
-  (cl-letf ((default-directory (file-name-as-directory (vendle:package-path package))))
-    (magit-status ".")
+  (with-helm-default-directory (vendle:package-path package)
+      (magit-status ".")
     (magit-log)))
 
 (cl-defmethod helm-vendle-action-open-dired ((package vendle:package))
