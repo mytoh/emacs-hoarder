@@ -11,11 +11,23 @@
   (setq helm-vendle-candidates
         *vendle-package-list*))
 
-(cl-defun helm-vendle-action-update (candidate)
-  (vendle:update-package candidate))
+(cl-defun helm-vendle-action-update (_candidate)
+  (cl-letf ((pkgs (helm-marked-candidates)))
+    (seq-each
+     #'helm-vendle-action-update-1
+     pkgs)))
 
-(cl-defun helm-vendle-action-reinstall (candidate)
-  (vendle:reinstall-package candidate))
+(cl-defmethod helm-vendle-action-update-1 ((package vendle:package))
+  (vendle:update-package package))
+
+(cl-defun helm-vendle-action-reinstall (_candidate)
+  (cl-letf ((pkgs (helm-marked-candidates)))
+    (seq-each
+     #'helm-vendle-action-reinstall-1
+     pkgs)))
+
+(cl-defmethod helm-vendle-action-reinstall-1 ((package vendle:package))
+  (vendle:reinstall-package package))
 
 ;; http://rubikitch.com/2014/09/02/helm-quelpa/
 (cl-defmethod helm-vendle-action-magit-log ((package vendle:package))
