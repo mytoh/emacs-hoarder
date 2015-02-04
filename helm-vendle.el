@@ -95,7 +95,7 @@
             "View README or source"  #'helm-vendle-action-view-readme-or-src
             "Open directory" #'helm-vendle-action-open-dired
             "Find file"  #'helm-vendle-action-find-file))
-   (candidate-transformer :initform helm-vendle-transformer-format)))
+   (candidate-transformer :initform #'helm-vendle-transformer-format)))
 
 (defvar helm-source-vendle-list
   (helm-make-source (helm-vendle-make-source-name)
