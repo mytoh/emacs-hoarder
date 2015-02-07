@@ -86,7 +86,7 @@
 
 (defclass helm-source-vendle-package-list (helm-source-sync)
   ((init :initform #'helm-vendle-init)
-   (candidates :initform #'helm-vendle-candidates)
+   (candidates :initform 'helm-vendle-candidates)
    (action :initform
            (helm-make-actions
             "Update"  #'helm-vendle-action-update
