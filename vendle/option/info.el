@@ -11,18 +11,18 @@
 (require 'vendle-package "vendle/package")
 
 (cl-defmethod vendle:option-info ((package vendle:package))
-  (cl-letf ((info (vendle:package-info package)))
-    (vendle:%option-info info package)))
+  (cl-letf ((info-path (vendle:package-info package)))
+    (vendle:%option-info info-path package)))
 
-(cl-defmethod vendle:%option-info ((info list) (package vendle:package))
+(cl-defmethod vendle:%option-info ((info-paths list) (package vendle:package))
   (seq-each
    (lambda (path)
      (vendle:option-info-set-infopath
       (expand-file-name path (vendle:package-path package))))
-   info))
+   info-paths))
 
-(cl-defmethod vendle:%option-info ((info string) (package vendle:package))
-  (cl-letf ((path (expand-file-name info (vendle:package-path package))))
+(cl-defmethod vendle:%option-info ((info-path string) (package vendle:package))
+  (cl-letf ((path (expand-file-name info-path (vendle:package-path package))))
     (vendle:message "add directory %s to INFOPATH" path)
     (vendle:option-info-set-infopath
      path)))
