@@ -68,12 +68,13 @@
 
 (cl-defun vendle:make-package (source option)
   (cl-letf ((s (string-trim source)))
-    (cond ((vendle:source-site-github-p s)
-           (vendle:make-package-github
-            (vendle:source-site-format-github s) option))
-          ((vendle:source-git-p s)
-           (vendle:make-package-git
-            s option)))))
+    (pcase s
+      ((pred vendle:source-site-github-p)
+       (vendle:make-package-github
+        (vendle:source-site-format-github s) option))
+      ((pred vendle:source-git-p)
+       (vendle:make-package-git
+        s option)))))
 
 (provide 'vendle-package)
 
