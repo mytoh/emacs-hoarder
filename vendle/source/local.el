@@ -5,18 +5,18 @@
 (cl-defun vendle:make-package-local (source option)
   (cl-letf ((name (vendle:make-package-name-local source option))
             (load-path (vendle:make-package-load-path-local source option)))
-    (vendle:package name
-                    :type 'local
-                    :name name
-                    :path source
-                    :load-path load-path
-                    :url ""
-                    :compile nil
-                    :build nil
-                    :info (cl-getf option :info nil)
-                    :origin (cl-getf option :origin source)
-                    :tag (cl-getf option :tag nil)
-                    :desc (cl-getf option :desc ""))))
+    (make-instance 'vendle:package
+                   :type 'local
+                   :name name
+                   :path source
+                   :load-path load-path
+                   :url ""
+                   :compile nil
+                   :build nil
+                   :info (cl-getf option :info nil)
+                   :origin (cl-getf option :origin source)
+                   :tag (cl-getf option :tag nil)
+                   :desc (cl-getf option :desc ""))))
 
 (cl-defun vendle:make-package-name-local (source option)
   (if option

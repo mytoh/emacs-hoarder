@@ -14,21 +14,21 @@
             (load-path (vendle:make-package-load-path-git source option))
             (compile (vendle:make-package-compile-git source option))
             (origin (vendle:make-package-origin-git source option)))
-    (vendle:package name
-                    :type 'git
-                    :site ""
-                    :name name
-                    :path path
-                    :load-path load-path
-                    :url source
-                    :compile compile
-                    :deps (cl-getf option :deps nil)
-                    :build (cl-getf option :build nil)
-                    :info (cl-getf option :info nil)
-                    :origin origin
-                    :tag (cl-getf option :tag nil)
-                    :desc (cl-getf option :desc "")
-                    :recursive (cl-getf option :recursive))))
+    (make-instance 'vendle:package
+                   :type 'git
+                   :site ""
+                   :name name
+                   :path path
+                   :load-path load-path
+                   :url source
+                   :compile compile
+                   :deps (cl-getf option :deps nil)
+                   :build (cl-getf option :build nil)
+                   :info (cl-getf option :info nil)
+                   :origin origin
+                   :tag (cl-getf option :tag nil)
+                   :desc (cl-getf option :desc "")
+                   :recursive (cl-getf option :recursive))))
 
 (cl-defun vendle:make-package-compile-git (source option)
   (if (cl-getf option :build nil)

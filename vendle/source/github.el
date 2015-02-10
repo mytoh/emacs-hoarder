@@ -38,21 +38,21 @@
             (path (vendle:make-package-path-github source option))
             (lpath (vendle:make-package-load-path-github source option))
             (origin (vendle:make-package-origin-github source option)))
-    (vendle:package name
-                    :type 'git
-                    :site "github"
-                    :name name
-                    :path path
-                    :load-path lpath
-                    :url (cl-concatenate 'string "git@github.com:" source)
-                    :compile (cl-getf option :compile t)
-                    :deps (cl-getf option :deps nil)
-                    :build (cl-getf option :build nil)
-                    :info (cl-getf option :info nil)
-                    :origin origin
-                    :tag (cl-getf option :tag nil)
-                    :desc (cl-getf option :desc "")
-                    :recursive (cl-getf option :recursive))))
+    (make-instance 'vendle:package
+                   :type 'git
+                   :site "github"
+                   :name name
+                   :path path
+                   :load-path lpath
+                   :url (cl-concatenate 'string "git@github.com:" source)
+                   :compile (cl-getf option :compile t)
+                   :deps (cl-getf option :deps nil)
+                   :build (cl-getf option :build nil)
+                   :info (cl-getf option :info nil)
+                   :origin origin
+                   :tag (cl-getf option :tag nil)
+                   :desc (cl-getf option :desc "")
+                   :recursive (cl-getf option :recursive))))
 
 (cl-defun vendle:make-package-name-github (source option)
   (if option
