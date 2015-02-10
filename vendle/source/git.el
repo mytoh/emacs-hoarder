@@ -11,7 +11,7 @@
 (cl-defun vendle:make-package-git (source option)
   (cl-letf ((name (vendle:make-package-name-git source option))
             (path (vendle:make-package-path-git source option))
-            (load-path (vendle:make-package-load-path-git source option))
+            (lpath (vendle:make-package-load-path-git source option))
             (compile (vendle:make-package-compile-git source option))
             (origin (vendle:make-package-origin-git source option)))
     (make-instance 'vendle:package
@@ -19,7 +19,7 @@
                    :site ""
                    :name name
                    :path path
-                   :load-path load-path
+                   :load-path lpath
                    :url source
                    :compile compile
                    :deps (cl-getf option :deps nil)

@@ -4,12 +4,12 @@
 
 (cl-defun vendle:make-package-local (source option)
   (cl-letf ((name (vendle:make-package-name-local source option))
-            (load-path (vendle:make-package-load-path-local source option)))
+            (lpath (vendle:make-package-load-path-local source option)))
     (make-instance 'vendle:package
                    :type 'local
                    :name name
                    :path source
-                   :load-path load-path
+                   :load-path lpath
                    :url ""
                    :compile nil
                    :build nil
