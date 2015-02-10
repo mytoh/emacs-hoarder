@@ -31,8 +31,7 @@
         *vendle-package-list*)))
 
 (cl-defun vendle:directory-git-p (p)
-  (if (file-directory-p (expand-file-name ".git" p))
-      t nil))
+  (file-directory-p (expand-file-name ".git" p)))
 
 (cl-defun vendle:append-to-list (var elem)
   (if (listp elem)
