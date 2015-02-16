@@ -15,7 +15,7 @@
 ;;;; register
 
 (cl-defmethod vendle:message-fetch ((package vendle:package))
-  (vendle:log (concat "\n" (vendle:package-name package) "\n%s")
+  (vendle:log (concat "\n* " (vendle:package-name package) "\n%s")
               (string-join
                (seq-map
                 (lambda (s)
