@@ -41,7 +41,7 @@
          (vendle:fetch-set-option package :compile nil))))
 
 (cl-defmethod vendle:fetch-set-option ((package vendle:package) slot value)
-  (set-slot-value package slot value))
+  (setf (slot-value package slot) value))
 
 (provide 'vendle-fetch)
 
