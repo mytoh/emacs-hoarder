@@ -62,10 +62,7 @@
               "/"))
 
 (cl-defun vendle:message (fmt &rest text)
-  (with-current-buffer (get-buffer-create vendle:log-buffer-name)
-    (goto-char (point-max))
-    (insert (apply #'format fmt text))
-    (insert "\n"))
+  (apply #'vendle:log fmt text)
   (apply #'message (format "[%s] %s"
                            (propertize "vendle"
                                        'face '(:foreground "#539b8f"))
@@ -74,6 +71,9 @@
 
 (cl-defun vendle:log (fmt &rest texts)
   (with-current-buffer (get-buffer-create vendle:log-buffer-name)
+    (when (vendle:empty-buffer-p (current-buffer))
+      (goto-char (point-min))
+      (insert ";; -*- mode: org -*-\n"))
     (goto-char (point-max))
     (insert (apply #'format fmt texts))
     (insert "\n")))
@@ -81,6 +81,9 @@
 (cl-defun vendle:foreach-package-list (fn)
   (seq-each fn *vendle-package-list*))
 
+(cl-defun vendle:empty-buffer-p (buffer)
+  "Check if BUFFER have contens."
+  (zerop (buffer-size (and buffer (get-buffer buffer)))))
 
 (cl-defun vendle:find-duplicate-packages ()
   (seq-filter
