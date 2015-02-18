@@ -27,7 +27,7 @@
 
 (cl-defun vendle:uninstall-package-by-name (name)
   (cl-letf ((target (vendle:search-registered "web-mode" 'name)))
-    (vendle:uninstall-package (car target))))
+    (vendle:uninstall-package (cl-first target))))
 
 (provide 'vendle-uninstall)
 

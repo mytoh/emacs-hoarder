@@ -102,9 +102,9 @@
     nil))
 
 (cl-defmethod vendle:install-dep ((dep list))
-  (vendle:register (car dep)
-                   (if (cdr dep)
-                       (cadr dep)
+  (vendle:register (cl-first dep)
+                   (if (cl-rest dep)
+                       (cl-second dep)
                      nil)))
 
 (cl-defmethod vendle:install-dep ((dep string))

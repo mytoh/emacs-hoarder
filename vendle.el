@@ -52,7 +52,7 @@
 (cl-defun vendle:turn-on-font-lock ()
   (cl-flet ((add-keywords (face-name keyword-rules)
               (cl-letf* ((keyword-list (seq-map (lambda (x)
-                                                  (symbol-name (cdr x)))
+                                                  (symbol-name (cl-rest x)))
                                                 keyword-rules))
                          (keyword-regexp (concat "(\\("
                                                  (regexp-opt keyword-list)
@@ -60,9 +60,9 @@
                 (font-lock-add-keywords  'emacs-lisp-mode
                                          `((,keyword-regexp 1 ',face-name))))
               (seq-each (lambda (x)
-                          (put (cdr x)
+                          (put (cl-rest x)
                                'scheme-indent-function
-                               (car x)))
+                               (cl-first x)))
                         keyword-rules)))
 
     (add-keywords

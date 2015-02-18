@@ -59,8 +59,8 @@
       (cl-letf ((name (cl-getf option :name)))
         (if name
             name
-          (cadr (split-string source "/"))))
-    (cadr (split-string source "/"))))
+          (cl-second (split-string source "/"))))
+    (cl-second (split-string source "/"))))
 
 (cl-defun vendle:make-package-load-path-github (source option)
   (cl-letf ((path (cl-getf option :load-path nil))
