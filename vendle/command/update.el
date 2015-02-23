@@ -39,11 +39,11 @@
         (vendle:message "updated %s" path)))))
 
 (cl-defun vendle:git-updatedp (msg)
-  (and (not (equalp
+  (and (not (cl-equalp
              "Already up-to-date.
 "
              msg))
-       (not (equalp
+       (not (cl-equalp
              "fatal: Not a git repository (or any of the parent directories): .git
 "
              msg))))

@@ -88,8 +88,8 @@
 (cl-defun vendle:find-duplicate-packages ()
   (seq-filter
    (lambda (p)
-     (cl-find-if (lambda (v) (equalp (vendle:package-name v)
-                                p))
+     (cl-find-if (lambda (v) (cl-equalp (vendle:package-name v)
+                                   p))
                  *vendle-package-list*))
    (seq-map
     (lambda (p) (format "%s" p))
