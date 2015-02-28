@@ -17,7 +17,7 @@
      #'helm-vendle-action-update-1
      pkgs)))
 
-(cl-defmethod helm-vendle-action-update-1 ((package vendle:package))
+(cl-defmethod helm-vendle-action-update-1 ((package vendle:<package>))
   (vendle:update-package package))
 
 (cl-defun helm-vendle-action-reinstall (_candidate)
@@ -26,22 +26,22 @@
      #'helm-vendle-action-reinstall-1
      pkgs)))
 
-(cl-defmethod helm-vendle-action-reinstall-1 ((package vendle:package))
+(cl-defmethod helm-vendle-action-reinstall-1 ((package vendle:<package>))
   (vendle:reinstall-package package))
 
 ;; http://rubikitch.com/2014/09/02/helm-quelpa/
-(cl-defmethod helm-vendle-action-magit-log ((package vendle:package))
+(cl-defmethod helm-vendle-action-magit-log ((package vendle:<package>))
   (with-helm-default-directory (vendle:package-path package)
       (magit-status ".")
     (magit-log)))
 
-(cl-defmethod helm-vendle-action-open-dired ((package vendle:package))
+(cl-defmethod helm-vendle-action-open-dired ((package vendle:<package>))
   (dired (vendle:package-path package)))
 
-(cl-defmethod helm-vendle-action-find-file ((package vendle:package))
+(cl-defmethod helm-vendle-action-find-file ((package vendle:<package>))
   (helm-find-files-1 (file-name-as-directory (vendle:package-path package))))
 
-(cl-defmethod helm-vendle-action-view-readme-or-src ((package vendle:package))
+(cl-defmethod helm-vendle-action-view-readme-or-src ((package vendle:<package>))
   (cl-loop for file in (list "README.md" "README.org" "README")
      for path = (expand-file-name file (vendle:package-path package))
      when (file-exists-p path)
@@ -58,7 +58,7 @@
    #'helm-vendle-transformer-format-1
    candidates))
 
-(cl-defmethod helm-vendle-transformer-format-1 ((package vendle:package))
+(cl-defmethod helm-vendle-transformer-format-1 ((package vendle:<package>))
   (cl-letf ((tag (helm-vendle-propertize-tag package 'font-lock-doc-face)))
     (cons (format
            "%s%s\t%s"
@@ -71,7 +71,7 @@
                        'font-lock-variable-name-face))
           package)))
 
-(cl-defmethod helm-vendle-propertize-tag ((package vendle:package) face)
+(cl-defmethod helm-vendle-propertize-tag ((package vendle:<package>) face)
   (cl-letf ((tag (vendle:package-tag package)))
     (if tag
         (if (stringp tag)
