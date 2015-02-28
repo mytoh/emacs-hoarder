@@ -63,6 +63,7 @@
          :initform ""
          :accessor vendle:package-desc)
    (recursive :initarg :recursive
+              :type (or null t)
               :initform nil
               :accessor vendle:package-recursive)))
 
