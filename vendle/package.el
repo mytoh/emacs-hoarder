@@ -9,7 +9,7 @@
 
 ;;;; package
 
-(defclass vendle:package ()
+(defclass vendle:<package> ()
   ((type :initarg :type
          :type symbol
          :initform nil

@@ -38,7 +38,7 @@
             (path (vendle:make-package-path-github source option))
             (lpath (vendle:make-package-load-path-github source option))
             (origin (vendle:make-package-origin-github source option)))
-    (make-instance 'vendle:package
+    (make-instance 'vendle:<package>
                    :type 'git
                    :site "github"
                    :name name

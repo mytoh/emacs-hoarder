@@ -11,7 +11,7 @@
 (require 'vendle-package "vendle/package")
 (require 'vendle-util "vendle/util")
 
-(cl-defmethod vendle:reinstall-package ((package vendle:package))
+(cl-defmethod vendle:reinstall-package ((package vendle:<package>))
   (vendle:uninstall-package package)
   (vendle:install-package package))
 

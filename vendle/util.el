@@ -24,7 +24,7 @@
        (cl-equalp (vendle:package-origin p1)
                   (vendle:package-origin p2))))
 
-(cl-defmethod vendle:installed? ((package vendle:package))
+(cl-defmethod vendle:installed? ((package vendle:<package>))
   (and (file-exists-p (vendle:package-path package))
        (seq-filter
         (lambda (p) (vendle:package-compare-fn p package))
@@ -47,13 +47,13 @@
        elem)
     (add-to-list var elem)))
 
-(cl-defmethod vendle:add-to-load-path ((package vendle:package))
+(cl-defmethod vendle:add-to-load-path ((package vendle:<package>))
   (vendle:add-to-list 'load-path (vendle:package-load-path package)))
 
-(cl-defmethod vendle:add-to-theme-path ((package vendle:package))
+(cl-defmethod vendle:add-to-theme-path ((package vendle:<package>))
   (vendle:add-to-list  'custom-theme-load-path (vendle:package-load-path package)))
 
-(cl-defmethod vendle:add-to-package-list ((package vendle:package))
+(cl-defmethod vendle:add-to-package-list ((package vendle:<package>))
   (vendle:append-to-list  '*vendle-package-list* package))
 
 ;;;; utilily functions

@@ -14,7 +14,7 @@
 
 ;;;; register
 
-(cl-defmethod vendle:message-fetch ((package vendle:package))
+(cl-defmethod vendle:message-fetch ((package vendle:<package>))
   (vendle:log (concat "\n* " (vendle:package-name package) "\n%s")
               (string-join
                (seq-map
@@ -36,11 +36,11 @@
 (cl-defun vendle:fetch-has-option (option key)
   (cl-getf option key nil))
 
-(cl-defmethod vendle:fetch-set-options ((package vendle:package) option)
+(cl-defmethod vendle:fetch-set-options ((package vendle:<package>) option)
   (cond ((not (vendle:fetch-has-option option :compile))
          (vendle:fetch-set-option package :compile nil))))
 
-(cl-defmethod vendle:fetch-set-option ((package vendle:package) slot value)
+(cl-defmethod vendle:fetch-set-option ((package vendle:<package>) slot value)
   (setf (slot-value package slot) value))
 
 (provide 'vendle-fetch)

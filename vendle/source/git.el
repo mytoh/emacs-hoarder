@@ -14,7 +14,7 @@
             (lpath (vendle:make-package-load-path-git source option))
             (compile (vendle:make-package-compile-git source option))
             (origin (vendle:make-package-origin-git source option)))
-    (make-instance 'vendle:package
+    (make-instance 'vendle:<package>
                    :type 'git
                    :site ""
                    :name name
