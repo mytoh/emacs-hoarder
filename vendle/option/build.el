@@ -3,9 +3,8 @@
 ;;; Code:
 
 ;;;; requirements
-(eval-when-compile
-  (require 'cl-lib)
-  (require 'eieio))
+(require 'cl-lib)
+(require 'eieio)
 
 (require 'seq)
 (require 'vendle-package "vendle/package")

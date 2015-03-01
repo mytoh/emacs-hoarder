@@ -2,10 +2,8 @@
 
 ;;; Code:
 
-(eval-when-compile
-  (require 'cl-lib)
-  (require 'cl-generic)
-  (require 'eieio))
+(require 'cl-lib)
+(require 'eieio)
 (require 'seq)
 
 (require 'vendle-source-github "vendle/source/github")

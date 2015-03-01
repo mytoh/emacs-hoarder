@@ -1,8 +1,6 @@
 ;;; package.el -*- lexical-binding: t -*-
 
-(eval-when-compile
-  (require 'cl-lib))
-
+(require 'cl-lib)
 (require 'vendle-source-github "vendle/source/github")
 (require 'vendle-source-git "vendle/source/git")
 (require 'vendle-source-local "vendle/source/local")

@@ -1,7 +1,6 @@
 ;;; helm-vendle.el -*- lexical-binding: t -*-
 
-(eval-when-compile
-  (require 'cl-lib))
+(require 'cl-lib)
 (require 'eieio)
 (require 'helm)
 (require 'vendle)
