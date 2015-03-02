@@ -93,22 +93,22 @@
                            (submatch (one-or-more (not (in "/"))))
                            line-end)
                        source)
-         (concat
-          "github.com/"
-          (match-string-no-properties 1 source)
-          "/"
-          (match-string-no-properties 2 source)))
+         (seq-concatenate 'string
+                          "github.com/"
+                          (match-string-no-properties 1 source)
+                          "/"
+                          (match-string-no-properties 2 source)))
         ((string-match (rx   line-start
                              (submatch (one-or-more (not (in "/"))))
                              "/"
                              (submatch (one-or-more (not (in "/"))))
                              line-end)
                        source)
-         (concat
-          "github.com/"
-          (match-string-no-properties 1 source)
-          "/"
-          (match-string-no-properties 2 source)))))))
+         (seq-concatenate 'string
+                          "github.com/"
+                          (match-string-no-properties 1 source)
+                          "/"
+                          (match-string-no-properties 2 source)))))))
 
 (provide 'vendle-source-github)
 

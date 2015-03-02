@@ -26,7 +26,7 @@
      (vendle:register-register source option))))
 
 (cl-defmethod vendle:message-register ((package vendle:<package>))
-  (vendle:log (concat "\n* " (vendle:package-name package) "\n%s")
+  (vendle:log (seq-concatenate 'string "\n* " (vendle:package-name package) "\n%s")
               (string-join
                (seq-map
                 (lambda (s)

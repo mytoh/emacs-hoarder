@@ -19,14 +19,14 @@
 
 (cl-defmethod vendle:install-package-git ((package vendle:<package>))
   (vendle:message "installing package %s" (vendle:package-name package))
-  (shell-command (concat  "git clone --quiet "
-                          (if (vendle:package-recursive package)
-                              " --recursive "
-                            "")
-                          (vendle:package-url package)
-                          " "
-                          (vendle:concat-path vendle-directory
-                                              (vendle:package-origin package)))
+  (shell-command (seq-concatenate 'string  "git clone --quiet "
+                                  (if (vendle:package-recursive package)
+                                      " --recursive "
+                                    "")
+                                  (vendle:package-url package)
+                                  " "
+                                  (vendle:concat-path vendle-directory
+                                                      (vendle:package-origin package)))
                  vendle-directory)
   (vendle:message "compiling %s" (vendle:package-name package))
   (vendle:option-compile package (vendle:package-path package))

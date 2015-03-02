@@ -27,9 +27,9 @@
                            (format  "updating package %s..."
                                     (propertize name 'face 'font-lock-type-face)))))
         (cl-letf* ((git-msg (shell-command-to-string
-                             (concat
-                              "git " " -C " path
-                              " pull ")))
+                             (seq-concatenate 'string
+                                              "git " " -C " path
+                                              " pull ")))
                    (changedp (vendle:git-updatedp git-msg)))
           (when changedp
             (vendle:option-compile package path)

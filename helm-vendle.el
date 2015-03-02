@@ -64,7 +64,7 @@
            (propertize (vendle:package-name package)
                        'face
                        'font-lock-keyword-face)
-           (if tag (concat "\t" tag) "")
+           (if tag (seq-concatenate 'string "\t" tag) "")
            (propertize (vendle:package-origin package)
                        'face
                        'font-lock-variable-name-face))

@@ -53,9 +53,9 @@
               (cl-letf* ((keyword-list (seq-map (lambda (x)
                                                   (symbol-name (cl-rest x)))
                                                 keyword-rules))
-                         (keyword-regexp (concat "(\\("
-                                                 (regexp-opt keyword-list)
-                                                 "\\)\\>")))
+                         (keyword-regexp (seq-concatenate 'string "(\\("
+                                                          (regexp-opt keyword-list)
+                                                          "\\)\\>")))
                 (font-lock-add-keywords  'emacs-lisp-mode
                                          `((,keyword-regexp 1 ',face-name))))
               (seq-each (lambda (x)

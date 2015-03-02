@@ -28,8 +28,8 @@
 
 (cl-defun vendle:option-info-set-infopath (path)
   (setenv "INFOPATH"
-          (concat path ":"
-                  (getenv "INFOPATH"))))
+          (seq-concatenate 'string path ":"
+                           (getenv "INFOPATH"))))
 
 (provide 'vendle-option-info)
 
