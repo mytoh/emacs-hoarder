@@ -21,7 +21,7 @@
                   (format "%s: %s"
                           (symbol-name s)
                           (slot-value package s)))
-                (object-slots package))
+                (eieio-class-slots (eieio-object-class package)))
                "\n")))
 
 (cl-defun vendle:fetch (source &optional option)
