@@ -34,6 +34,7 @@
                           (symbol-name s)
                           (slot-value package s)))
                 (object-slots package))
+                (eieio-class-slots (eieio-object-class package)))
                "\n")))
 
 (cl-defun vendle:register-register (source &optional option)
