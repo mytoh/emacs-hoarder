@@ -18,11 +18,13 @@
               (string-join
                (seq-map
                 (lambda (s)
-                  (format "%s: %s"
-                          (symbol-name s)
-                          (slot-value package s))
-                  ;; (symbol-name (eieio-slot-descriptor-name s))
-                  )
+                  ;; (format "%s: %s"
+                  ;;         (symbol-name s)
+                  ;;         (slot-value package s))
+                  (let ((slot-symbol (eieio-slot-descriptor-name s)))
+                    (format "- %s :: %s"
+                            slot-symbol
+                            (slot-value package slot-symbol))))
                 (eieio-class-slots (eieio-object-class package)))
                "\n")))
 
