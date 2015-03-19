@@ -32,8 +32,9 @@
                 (lambda (s)
                   (format "%s: %s"
                           (symbol-name s)
-                          (slot-value package s)))
-                (object-slots package))
+                          (slot-value package s))
+                  ;; (symbol-name (eieio-slot-descriptor-name s))
+                  )
                 (eieio-class-slots (eieio-object-class package)))
                "\n")))
 
