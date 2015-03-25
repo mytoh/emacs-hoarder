@@ -8,7 +8,7 @@
 
 (cl-defun helm-vendle-init ()
   (setq helm-vendle-candidates
-        *vendle-package-list*))
+        vendle:*packages*))
 
 (cl-defun helm-vendle-action-update (_candidate)
   (cl-letf ((pkgs (helm-marked-candidates)))

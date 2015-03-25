@@ -25,7 +25,7 @@
         (cl-equalp key (vendle:package-path p)))
        (`load-path
         (cl-equalp key (vendle:package-load-path p)))))
-   *vendle-package-list*))
+   vendle:*packages*))
 
 (cl-defun vendle:registered-p (name)
   (if (vendle:search-registered name 'name)

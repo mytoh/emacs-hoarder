@@ -27,7 +27,7 @@
   (and (file-exists-p (vendle:package-path package))
        (seq-filter
         (lambda (p) (vendle:package-compare-fn p package))
-        *vendle-package-list*)))
+        vendle:*packages*)))
 
 (cl-defun vendle:directory-git-p (p)
   (file-directory-p (expand-file-name ".git" p)))
@@ -53,7 +53,7 @@
   (vendle:add-to-list  'custom-theme-load-path (vendle:package-load-path package)))
 
 (cl-defmethod vendle:add-to-package-list ((package vendle:<package>))
-  (vendle:append-to-list  '*vendle-package-list* package))
+  (vendle:append-to-list  'vendle:*packages* package))
 
 ;;;; utilily functions
 (cl-defun vendle:concat-path (&rest parts)
@@ -78,7 +78,7 @@
     (insert "\n")))
 
 (cl-defun vendle:foreach-package-list (fn)
-  (seq-each fn *vendle-package-list*))
+  (seq-each fn vendle:*packages*))
 
 (cl-defun vendle:empty-buffer-p (buffer)
   "Check if BUFFER have contens."
@@ -89,7 +89,7 @@
    (lambda (p)
      (cl-find-if (lambda (v) (cl-equalp (vendle:package-name v)
                                    p))
-                 *vendle-package-list*))
+                 vendle:*packages*))
    (seq-map
     (lambda (p) (format "%s" p))
     package-activated-list)))

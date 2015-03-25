@@ -20,7 +20,7 @@
     (cl-delete-if
      (lambda (p) (cl-equalp (vendle:package-name package)
                        (vendle:package-name p)))
-     *vendle-package-list*)
+     vendle:*packages*)
     (vendle:message "removing files")
     (delete-directory (vendle:package-path package) 'recursive)))
 

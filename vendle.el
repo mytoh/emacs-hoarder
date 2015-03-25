@@ -24,10 +24,10 @@
 (defcustom vendle-directory
   (vendle:concat-path user-emacs-directory (file-name-as-directory "vendle"))
   "default install directory")
-(defvar *vendle-package-list* '())
+(defvar vendle:*packages* '())
 
 (cl-defun vendle:initialize (&optional path)
-  (setq *vendle-package-list* nil)
+  (setq vendle:*packages* nil)
   (when path
     (setq vendle-directory path))
   (unless (file-exists-p vendle-directory)
