@@ -36,10 +36,10 @@
             :type symbol
             :initform nil
             :accessor vendle:package-compile)
-   (deps :initarg :deps
-         :type list
-         :initform nil
-         :accessor vendle:package-deps)
+   (dependency :initarg :dependency
+               :type list
+               :initform nil
+               :accessor vendle:package-dependency)
    (build :initarg :build
           :type (or list string)
           :initform nil

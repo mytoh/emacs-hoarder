@@ -46,7 +46,7 @@
                    :load-path lpath
                    :url (cl-concatenate 'string "git@github.com:" source)
                    :compile (cl-getf option :compile t)
-                   :deps (cl-getf option :deps nil)
+                   :dependency (cl-getf option :depends nil)
                    :build (cl-getf option :build nil)
                    :info (cl-getf option :info nil)
                    :origin origin

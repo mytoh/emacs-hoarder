@@ -97,7 +97,7 @@
 
 
 (cl-defmethod vendle:resolve-deps ((package vendle:<package>))
-  (if-let ((deps (vendle:package-deps package)))
+  (if-let ((deps (vendle:package-dependency package)))
       (seq-each
        #'vendle:install-dep
        deps)

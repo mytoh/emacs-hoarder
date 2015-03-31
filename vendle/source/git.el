@@ -22,7 +22,7 @@
                    :load-path lpath
                    :url source
                    :compile compile
-                   :deps (cl-getf option :deps nil)
+                   :dependency (cl-getf option :depends nil)
                    :build (cl-getf option :build nil)
                    :info (cl-getf option :info nil)
                    :origin origin
