@@ -44,7 +44,7 @@
                    :name name
                    :path path
                    :load-path lpath
-                   :url (cl-concatenate 'string "git@github.com:" source)
+                   :url (seq-concatenate 'string "git@github.com:" source)
                    :compile (cl-getf option :compile t)
                    :dependency (cl-getf option :depends nil)
                    :build (cl-getf option :build nil)
