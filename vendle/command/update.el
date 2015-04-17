@@ -13,7 +13,7 @@
 
 ;;;; update
 
-(cl-defun vendle:update-packages ()
+(cl-defun vendle:update-all-packages ()
   (when (file-exists-p vendle-directory)
     (vendle:foreach-package-list #'vendle:update-package)))
 
@@ -51,7 +51,7 @@
 (cl-defun vendle:update ()
   (interactive)
   (vendle:message "package update start")
-  (vendle:update-packages)
+  (vendle:update-all-packages)
   (vendle:message "package update finish"))
 
 
