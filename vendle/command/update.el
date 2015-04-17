@@ -48,7 +48,7 @@
              msg))))
 
 ;; ###autoload
-(cl-defun vendle-update ()
+(cl-defun vendle:update ()
   (interactive)
   (vendle:message "package update start")
   (vendle:update-packages)

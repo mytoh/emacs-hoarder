@@ -24,7 +24,7 @@
        paths)))
 
 ;;;###autoload
-(cl-defun vendle-clean ()
+(cl-defun vendle:clean ()
   (interactive)
   (vendle:message "package clean start")
   (vendle:clean-packages)

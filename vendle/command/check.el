@@ -17,7 +17,7 @@
 ;;;; commands
 
 ;;;###autoload
-(cl-defun vendle-check ()
+(cl-defun vendle:check ()
   "Install packages using `vendle:install-packages'"
   (interactive)
   (vendle:message "package check start")

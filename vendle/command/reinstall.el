@@ -15,7 +15,7 @@
   (vendle:install-package package))
 
 ;;;###autoload
-(cl-defun vendle-reinstall ()
+(cl-defun vendle:reinstall ()
   (interactive)
   (vendle:message "package reinstall start")
   (vendle:reinstall-package)
