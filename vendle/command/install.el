@@ -23,6 +23,12 @@
                                   (if (vendle:package-recursive package)
                                       " --recursive "
                                     "")
+                                  (if (vendle:package-branch package)
+                                      (seq-concatenate 'string
+                                                       " --branch "
+                                                       (vendle:package-branch package)
+                                                       " ")
+                                    "")
                                   (vendle:package-url package)
                                   " "
                                   (vendle:concat-path vendle-directory

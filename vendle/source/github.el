@@ -52,7 +52,8 @@
                    :origin origin
                    :tag (cl-getf option :tag nil)
                    :desc (cl-getf option :desc "")
-                   :recursive (cl-getf option :recursive))))
+                   :recursive (cl-getf option :recursive)
+                   :branch (cl-getf option :branch))))
 
 (cl-defun vendle:make-package-name-github (source option)
   (if option

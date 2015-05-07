@@ -63,7 +63,11 @@
    (recursive :initarg :recursive
               :type (or null t)
               :initform nil
-              :accessor vendle:package-recursive)))
+              :accessor vendle:package-recursive)
+   (branch :initarg :branch
+           :type (or null string)
+           :initform nil
+           :accessor vendle:package-branch)))
 
 (cl-defun vendle:make-package (source option)
   (cl-letf ((s (string-trim source)))
