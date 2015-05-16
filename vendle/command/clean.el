@@ -13,7 +13,7 @@
 
 ;;;; clean
 (cl-defun vendle:clean-packages ()
-  (if-let ((paths (cl-remove-if
+  (if-let ((paths (seq-remove
                    (lambda (dir)
                      (vendle:search-registered dir 'path))
                    (directory-files vendle-directory 'absolute (rx (not (any ".")))))))
