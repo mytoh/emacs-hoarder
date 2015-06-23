@@ -2,19 +2,19 @@
 
 (require 'seq)
 
-(cl-defun vendle:source-git-p (source)
+(cl-defun hoarder:source-git-p (source)
   (cond ((or (string-match (rx "git://") source)
              (string-match (rx ".git" (zero-or-one "/") line-end) source))
          t)
         (t nil)))
 
-(cl-defun vendle:make-package-git (source option)
-  (cl-letf ((name (vendle:make-package-name-git source option))
-            (path (vendle:make-package-path-git source option))
-            (lpath (vendle:make-package-load-path-git source option))
-            (compile (vendle:make-package-compile-git source option))
-            (origin (vendle:make-package-origin-git source option)))
-    (make-instance 'vendle:<package>
+(cl-defun hoarder:make-package-git (source option)
+  (cl-letf ((name (hoarder:make-package-name-git source option))
+            (path (hoarder:make-package-path-git source option))
+            (lpath (hoarder:make-package-load-path-git source option))
+            (compile (hoarder:make-package-compile-git source option))
+            (origin (hoarder:make-package-origin-git source option)))
+    (make-instance 'hoarder:<package>
                    :type 'git
                    :site ""
                    :name name
@@ -31,12 +31,12 @@
                    :recursive (cl-getf option :recursive)
                    :branch (cl-getf option :branch))))
 
-(cl-defun vendle:make-package-compile-git (source option)
+(cl-defun hoarder:make-package-compile-git (source option)
   (if (cl-getf option :build nil)
       nil
     (cl-getf option :compile t)))
 
-(cl-defun vendle:make-package-name-git (source option)
+(cl-defun hoarder:make-package-name-git (source option)
   (if option
       (cl-letf ((name (cl-getf option :name)))
         (if name
@@ -44,27 +44,27 @@
           (file-name-base source)))
     (file-name-base source)))
 
-(cl-defun vendle:make-package-path-git (source option)
+(cl-defun hoarder:make-package-path-git (source option)
   (cl-letf ((p (cl-getf option :path nil))
-            (origin (vendle:make-package-origin-git source option)))
+            (origin (hoarder:make-package-origin-git source option)))
     (if p
-        (expand-file-name p vendle-directory)
-      (expand-file-name origin vendle-directory))))
+        (expand-file-name p hoarder-directory)
+      (expand-file-name origin hoarder-directory))))
 
-(cl-defun vendle:make-package-load-path-git (source option)
+(cl-defun hoarder:make-package-load-path-git (source option)
   (cl-letf ((path (cl-getf option :load-path nil))
-            (origin (vendle:make-package-origin-git source option)))
+            (origin (hoarder:make-package-origin-git source option)))
     (if path
         (if (listp path)
             (seq-map
              (lambda (p)
-               (vendle:concat-path vendle-directory origin p))
+               (hoarder:concat-path hoarder-directory origin p))
              path)
-          (vendle:concat-path vendle-directory origin path))
-      (vendle:concat-path vendle-directory origin))))
+          (hoarder:concat-path hoarder-directory origin path))
+      (hoarder:concat-path hoarder-directory origin))))
 
 
-(cl-defun vendle:make-package-origin-git (source option)
+(cl-defun hoarder:make-package-origin-git (source option)
   (cl-letf ((origin (cl-getf option :origin nil)))
     (if origin
         origin
@@ -77,7 +77,7 @@
                                        "" source))
             (t source)))))
 
-(provide 'vendle-source-git)
+(provide 'hoarder-source-git)
 
 ;; Local Variables:
 ;; coding: utf-8

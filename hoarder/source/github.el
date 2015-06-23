@@ -2,7 +2,7 @@
 
 (require 'seq)
 
-(cl-defun vendle:source-site-github-p (source)
+(cl-defun hoarder:source-site-github-p (source)
   (cond
     ((string-match (rx "github:" (submatch (+ (not (in "/")))
                                            "/"
@@ -18,7 +18,7 @@
      t)
     (t nil)))
 
-(cl-defun vendle:source-site-format-github (source)
+(cl-defun hoarder:source-site-format-github (source)
   (cond
     ((string-match (rx "github:" (submatch (+ (not (in "/")))
                                            "/"
@@ -33,12 +33,12 @@
                    source)
      (match-string-no-properties 0 source))))
 
-(cl-defun vendle:make-package-github (source option)
-  (cl-letf ((name (vendle:make-package-name-github source option))
-            (path (vendle:make-package-path-github source option))
-            (lpath (vendle:make-package-load-path-github source option))
-            (origin (vendle:make-package-origin-github source option)))
-    (make-instance 'vendle:<package>
+(cl-defun hoarder:make-package-github (source option)
+  (cl-letf ((name (hoarder:make-package-name-github source option))
+            (path (hoarder:make-package-path-github source option))
+            (lpath (hoarder:make-package-load-path-github source option))
+            (origin (hoarder:make-package-origin-github source option)))
+    (make-instance 'hoarder:<package>
                    :type 'git
                    :site "github"
                    :name name
@@ -55,7 +55,7 @@
                    :recursive (cl-getf option :recursive)
                    :branch (cl-getf option :branch))))
 
-(cl-defun vendle:make-package-name-github (source option)
+(cl-defun hoarder:make-package-name-github (source option)
   (if option
       (cl-letf ((name (cl-getf option :name)))
         (if name
@@ -63,26 +63,26 @@
           (cl-second (split-string source "/"))))
     (cl-second (split-string source "/"))))
 
-(cl-defun vendle:make-package-load-path-github (source option)
+(cl-defun hoarder:make-package-load-path-github (source option)
   (cl-letf ((path (cl-getf option :load-path nil))
-            (origin (vendle:make-package-origin-github source option)))
+            (origin (hoarder:make-package-origin-github source option)))
     (if path
         (if (listp path)
             (seq-map
              (lambda (p)
-               (vendle:concat-path vendle-directory origin p))
+               (hoarder:concat-path hoarder-directory origin p))
              path)
-          (vendle:concat-path vendle-directory origin path))
-      (vendle:concat-path vendle-directory origin))))
+          (hoarder:concat-path hoarder-directory origin path))
+      (hoarder:concat-path hoarder-directory origin))))
 
-(cl-defun vendle:make-package-path-github (source option)
+(cl-defun hoarder:make-package-path-github (source option)
   (cl-letf ((path (cl-getf option :path))
-            (origin (vendle:make-package-origin-github source option)))
+            (origin (hoarder:make-package-origin-github source option)))
     (if path
-        (vendle:concat-path vendle-directory path)
-      (vendle:concat-path vendle-directory origin))))
+        (hoarder:concat-path hoarder-directory path)
+      (hoarder:concat-path hoarder-directory origin))))
 
-(cl-defun vendle:make-package-origin-github (source option)
+(cl-defun hoarder:make-package-origin-github (source option)
   (cl-letf ((origin (cl-getf option :origin nil)))
     (if origin
         origin
@@ -111,7 +111,7 @@
                           "/"
                           (match-string-no-properties 2 source)))))))
 
-(provide 'vendle-source-github)
+(provide 'hoarder-source-github)
 
 ;; Local Variables:
 ;; coding: utf-8

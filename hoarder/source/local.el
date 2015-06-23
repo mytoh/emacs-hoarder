@@ -2,10 +2,10 @@
 
 ;;; Code:
 
-(cl-defun vendle:make-package-local (source option)
-  (cl-letf ((name (vendle:make-package-name-local source option))
-            (lpath (vendle:make-package-load-path-local source option)))
-    (make-instance 'vendle:<package>
+(cl-defun hoarder:make-package-local (source option)
+  (cl-letf ((name (hoarder:make-package-name-local source option))
+            (lpath (hoarder:make-package-load-path-local source option)))
+    (make-instance 'hoarder:<package>
                    :type 'local
                    :name name
                    :path source
@@ -18,14 +18,14 @@
                    :tag (cl-getf option :tag nil)
                    :desc (cl-getf option :desc ""))))
 
-(cl-defun vendle:make-package-name-local (source option)
+(cl-defun hoarder:make-package-name-local (source option)
   (if option
       (thread-first option
         (cl-getf :name)
         (if name (file-name-nondirectory source)))
     (file-name-nondirectory source)))
 
-(cl-defun vendle:make-package-load-path-local (source option)
+(cl-defun hoarder:make-package-load-path-local (source option)
   (if option
       (cl-letf ((path (cl-getf option :load-path)))
         (if path
@@ -33,12 +33,12 @@
           source))
     source))
 
-(cl-defun vendle:make-package-url-local (source option)
+(cl-defun hoarder:make-package-url-local (source option)
   (if option
       (if-let ((url (cl-getf option :url)))
           url "")
     ""))
 
-(provide 'vendle-source-local)
+(provide 'hoarder-source-local)
 
 ;;; local.el ends here

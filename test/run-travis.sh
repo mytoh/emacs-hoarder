@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 EMACS=${EMACS:-$(which emacs)}
-SCRIPT="test/vendle-test.el"
+SCRIPT="test/hoarder-test.el"
 FUNCTION="main"
 
 ${EMACS} --version
