@@ -33,11 +33,7 @@
   (file-directory-p (expand-file-name ".git" p)))
 
 (cl-defun hoarder:append-to-list (var elem)
-  (if (listp elem)
-      (seq-map
-       (lambda (e) (add-to-list var e 'append))
-       elem)
-    (add-to-list var elem 'append)))
+  (add-to-list var elem))
 
 (cl-defun hoarder:add-to-list (var elem)
   (if (listp elem)
@@ -90,7 +86,7 @@
   (seq-filter
    (lambda (p)
      (cl-find-if (lambda (v) (cl-equalp (glof:get v :name)
-                                        p))
+                                   p))
                  hoarder:*packages*))
    (seq-map
     (lambda (p) (format "%s" p))
