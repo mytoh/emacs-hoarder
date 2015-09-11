@@ -64,9 +64,11 @@
                        'face
                        'font-lock-keyword-face)
            (if tag (seq-concatenate 'string "\t" tag) "")
-           (propertize (glof:get package :origin)
-                       'face
-                       'font-lock-variable-name-face))
+           (if (glof:get package :origin "")
+               (propertize (glof:get package :origin "")
+                           'face
+                           'font-lock-variable-name-face)
+             ""))
           package)))
 
 (cl-defun helm-hoarder-propertize-tag (package face)
