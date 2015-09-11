@@ -60,13 +60,15 @@
   (seq-reduce (lambda (a b) (expand-file-name b a)) parts
               "/"))
 
-(cl-defun hoarder:message (fmt &rest text)
-  (apply #'hoarder:log fmt text)
-  (apply #'message (format "[%s] %s"
-                           (propertize "hoarder"
-                                       'face '(:foreground "#539b8f"))
-                           fmt)
-         text))
+(cl-defun hoarder:message (fmt &rest texts)
+  (if noninteractive
+      (princ (apply #'format (concat fmt "\n") texts))
+    (apply #'hoarder:log fmt texts)
+    (apply #'message (format "[%s] %s"
+                             (propertize "hoarder"
+                                         'face '(:foreground "#539b8f"))
+                             fmt)
+           texts)))
 
 (cl-defun hoarder:log (fmt &rest texts)
   (with-current-buffer (get-buffer-create hoarder:log-buffer-name)
