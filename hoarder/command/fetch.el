@@ -20,15 +20,16 @@
                    ;; (format "%s: %s"
                    ;;         (symbol-name s)
                    ;;         (slot-value package s))
-		   (format "- %s :: %s"
-			   (glof:stringify key)
-			   (glof:get package key)))
+                   (format "- %s :: %s"
+                           (glof:stringify key)
+                           (glof:get package key)))
                  (glof:keys package))
                 "\n")))
 
 (cl-defun hoarder:fetch (source &optional option)
-  (cl-letf* ((package (hoarder:make-package source option)))
-    (hoarder:fetch-set-options package option)
+  (cl-letf* ((package (thread-first source
+                        (hoarder:make-package option)
+                        (hoarder:fetch-set-options option))))
     (hoarder:add-to-package-list package)
     (hoarder:option-info package)
     (hoarder:message "registered %s"    (glof:get package :name))
