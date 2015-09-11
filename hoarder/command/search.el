@@ -18,13 +18,13 @@
    (lambda (p)
      (pcase term
        (`name
-        (cl-equalp key (hoarder:package-name p)))
+        (cl-equalp key (glof:get p :name)))
        (`type
-        (cl-equalp key (hoarder:package-type p)))
+        (cl-equalp key (glof:get p :type)))
        (`path
-        (cl-equalp key (hoarder:package-path p)))
+        (cl-equalp key (glof:get p :path)))
        (`load-path
-        (cl-equalp key (hoarder:package-load-path p)))))
+        (cl-equalp key (glof:get p :load-path)))))
    hoarder:*packages*))
 
 (cl-defun hoarder:registered-p (name)

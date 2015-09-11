@@ -17,11 +17,11 @@
   (when (file-exists-p hoarder-directory)
     (hoarder:foreach-package-list #'hoarder:update-package)))
 
-(cl-defmethod hoarder:update-package ((package hoarder:<package>))
-  (cl-letf ((name (hoarder:package-name package))
+(cl-defun hoarder:update-package (package)
+  (cl-letf ((name (glof:get package :name))
             (path (hoarder:concat-path hoarder-directory
-                                      (hoarder:package-origin package))))
-    (when (and (cl-equalp 'git (hoarder:package-type package))
+                                       (glof:get package :origin))))
+    (when (and (cl-equalp 'git (glof:get package :type))
                (not (file-symlink-p path)))
       (cl-letf ((reporter (make-progress-reporter
                            (format  "updating package %s..."

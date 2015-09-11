@@ -1,6 +1,7 @@
 ;;; git.el -*- lexical-binding: t -*-
 
 (require 'seq)
+(require 'glof)
 
 (cl-defun hoarder:source-git-p (source)
   (cond ((or (string-match (rx "git://") source)
@@ -14,45 +15,44 @@
             (lpath (hoarder:make-package-load-path-git source option))
             (compile (hoarder:make-package-compile-git source option))
             (origin (hoarder:make-package-origin-git source option)))
-    (make-instance 'hoarder:<package>
-                   :type 'git
-                   :site ""
-                   :name name
-                   :path path
-                   :load-path lpath
-                   :url source
-                   :compile compile
-                   :dependency (cl-getf option :depends nil)
-                   :build (cl-getf option :build nil)
-                   :info (cl-getf option :info nil)
-                   :origin origin
-                   :tag (cl-getf option :tag nil)
-                   :desc (cl-getf option :desc "")
-                   :recursive (cl-getf option :recursive)
-                   :branch (cl-getf option :branch))))
+    (glof:plist :type 'git
+                :site ""
+                :name name
+                :path path
+                :load-path lpath
+                :url source
+                :compile compile
+                :dependency (glof:get option :dependency nil)
+                :build (glof:get option :build nil)
+                :info (glof:get option :info nil)
+                :origin origin
+                :tag (glof:get option :tag nil)
+                :desc (glof:get option :desc "")
+                :recursive (glof:get option :recursive)
+                :branch (glof:get option :branch))))
 
 (cl-defun hoarder:make-package-compile-git (source option)
-  (if (cl-getf option :build nil)
+  (if (glof:get option :build nil)
       nil
-    (cl-getf option :compile t)))
+    (glof:get option :compile t)))
 
 (cl-defun hoarder:make-package-name-git (source option)
   (if option
-      (cl-letf ((name (cl-getf option :name)))
+      (cl-letf ((name (glof:get option :name)))
         (if name
             name
           (file-name-base source)))
     (file-name-base source)))
 
 (cl-defun hoarder:make-package-path-git (source option)
-  (cl-letf ((p (cl-getf option :path nil))
+  (cl-letf ((p (glof:get option :path nil))
             (origin (hoarder:make-package-origin-git source option)))
     (if p
         (expand-file-name p hoarder-directory)
       (expand-file-name origin hoarder-directory))))
 
 (cl-defun hoarder:make-package-load-path-git (source option)
-  (cl-letf ((path (cl-getf option :load-path nil))
+  (cl-letf ((path (glof:get option :load-path nil))
             (origin (hoarder:make-package-origin-git source option)))
     (if path
         (if (listp path)
@@ -65,7 +65,7 @@
 
 
 (cl-defun hoarder:make-package-origin-git (source option)
-  (cl-letf ((origin (cl-getf option :origin nil)))
+  (cl-letf ((origin (glof:get option :origin nil)))
     (if origin
         origin
       (cond ((or (string-match (rx "git://") source)

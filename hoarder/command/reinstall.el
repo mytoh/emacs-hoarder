@@ -10,7 +10,7 @@
 (require 'hoarder-package "hoarder/package")
 (require 'hoarder-util "hoarder/util")
 
-(cl-defmethod hoarder:reinstall-package ((package hoarder:<package>))
+(cl-defun hoarder:reinstall-package (package)
   (hoarder:uninstall-package package)
   (hoarder:install-package package))
 

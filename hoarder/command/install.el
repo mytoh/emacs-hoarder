@@ -11,31 +11,32 @@
 
 ;;;; install
 
-(cl-defmethod hoarder:install-package ((package hoarder:<package>))
-  (unless (or (cl-equalp 'local (hoarder:package-type package))
-              (file-exists-p (hoarder:package-path package)))
-    (pcase (hoarder:package-type package)
+(cl-defun hoarder:install-package (package)
+  (unless (or (cl-equalp 'local (glof:get package :type))
+	      (and (glof:get package :path)
+		  (file-exists-p (glof:get package :path)) )              )
+    (pcase (glof:get package :type)
       ('git (hoarder:install-package-git package)))))
 
-(cl-defmethod hoarder:install-package-git ((package hoarder:<package>))
-  (hoarder:message "installing package %s" (hoarder:package-name package))
+(cl-defun hoarder:install-package-git (package)
+  (hoarder:message "installing package %s" (glof:get package :name))
   (shell-command (seq-concatenate 'string  "git clone --quiet "
-                                  (if (hoarder:package-recursive package)
+                                  (if (glof:get package :recursive)
                                       " --recursive "
                                     "")
-                                  (if (hoarder:package-branch package)
+                                  (if (glof:get package :branch)
                                       (seq-concatenate 'string
                                                        " --branch "
-                                                       (hoarder:package-branch package)
+                                                       (glof:get package :branch)
                                                        " ")
                                     "")
-                                  (hoarder:package-url package)
+                                  (glof:get package :url)
                                   " "
                                   (hoarder:concat-path hoarder-directory
-                                                      (hoarder:package-origin package)))
+                                                       (glof:get package :origin)))
                  hoarder-directory)
-  (hoarder:message "compiling %s" (hoarder:package-name package))
-  (hoarder:option-compile package (hoarder:package-path package))
+  (hoarder:message "compiling %s" (glof:get package :name))
+  (hoarder:option-compile package (glof:get package :path))
   (hoarder:option-build package)
   (hoarder:option-info package))
 

@@ -18,13 +18,13 @@
   "*hoarder log*")
 
 (cl-defun hoarder:package-compare-fn (p1 p2)
-  (and (cl-equalp (hoarder:package-name p1)
-                  (hoarder:package-name p2))
-       (cl-equalp (hoarder:package-origin p1)
-                  (hoarder:package-origin p2))))
+  (and (cl-equalp (glof:get p1 :name)
+                  (glof:get p2 :name))
+       (cl-equalp (glof:get p1 :origin)
+                  (glof:get p2 :origin))))
 
-(cl-defmethod hoarder:installed? ((package hoarder:<package>))
-  (and (file-exists-p (hoarder:package-path package))
+(cl-defun hoarder:installed? (package)
+  (and (file-exists-p (glof:get package :path))
        (seq-filter
         (lambda (p) (hoarder:package-compare-fn p package))
         hoarder:*packages*)))
@@ -46,13 +46,13 @@
        elem)
     (add-to-list var elem)))
 
-(cl-defmethod hoarder:add-to-load-path ((package hoarder:<package>))
-  (hoarder:add-to-list 'load-path (hoarder:package-load-path package)))
+(cl-defun hoarder:add-to-load-path (package)
+  (hoarder:add-to-list 'load-path (glof:get package :load-path)))
 
-(cl-defmethod hoarder:add-to-theme-path ((package hoarder:<package>))
-  (hoarder:add-to-list  'custom-theme-load-path (hoarder:package-load-path package)))
+(cl-defun hoarder:add-to-theme-path (package)
+  (hoarder:add-to-list  'custom-theme-load-path (glof:get package :load-path)))
 
-(cl-defmethod hoarder:add-to-package-list ((package hoarder:<package>))
+(cl-defun hoarder:add-to-package-list (package)
   (hoarder:append-to-list  'hoarder:*packages* package))
 
 ;;;; utilily functions
@@ -89,7 +89,7 @@
 (cl-defun hoarder:find-duplicate-packages ()
   (seq-filter
    (lambda (p)
-     (cl-find-if (lambda (v) (cl-equalp (hoarder:package-name v)
+     (cl-find-if (lambda (v) (cl-equalp (glof:get v :name)
                                    p))
                  hoarder:*packages*))
    (seq-map

@@ -1,4 +1,4 @@
-;/bin/tcsh;; info -*- lexical-binding: t; coding: utf-8; -*-
+                                        ;/bin/tcsh;; info -*- lexical-binding: t; coding: utf-8; -*-
 
 ;;; Code:
 
@@ -9,19 +9,19 @@
 
 (require 'hoarder-package "hoarder/package")
 
-(cl-defmethod hoarder:option-info ((package hoarder:<package>))
-  (cl-letf ((info-path (hoarder:package-info package)))
+(cl-defun hoarder:option-info (package)
+  (cl-letf ((info-path (glof:get package :info)))
     (hoarder:%option-info info-path package)))
 
-(cl-defmethod hoarder:%option-info ((info-paths list) (package hoarder:<package>))
+(cl-defmethod hoarder:%option-info ((info-paths list) package)
   (seq-each
    (lambda (path)
      (hoarder:option-info-set-infopath
-      (expand-file-name path (hoarder:package-path package))))
+      (expand-file-name path (glof:get package :path))))
    info-paths))
 
-(cl-defmethod hoarder:%option-info ((info-path string) (package hoarder:<package>))
-  (cl-letf ((path (expand-file-name info-path (hoarder:package-path package))))
+(cl-defmethod hoarder:%option-info ((info-path string) package)
+  (cl-letf ((path (expand-file-name info-path (glof:get  package :path))))
     (hoarder:message "add directory %s to INFOPATH" path)
     (hoarder:option-info-set-infopath
      path)))

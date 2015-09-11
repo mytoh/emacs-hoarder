@@ -13,16 +13,16 @@
 (require 'hoarder-clean "hoarder/command/clean")
 
 ;;;; uninstall
-(cl-defmethod hoarder:uninstall-package ((package hoarder:<package>))
-  (when (and (not (cl-equalp 'local (hoarder:package-type package)))
-             (file-exists-p (hoarder:package-path package)))
+(cl-defun hoarder:uninstall-package (package)
+  (when (and (not (cl-equalp 'local (glof:get package :type)))
+             (file-exists-p (glof:get package :path)))
     (hoarder:message "unregister package info")
     (cl-delete-if
-     (lambda (p) (cl-equalp (hoarder:package-name package)
-                       (hoarder:package-name p)))
+     (lambda (p) (cl-equalp (glof:get package :name)
+                       (glof:get p :name)))
      hoarder:*packages*)
     (hoarder:message "removing files")
-    (delete-directory (hoarder:package-path package) 'recursive)))
+    (delete-directory (glof:get package :path) 'recursive)))
 
 (cl-defun hoarder:uninstall-package-by-name (name)
   (cl-letf ((target (hoarder:search-registered "web-mode" 'name)))

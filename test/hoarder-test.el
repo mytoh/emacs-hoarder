@@ -35,11 +35,11 @@
   (hoarder:register "mytoh/fish-mode")
   (should (hoarder:registered-p "fish-mode"))
   (should (cl-equalp 'git
-                     (hoarder:package-type
-                      (car (hoarder:search-registered "fish-mode" 'name)))))
+                     (glof:get (car (hoarder:search-registered "fish-mode" 'name))
+                               :type)))
   (should (cl-equalp "github"
-                     (hoarder:package-site
-                      (car (hoarder:search-registered "fish-mode" 'name)))))
+                     (glof:get 
+                      (car (hoarder:search-registered "fish-mode" 'name)) :site)))
   (when (file-exists-p hoarder-directory)
     (delete-directory hoarder-directory 'recursive)))
 

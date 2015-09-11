@@ -16,7 +16,7 @@
      #'helm-hoarder-action-update-1
      pkgs)))
 
-(cl-defmethod helm-hoarder-action-update-1 ((package hoarder:<package>))
+(cl-defun helm-hoarder-action-update-1 (package)
   (hoarder:update-package package))
 
 (cl-defun helm-hoarder-action-reinstall (_candidate)
@@ -25,23 +25,23 @@
      #'helm-hoarder-action-reinstall-1
      pkgs)))
 
-(cl-defmethod helm-hoarder-action-reinstall-1 ((package hoarder:<package>))
+(cl-defun helm-hoarder-action-reinstall-1 (package)
   (hoarder:reinstall-package package))
 
 ;; http://rubikitch.com/2014/09/02/helm-quelpa/
-(cl-defmethod helm-hoarder-action-magit-log ((package hoarder:<package>))
-  (with-helm-default-directory (hoarder:package-path package)
+(cl-defun helm-hoarder-action-magit-log (package)
+  (with-helm-default-directory (glof:get package :path)
       (magit-log '("HEAD"))))
 
-(cl-defmethod helm-hoarder-action-open-dired ((package hoarder:<package>))
-  (dired (hoarder:package-path package)))
+(cl-defun helm-hoarder-action-open-dired (package)
+  (dired (glof:get package :path)))
 
-(cl-defmethod helm-hoarder-action-find-file ((package hoarder:<package>))
-  (helm-find-files-1 (file-name-as-directory (hoarder:package-path package))))
+(cl-defun helm-hoarder-action-find-file (package)
+  (helm-find-files-1 (file-name-as-directory (glof:get package :path))))
 
-(cl-defmethod helm-hoarder-action-view-readme-or-src ((package hoarder:<package>))
+(cl-defun helm-hoarder-action-view-readme-or-src (package)
   (cl-loop for file in (list "README.md" "README.org" "README")
-     for path = (expand-file-name file (hoarder:package-path package))
+     for path = (expand-file-name file (glof:get package :path))
      when (file-exists-p path)
      return (view-file path)))
 
@@ -56,21 +56,21 @@
    #'helm-hoarder-transformer-format-1
    candidates))
 
-(cl-defmethod helm-hoarder-transformer-format-1 ((package hoarder:<package>))
+(cl-defun helm-hoarder-transformer-format-1 (package)
   (cl-letf ((tag (helm-hoarder-propertize-tag package 'font-lock-doc-face)))
     (cons (format
            "%s%s\t%s"
-           (propertize (hoarder:package-name package)
+           (propertize (glof:get package :name)
                        'face
                        'font-lock-keyword-face)
            (if tag (seq-concatenate 'string "\t" tag) "")
-           (propertize (hoarder:package-origin package)
+           (propertize (glof:get package :origin)
                        'face
                        'font-lock-variable-name-face))
           package)))
 
-(cl-defmethod helm-hoarder-propertize-tag ((package hoarder:<package>) face)
-  (cl-letf ((tag (hoarder:package-tag package)))
+(cl-defun helm-hoarder-propertize-tag (package face)
+  (cl-letf ((tag (glof:get package :tag)))
     (if tag
         (if (stringp tag)
             (propertize tag 'face face)

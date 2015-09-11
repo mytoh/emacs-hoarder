@@ -8,8 +8,8 @@
 
 (require 'hoarder-package "hoarder/package")
 
-(cl-defmethod hoarder:option-compile ((package hoarder:<package>) path)
-  (if (hoarder:package-compile package)
+(cl-defun hoarder:option-compile (package path)
+  (if (glof:get package :compile)
       (byte-recompile-directory path 0)))
 
 (provide 'hoarder-option-compile)

@@ -3,7 +3,6 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'eieio)
 (require 'seq)
 
 (require 'hoarder-source-github "hoarder/source/github")
@@ -25,20 +24,19 @@
     (t
      (hoarder:register-register source option))))
 
-(cl-defmethod hoarder:message-register ((package hoarder:<package>))
-  (hoarder:log (seq-concatenate 'string "\n* " (hoarder:package-name package) "\n%s")
-              (string-join
-               (seq-map
-                (lambda (s)
-                  ;; (format "%s: %s"
-                  ;;         (symbol-name s)
-                  ;;         (slot-value package s))
-                  (let ((slot-symbol (eieio-slot-descriptor-name s)))
-                    (format "- %s :: %s"
-                            slot-symbol
-                            (slot-value package slot-symbol))))
-                (eieio-class-slots (eieio-object-class package)))
-               "\n")))
+(cl-defun hoarder:message-register (package)
+  (hoarder:log (seq-concatenate 'string "\n* " (glof:get package :name) "\n%s")
+               (string-join
+                (seq-map
+                 (lambda (key)
+                   ;; (format "%s: %s"
+                   ;;         (symbol-name s)
+                   ;;         (slot-value package s))
+		   (format "- %s :: %s"
+                             (glof:stringify key)
+                             (glof:get package key)))
+                 (glof:keys package))
+                "\n")))
 
 (cl-defun hoarder:register-register (source &optional option)
   (cl-letf* ((package (hoarder:make-package source option)))
@@ -47,7 +45,7 @@
       (hoarder:add-to-load-path package)
       (hoarder:add-to-package-list package)
       (hoarder:option-info package)
-      (hoarder:message "registered %s"  (hoarder:package-name package))
+      (hoarder:message "registered %s"  (glof:get package :name))
       (hoarder:message-register package)
       )))
 
@@ -58,7 +56,7 @@
     (hoarder:add-to-package-list package)
     (hoarder:option-info package)
     (hoarder:message "registered %s locally"
-                    (hoarder:package-name package))
+                     (glof:get package :name))
     (hoarder:message-register package)
     ))
 
@@ -70,7 +68,7 @@
       (hoarder:add-to-load-path package)
       (hoarder:add-to-package-list package)
       (hoarder:message "registered %s as theme"
-                      (hoarder:package-name package))
+                       (glof:get package :name))
       (hoarder:message-register package)
       )))
 
@@ -80,13 +78,13 @@
     (hoarder:add-to-theme-path package)
     (hoarder:add-to-package-list package)
     (hoarder:message "registered %s as local theme"
-                    (hoarder:package-name package))
+                     (glof:get package :name))
     (hoarder:message-register package)
     ))
 
 
 (cl-defun hoarder:register-theme-default-tag (option)
-  (cl-letf ((o (cl-getf option :tag nil)))
+  (cl-letf ((o (glof:get option :tag nil)))
     (if o
         (cond ((cl-equalp "theme" o)
                option)
@@ -96,8 +94,8 @@
       (cons :tag (cons "theme" option)))))
 
 
-(cl-defmethod hoarder:resolve-deps ((package hoarder:<package>))
-  (if-let ((deps (hoarder:package-dependency package)))
+(cl-defun hoarder:resolve-deps (package)
+  (if-let ((deps (glof:get package :dependency)))
       (seq-each
        #'hoarder:install-dep
        deps)
@@ -105,9 +103,9 @@
 
 (cl-defmethod hoarder:install-dep ((dep list))
   (hoarder:register (cl-first dep)
-                   (if (cl-rest dep)
-                       (cl-second dep)
-                     nil)))
+                    (if (cl-rest dep)
+                        (cl-second dep)
+                      nil)))
 
 (cl-defmethod hoarder:install-dep ((dep string))
   (hoarder:register dep nil))

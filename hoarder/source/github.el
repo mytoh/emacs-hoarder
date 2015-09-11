@@ -38,33 +38,32 @@
             (path (hoarder:make-package-path-github source option))
             (lpath (hoarder:make-package-load-path-github source option))
             (origin (hoarder:make-package-origin-github source option)))
-    (make-instance 'hoarder:<package>
-                   :type 'git
-                   :site "github"
-                   :name name
-                   :path path
-                   :load-path lpath
-                   :url (seq-concatenate 'string "git@github.com:" source)
-                   :compile (cl-getf option :compile t)
-                   :dependency (cl-getf option :depends nil)
-                   :build (cl-getf option :build nil)
-                   :info (cl-getf option :info nil)
-                   :origin origin
-                   :tag (cl-getf option :tag nil)
-                   :desc (cl-getf option :desc "")
-                   :recursive (cl-getf option :recursive)
-                   :branch (cl-getf option :branch))))
+    (glof:plist :type 'git
+                :site "github"
+                :name name
+                :path path
+                :load-path lpath
+                :url (seq-concatenate 'string "git@github.com:" source)
+                :compile (glof:get option :compile t)
+                :dependency (glof:get option :dependency nil)
+                :build (glof:get option :build nil)
+                :info (glof:get option :info nil)
+                :origin origin
+                :tag (glof:get option :tag nil)
+                :desc (glof:get option :desc "")
+                :recursive (glof:get option :recursive)
+                :branch (glof:get option :branch))))
 
 (cl-defun hoarder:make-package-name-github (source option)
   (if option
-      (cl-letf ((name (cl-getf option :name)))
+      (cl-letf ((name (glof:get option :name)))
         (if name
             name
           (cl-second (split-string source "/"))))
     (cl-second (split-string source "/"))))
 
 (cl-defun hoarder:make-package-load-path-github (source option)
-  (cl-letf ((path (cl-getf option :load-path nil))
+  (cl-letf ((path (glof:get option :load-path nil))
             (origin (hoarder:make-package-origin-github source option)))
     (if path
         (if (listp path)
@@ -76,14 +75,14 @@
       (hoarder:concat-path hoarder-directory origin))))
 
 (cl-defun hoarder:make-package-path-github (source option)
-  (cl-letf ((path (cl-getf option :path))
+  (cl-letf ((path (glof:get option :path))
             (origin (hoarder:make-package-origin-github source option)))
     (if path
         (hoarder:concat-path hoarder-directory path)
       (hoarder:concat-path hoarder-directory origin))))
 
 (cl-defun hoarder:make-package-origin-github (source option)
-  (cl-letf ((origin (cl-getf option :origin nil)))
+  (cl-letf ((origin (glof:get option :origin nil)))
     (if origin
         origin
       (cond

@@ -1,4 +1,4 @@
-;/bin/tcsh;; build -*- lexical-binding: t -*-
+                                        ;/bin/tcsh;; build -*- lexical-binding: t -*-
 
 ;;; Code:
 
@@ -9,10 +9,10 @@
 (require 'seq)
 (require 'hoarder-package "hoarder/package")
 
-(cl-defmethod hoarder:option-build ((package hoarder:<package>))
-  (when (hoarder:package-build package)
-    (cl-letf ((commands (hoarder:package-build package))
-              (path (file-name-as-directory (hoarder:package-path package))))
+(cl-defun hoarder:option-build (package)
+  (when (glof:get package :build)
+    (cl-letf ((commands (glof:get package :build))
+              (path (file-name-as-directory (glof:get package :path))))
       (seq-each
        (lambda (c)
          (cl-letf ((default-directory path))
