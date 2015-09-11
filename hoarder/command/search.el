@@ -3,7 +3,7 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'eieio)
+(require 'glof)
 (require 'subr-x)
 (require 'seq)
 

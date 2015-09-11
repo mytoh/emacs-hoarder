@@ -3,7 +3,7 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'eieio)
+(require 'glof)
 (require 'seq)
 
 (require 'hoarder-source-github "hoarder/source/github")

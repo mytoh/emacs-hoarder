@@ -3,7 +3,7 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'eieio)
+(require 'glof)
 
 (require 'hoarder-source-github "hoarder/source/github")
 (require 'hoarder-source-git "hoarder/source/git")
@@ -13,8 +13,8 @@
 
 (cl-defun hoarder:install-package (package)
   (unless (or (cl-equalp 'local (glof:get package :type))
-	      (and (glof:get package :path)
-		  (file-exists-p (glof:get package :path)) )              )
+              (and (glof:get package :path)
+                   (file-exists-p (glof:get package :path)))              )
     (pcase (glof:get package :type)
       ('git (hoarder:install-package-git package)))))
 

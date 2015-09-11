@@ -1,7 +1,7 @@
 ;;; helm-hoarder.el -*- lexical-binding: t -*-
 
 (require 'cl-lib)
-(require 'eieio)
+(require 'glof)
 (require 'helm)
 (require 'hoarder)
 (require 'seq)

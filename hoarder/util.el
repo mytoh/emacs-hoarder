@@ -4,7 +4,7 @@
 
 ;;;; requirements
 (require 'cl-lib)
-(require 'eieio)
+(require 'glof)
 (require 'subr-x)
 (require 'seq)
 
@@ -90,7 +90,7 @@
   (seq-filter
    (lambda (p)
      (cl-find-if (lambda (v) (cl-equalp (glof:get v :name)
-                                   p))
+                                        p))
                  hoarder:*packages*))
    (seq-map
     (lambda (p) (format "%s" p))

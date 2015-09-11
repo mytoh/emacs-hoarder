@@ -4,7 +4,7 @@
 
 ;;;; requirements
 (require 'cl-lib)
-(require 'eieio)
+(require 'glof)
 
 (require 'hoarder-package "hoarder/package")
 
