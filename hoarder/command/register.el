@@ -14,15 +14,20 @@
 ;;;; register
 
 (cl-defun hoarder:register (source &optional option)
-  (hoarder:handle-register source option))
+  (pcase source
+    ((and (pred file-name-absolute-p)
+          (pred file-exists-p))
+     (hoarder:handle-register `[:local ,source ,option]))
+    (_
+     (hoarder:handle-register `[:remote ,source ,option]))))
 
-(cl-defun hoarder:handle-register (source option)
-  (cond
-    ((and (file-name-absolute-p source)
-          (file-exists-p source))
-     (hoarder:register-local source option))
-    (t
-     (hoarder:register-register source option))))
+(cl-defun hoarder:handle-register (variant)
+  (pcase variant
+    (`[:local ,source ,option]
+      (hoarder:register-local source option))
+    (`[:remote ,source ,option]
+      (hoarder:register-remote
+       (hoarder:make-package source option)))))
 
 (cl-defun hoarder:message-register (package)
   (hoarder:log (seq-concatenate 'string "\n* " (glof:get package :name) "\n%s")
