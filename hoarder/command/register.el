@@ -37,22 +37,20 @@
                    ;; (format "%s: %s"
                    ;;         (symbol-name s)
                    ;;         (slot-value package s))
-		   (format "- %s :: %s"
-                             (glof:stringify key)
-                             (glof:get package key)))
+                   (format "- %s :: %s"
+                           (glof:stringify key)
+                           (glof:get package key)))
                  (glof:keys package))
                 "\n")))
 
-(cl-defun hoarder:register-register (source &optional option)
-  (cl-letf* ((package (hoarder:make-package source option)))
-    (hoarder:resolve-deps package)
-    (unless (hoarder:installed? package)
-      (hoarder:add-to-load-path package)
-      (hoarder:add-to-package-list package)
-      (hoarder:option-info package)
-      (hoarder:message "registered %s"  (glof:get package :name))
-      (hoarder:message-register package)
-      )))
+(cl-defun hoarder:register-remote (package)
+  (hoarder:resolve-deps package)
+  (unless (hoarder:installed? package)
+    (hoarder:add-to-load-path package)
+    (hoarder:add-to-package-list package)
+    (hoarder:option-info package)
+    (hoarder:message "registered %s"  (glof:get package :name))
+    (hoarder:message-register package)))
 
 (cl-defun hoarder:register-local (source &optional option)
   (cl-letf* ((path (expand-file-name source))
