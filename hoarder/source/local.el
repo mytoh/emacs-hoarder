@@ -13,15 +13,16 @@
                 :compile nil
                 :build nil
                 :info (glof:get option :info nil)
-                :origin (glof:get option :origin source)
+                :origin source
                 :tag (glof:get option :tag nil)
                 :desc (glof:get option :desc ""))))
 
 (cl-defun hoarder:make-package-name-local (source option)
   (if option
-      (thread-first option
-        (glof:get :name)
-        (if name (file-name-nondirectory source)))
+      (cl-letf ((name (glof:get option :name)))
+        (if name
+            name
+          (file-name-nondirectory source)))
     (file-name-nondirectory source)))
 
 (cl-defun hoarder:make-package-load-path-local (source option)
