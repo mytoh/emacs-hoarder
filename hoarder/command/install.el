@@ -14,7 +14,7 @@
 (cl-defun hoarder:install-package (package)
   (unless (or (cl-equalp 'local (glof:get package :type))
               (and (glof:get package :path)
-                   (file-exists-p (glof:get package :path)))              )
+                   (file-exists-p (glof:get package :path))))
     (pcase (glof:get package :type)
       ('git (hoarder:install-package-git package)))))
 
