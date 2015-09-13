@@ -7,67 +7,22 @@
 
 ;;;; package
 
-;; (defclass hoarder:<package> ()
-;;   ((type :initarg :type
-;;          :type symbol
-;;          :initform nil
-;;          :accessor hoarder:package-type)
-;;    (name :initarg :name
-;;          :type string
-;;          :initform ""
-;;          :accessor hoarder:package-name)
-;;    (url :initarg :url
-;;         :type string
-;;         :initform ""
-;;         :accessor hoarder:package-url)
-;;    (path :initarg :path
-;;          :type string
-;;          :initform ""
-;;          :accessor hoarder:package-path)
-;;    (load-path :initarg :load-path
-;;               :type (or list string)
-;;               :initform ""
-;;               :accessor hoarder:package-load-path)
-;;    (site :initarg :site
-;;          :type string
-;;          :initform ""
-;;          :accessor hoarder:package-site)
-;;    (compile :initarg :compile
-;;             :type symbol
-;;             :initform nil
-;;             :accessor hoarder:package-compile)
-;;    (dependency :initarg :dependency
-;;                :type list
-;;                :initform nil
-;;                :accessor hoarder:package-dependency)
-;;    (build :initarg :build
-;;           :type (or list string)
-;;           :initform nil
-;;           :accessor hoarder:package-build)
-;;    (info :initarg :info
-;;          :type (or list string)
-;;          :initform nil
-;;          :accessor hoarder:package-info)
-;;    (origin :initarg :origin
-;;            :type string
-;;            :initform ""
-;;            :accessor hoarder:package-origin)
-;;    (tag :initarg :tag
-;;         :type (or list string)
-;;         :initform nil
-;;         :accessor hoarder:package-tag)
-;;    (desc :initarg :desc
-;;          :type string
-;;          :initform ""
-;;          :accessor hoarder:package-desc)
-;;    (recursive :initarg :recursive
-;;               :type (or null t)
-;;               :initform nil
-;;               :accessor hoarder:package-recursive)
-;;    (branch :initarg :branch
-;;            :type (or null string)
-;;            :initform nil
-;;            :accessor hoarder:package-branch)))
+(defvar hoarder:package-template
+  '(:type nil
+    :name ""
+    :url ""
+    :path ""
+    :load-path ""
+    :site ""
+    :compile nil
+    :dependency nil
+    :build nil
+    :info nil
+    :origin ""
+    :tag nil
+    :desc ""
+    :recursive nil
+    :branch nil))
 
 (cl-defun hoarder:make-package (source option)
   (cl-letf ((s (string-trim source)))
