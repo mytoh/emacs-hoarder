@@ -24,7 +24,9 @@
 (cl-defun hoarder:handle-register (variant)
   (pcase variant
     (`[:local ,source ,option]
-      (hoarder:register-local source option))
+      (hoarder:register-local
+       (hoarder:make-package-local
+        (expand-file-name source) option)))
     (`[:remote ,source ,option]
       (hoarder:register-remote
        (hoarder:make-package source option)))))
@@ -52,16 +54,13 @@
     (hoarder:message "registered %s"  (glof:get package :name))
     (hoarder:message-register package)))
 
-(cl-defun hoarder:register-local (source &optional option)
-  (cl-letf* ((path (expand-file-name source))
-             (package (hoarder:make-package-local path option)))
-    (hoarder:add-to-load-path package)
-    (hoarder:add-to-package-list package)
-    (hoarder:option-info package)
-    (hoarder:message "registered %s locally"
-                     (glof:get package :name))
-    (hoarder:message-register package)
-    ))
+(cl-defun hoarder:register-local (package)
+  (hoarder:add-to-load-path package)
+  (hoarder:add-to-package-list package)
+  (hoarder:option-info package)
+  (hoarder:message "registered %s locally"
+                   (glof:get package :name))
+  (hoarder:message-register package))
 
 (cl-defun hoarder:register-theme (source &optional option)
   (cl-letf* ((mod-option (hoarder:register-theme-default-tag option))
