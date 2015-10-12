@@ -8,7 +8,8 @@
 
 (cl-defun helm-hoarder-init ()
   (setq helm-hoarder-candidates
-        hoarder:*packages*))
+        (seq-into hoarder:*packages*
+                  'list)))
 
 (cl-defun helm-hoarder-action-update (_candidate)
   (cl-letf ((pkgs (helm-marked-candidates)))

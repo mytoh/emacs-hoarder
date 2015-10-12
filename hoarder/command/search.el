@@ -13,22 +13,15 @@
 (require 'hoarder-util "hoarder/util")
 
 ;;;; search
-(cl-defun hoarder:search-registered (key term)
-  (seq-filter
+(cl-defun hoarder:search-registered (key target)
+  (hoarder::filter
    (lambda (p)
-     (pcase term
-       (`name
-        (cl-equalp key (glof:get p :name)))
-       (`type
-        (cl-equalp key (glof:get p :type)))
-       (`path
-        (cl-equalp key (glof:get p :path)))
-       (`load-path
-        (cl-equalp key (glof:get p :load-path)))))
+     (cl-equalp target (glof:get p key)))
    hoarder:*packages*))
 
 (cl-defun hoarder:registered-p (name)
-  (if (hoarder:search-registered name 'name)
+  (if (not (seq-empty-p
+            (hoarder:search-registered :name name)))
       t nil))
 
 (provide 'hoarder-search)

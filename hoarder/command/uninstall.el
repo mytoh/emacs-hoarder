@@ -17,16 +17,16 @@
   (when (and (not (cl-equalp 'local (glof:get package :type)))
              (file-exists-p (glof:get package :path)))
     (hoarder:message "unregister package info")
-    (cl-delete-if
-     (lambda (p) (cl-equalp (glof:get package :name)
-                       (glof:get p :name)))
-     hoarder:*packages*)
+    (setq hoarder:*package*
+          (hoarder::remove
+           (lambda (p) (hoarder:package-compare-fn p package))
+           hoarder:*packages*))
     (hoarder:message "removing files")
     (delete-directory (glof:get package :path) 'recursive)))
 
 (cl-defun hoarder:uninstall-package-by-name (name)
-  (cl-letf ((target (hoarder:search-registered "web-mode" 'name)))
-    (hoarder:uninstall-package (cl-first target))))
+  (cl-letf ((target (hoarder:search-registered :name name)))
+    (hoarder:uninstall-package (hoarder::first target))))
 
 (provide 'hoarder-uninstall)
 

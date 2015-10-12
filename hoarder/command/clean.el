@@ -15,7 +15,7 @@
 (cl-defun hoarder:clean-packages ()
   (if-let ((paths (seq-remove
                    (lambda (dir)
-                     (hoarder:search-registered dir 'path))
+                     (hoarder:search-registered :path dir))
                    (directory-files hoarder-directory 'absolute (rx (not (any ".")))))))
       (seq-each
        (lambda (p)

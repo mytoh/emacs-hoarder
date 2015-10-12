@@ -25,9 +25,10 @@
 
 (cl-defun hoarder:installed? (package)
   (and (file-exists-p (glof:get package :path))
-       (seq-filter
-        (lambda (p) (hoarder:package-compare-fn p package))
-        hoarder:*packages*)))
+       (if (seq-empty-p (hoarder::filter
+                         (lambda (p) (hoarder:package-compare-fn p package))
+                         hoarder:*packages*))
+           nil t)))
 
 (cl-defun hoarder:directory-git-p (p)
   (file-directory-p (expand-file-name ".git" p)))
@@ -49,7 +50,8 @@
   (hoarder:add-to-list  'custom-theme-load-path (glof:get package :load-path)))
 
 (cl-defun hoarder:add-to-package-list (package)
-  (hoarder:append-to-list  'hoarder:*packages* package))
+  (setq hoarder:*packages*
+        (hoarder::cons package hoarder:*packages*)))
 
 ;;;; utilily functions
 (cl-defun hoarder:concat-path (&rest parts)
@@ -85,13 +87,45 @@
 (cl-defun hoarder:find-duplicate-packages ()
   (seq-filter
    (lambda (p)
-     (cl-find-if (lambda (v) (cl-equalp (glof:get v :name)
-                                   p))
-                 hoarder:*packages*))
+     (seq-find
+      (lambda (v) (cl-equalp (glof:get v :name)
+                        p))
+      hoarder:*packages*))
    (seq-map
     (lambda (p) (format "%s" p))
     package-activated-list)))
 
+(cl-defun hoarder::map (pred seq)
+  (pcase seq
+    ((pred vectorp)
+     (seq-into (seq-map pred seq) 'vector))
+    ((pred seq-p)
+     (seq-map pred seq))))
+
+(cl-defun hoarder::remove (pred seq)
+  (pcase seq
+    ((pred vectorp)
+     (seq-into (seq-remove pred seq) 'vector))
+    ((pred seq-p)
+     (seq-remove pred seq))))
+
+(cl-defun hoarder::filter (pred seq)
+  (pcase seq
+    ((pred vectorp)
+     (seq-into (seq-filter pred seq) 'vector))
+    ((pred seq-p)
+     (seq-filter pred seq))))
+
+(cl-defun hoarder::cons (e seq)
+  (pcase seq
+    ((pred vectorp)
+     (seq-concatenate 'vector
+                      (vector e) seq))
+    ((pred seq-p)
+     (cons e seq))))
+
+(cl-defun hoarder::first (seq)
+  (seq-elt thing 0))
 
 (provide 'hoarder-util)
 

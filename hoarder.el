@@ -24,10 +24,10 @@
 (defcustom hoarder-directory
   (hoarder:concat-path user-emacs-directory (file-name-as-directory "hoarder"))
   "default install directory")
-(defvar hoarder:*packages* '())
+(defvar hoarder:*packages* [])
 
 (cl-defun hoarder:initialize (&optional path)
-  (setq hoarder:*packages* nil)
+  (setq hoarder:*packages* [])
   (when path
     (setq hoarder-directory path))
   (unless (file-exists-p hoarder-directory)
