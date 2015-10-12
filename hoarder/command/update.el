@@ -29,7 +29,7 @@
         (cl-letf* ((git-msg (shell-command-to-string
                              (seq-concatenate 'string
                                               "git " " -C " path
-                                              " pull ")))
+                                              " pull " " --rebase " " --ff-only ")))
                    (changedp (hoarder:git-updatedp git-msg)))
           (when changedp
             (hoarder:option-compile package path)
