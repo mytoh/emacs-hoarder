@@ -7,7 +7,7 @@
 
 ;;;; package
 
-(defvar hoarder:package-template
+(defvar hoarder:<package>
   '(:type nil
     :name ""
     :url ""
