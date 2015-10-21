@@ -87,14 +87,12 @@
 
 (cl-defun hoarder:register-theme-default-tag (option)
   (cl-letf ((o (glof:get option :tag nil)))
-    (if o
-        (cond ((cl-equalp "theme" o)
-               option)
-              ((cl-find "theme" o :test #'cl-equalp)
-               option)
-              (t option))
-      (cons :tag (cons "theme" option)))))
-
+    (pcase o
+      (`nil (cons :tag (cons "theme" option)))
+      ("theme" option)
+      ((guard (cl-find "theme" o :test #'cl-equalp))
+       option)
+      (_ option))))
 
 (cl-defun hoarder:resolve-deps (package)
   (if-let ((deps (glof:get package :dependency)))
