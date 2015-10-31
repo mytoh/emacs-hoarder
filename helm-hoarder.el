@@ -78,7 +78,7 @@
         (if (stringp tag)
             (propertize tag 'face face)
           (string-join
-           (seq-map (lambda (t) (propertize t 'face face)) tag)
+           (seq-map (lambda (tg) (propertize tg 'face face)) tag)
            ","))
       nil)))
 
