@@ -4,10 +4,12 @@
 (require 'glof)
 
 (cl-defun hoarder:source-git-p (source)
-  (cond ((or (string-match (rx "git://") source)
-             (string-match (rx ".git" (zero-or-one "/") line-end) source))
-         t)
-        (t nil)))
+  (pcase source
+    ((pred (string-match (rx "git://")))
+     t)
+    ((pred (string-match (rx ".git" (zero-or-one "/") line-end)))
+     t)
+    (_ nil)))
 
 (cl-defun hoarder:make-package-git (source option)
   (cl-letf ((name (hoarder:make-package-name-git source option))
@@ -68,14 +70,24 @@
   (cl-letf ((origin (glof:get option :origin nil)))
     (if origin
         origin
-      (cond ((or (string-match (rx "git://") source)
-                 (string-match (rx ".git" (zero-or-one "/") line-end) source))
-             (replace-regexp-in-string (rx (or (seq line-start "git://")
-                                               (seq line-start "http://")
-                                               (seq line-start "https://")
-                                               (seq ".git" line-end)))
-                                       "" source))
-            (t source)))))
+      (pcase source
+        ((or (pred (string-match (rx "git://")))
+             (pred (string-match (rx ".git" (zero-or-one "/") line-end))))
+         (replace-regexp-in-string (rx (or (seq line-start "git://")
+                                           (seq line-start "http://")
+                                           (seq line-start "https://")
+                                           (seq ".git" line-end)))
+                                   "" source))
+        (_ source))
+      ;; (cond ((or (string-match (rx "git://") source)
+      ;;            (string-match (rx ".git" (zero-or-one "/") line-end) source))
+      ;;        (replace-regexp-in-string (rx (or (seq line-start "git://")
+      ;;                                          (seq line-start "http://")
+      ;;                                          (seq line-start "https://")
+      ;;                                          (seq ".git" line-end)))
+      ;;                                  "" source))
+      ;;       (t source))
+      )))
 
 (provide 'hoarder-source-git)
 
