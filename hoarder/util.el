@@ -99,21 +99,21 @@
   (pcase seq
     ((pred vectorp)
      (seq-into (seq-map pred seq) 'vector))
-    ((pred seq-p)
+    ((pred seqp)
      (seq-map pred seq))))
 
 (cl-defun hoarder::remove (pred seq)
   (pcase seq
     ((pred vectorp)
      (seq-into (seq-remove pred seq) 'vector))
-    ((pred seq-p)
+    ((pred seqp)
      (seq-remove pred seq))))
 
 (cl-defun hoarder::filter (pred seq)
   (pcase seq
     ((pred vectorp)
      (seq-into (seq-filter pred seq) 'vector))
-    ((pred seq-p)
+    ((pred seqp)
      (seq-filter pred seq))))
 
 (cl-defun hoarder::cons (e seq)
@@ -121,7 +121,7 @@
     ((pred vectorp)
      (seq-concatenate 'vector
                       (vector e) seq))
-    ((pred seq-p)
+    ((pred seqp)
      (cons e seq))))
 
 (cl-defun hoarder::first (seq)
