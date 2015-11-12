@@ -125,7 +125,7 @@
      (cons e seq))))
 
 (cl-defun hoarder::first (seq)
-  (seq-elt thing 0))
+  (seq-elt seq 0))
 
 (provide 'hoarder-util)
 
