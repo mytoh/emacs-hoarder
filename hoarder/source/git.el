@@ -56,13 +56,17 @@
 (cl-defun hoarder:make-package-load-path-git (source option)
   (cl-letf ((path (glof:get option :load-path nil))
             (origin (hoarder:make-package-origin-git source option)))
-    (if path
-        (if (listp path)
+    (if (not (seq-empty-p path))
+        (pcase path
+          ((pred vectorp)
+           (seq-into
             (seq-map
              (lambda (p)
                (hoarder:concat-path hoarder-directory origin p))
              path)
-          (hoarder:concat-path hoarder-directory origin path))
+            'vector))
+          ((pred stringp)
+           (hoarder:concat-path hoarder-directory origin path)))
       (hoarder:concat-path hoarder-directory origin))))
 
 

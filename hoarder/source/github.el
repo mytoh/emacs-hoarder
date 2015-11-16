@@ -63,16 +63,22 @@
     (cl-second (split-string source "/"))))
 
 (cl-defun hoarder:make-package-load-path-github (source option)
-  (cl-letf ((path (glof:get option :load-path nil))
-            (origin (hoarder:make-package-origin-github source option)))
-    (if path
-        (if (listp path)
-            (seq-map
-             (lambda (p)
-               (hoarder:concat-path hoarder-directory origin p))
-             path)
-          (hoarder:concat-path hoarder-directory origin path))
-      (hoarder:concat-path hoarder-directory origin))))
+  (cl-letf ((origin (hoarder:make-package-origin-github source option)))
+    (if option
+        (cl-letf ((path (glof:get option :load-path nil)))
+          (pcase path
+            ((pred vectorp)
+             (seq-into
+              (seq-map
+               (lambda (p)
+                 (hoarder:concat-path hoarder-directory origin p))
+               path)
+              'vector))
+            ((pred stringp)
+             (hoarder:concat-path hoarder-directory origin path))
+            ((pred seq-empty-p)
+             (hoarder:concat-path hoarder-directory origin))))        
+      (hoarder:concat-path hoarder-directory origin)))) 
 
 (cl-defun hoarder:make-package-path-github (source option)
   (cl-letf ((path (glof:get option :path))

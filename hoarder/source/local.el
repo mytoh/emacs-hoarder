@@ -27,10 +27,17 @@
 
 (cl-defun hoarder:make-package-load-path-local (source option)
   (if option
-      (cl-letf ((path (glof:get option :load-path)))
-        (if path
-            (expand-file-name path source)
-          source))
+      (cl-letf ((path (glof:get option :load-path nil)))
+        (pcase path
+          ((pred vectorp)
+           (seq-into
+            (seq-map
+             (lambda (p)
+               (expand-file-name p source))
+             path)
+            'vector))
+          ((pred seq-empty-p)
+           source)))
     source))
 
 (cl-defun hoarder:make-package-url-local (source option)

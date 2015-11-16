@@ -37,7 +37,7 @@
   (add-to-list var elem))
 
 (cl-defun hoarder:add-to-list (var elem)
-  (if (listp elem)
+  (if (vectorp elem)
       (seq-map
        (lambda (e) (add-to-list var e))
        elem)
@@ -89,7 +89,7 @@
    (lambda (p)
      (seq-find
       (lambda (v) (cl-equalp (glof:get v :name)
-                             p))
+                        p))
       hoarder:*packages*))
    (seq-map
     (lambda (p) (format "%s" p))
