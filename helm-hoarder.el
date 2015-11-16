@@ -75,11 +75,16 @@
 (cl-defun helm-hoarder-propertize-tag (package face)
   (cl-letf ((tag (glof:get package :tag)))
     (if tag
-        (if (stringp tag)
-            (propertize tag 'face face)
-          (string-join
-           (seq-map (lambda (tg) (propertize tg 'face face)) tag)
-           ","))
+        (pcase tag
+          ((pred stringp)
+           (propertize tag 'face face))
+          ((pred seqp)
+           (string-join
+            (seq-into
+             (seq-map
+              (lambda (tg) (propertize tg 'face face))
+              tag) 'list)
+            ",")))
       nil)))
 
 (cl-defun helm-hoarder-make-source-name ()
