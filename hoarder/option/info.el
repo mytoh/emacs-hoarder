@@ -1,4 +1,4 @@
-                                        ;/bin/tcsh;; info -*- lexical-binding: t; coding: utf-8; -*-
+;; info -*- lexical-binding: t; coding: utf-8; -*-
 
 ;;; Code:
 
