@@ -88,11 +88,23 @@
 (cl-defun hoarder:register-theme-default-tag (option)
   (cl-letf ((o (glof:get option :tag nil)))
     (pcase o
-      (`nil (cons :tag (cons "theme" option)))
+      (`nil (glof:assoc option
+                        :tag "theme"))
       ("theme" option)
-      ((guard (cl-find "theme" o :test #'cl-equalp))
+      ((pred stringp)
+       (glof:assoc option
+                   :tag
+                   (seq-concatenate 'vector
+                                    `[,o]
+                                    ["theme"])))
+      ((pred (seq-find (lambda (tag) (equal tag "theme"))))
        option)
-      (_ option))))
+      (_
+       (glof:update option :tag
+                    (lambda (tags)
+                      (seq-concatenate 'vector
+                                       tags
+                                       ["theme"])))))))
 
 (cl-defun hoarder:resolve-deps (package)
   (if-let ((deps (glof:get package :dependency)))
