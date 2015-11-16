@@ -1,4 +1,4 @@
-                                        ;/bin/tcsh;; build -*- lexical-binding: t -*-
+;; build -*- lexical-binding: t -*-
 
 ;;; Code:
 
