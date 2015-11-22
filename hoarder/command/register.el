@@ -107,10 +107,11 @@
                                        ["theme"])))))))
 
 (cl-defun hoarder:resolve-deps (package)
-  (if-let ((deps (glof:get package :dependency)))
+  (cl-letf ((deps (glof:get package :dependency)))
+    (unless (seq-empty-p deps)
       (seq-each
        #'hoarder:install-dep
-       deps)
+       deps))
     nil))
 
 (cl-defmethod hoarder:install-dep ((dep list))
