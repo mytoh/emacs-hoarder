@@ -14,6 +14,7 @@
 ;;;; register
 
 (cl-defun hoarder:register (source &optional option)
+  (declare (indent 1))
   (pcase source
     ((and (pred file-name-absolute-p)
           (pred file-exists-p))
@@ -55,6 +56,7 @@
     (hoarder:message-register package)))
 
 (cl-defun hoarder:register-local (package)
+  (declare (indent 1))
   (hoarder:add-to-load-path package)
   (hoarder:add-to-package-list package)
   (hoarder:option-info package)
@@ -63,6 +65,7 @@
   (hoarder:message-register package))
 
 (cl-defun hoarder:register-theme (source &optional option)
+  (declare (indent 1))
   (cl-letf* ((mod-option (hoarder:register-theme-default-tag option))
              (package (hoarder:make-package source mod-option)))
     (unless (hoarder:installed? package)
@@ -75,6 +78,7 @@
       )))
 
 (cl-defun hoarder:register-theme-local (source &optional option)
+  (declare (indent 1))
   (cl-letf* ((path (expand-file-name source))
              (package (hoarder:make-package-local path option)))
     (hoarder:add-to-theme-path package)
@@ -116,9 +120,9 @@
 
 (cl-defmethod hoarder:install-dep ((dep list))
   (hoarder:register (cl-first dep)
-                    (if (cl-rest dep)
-                        (cl-second dep)
-                      nil)))
+    (if (cl-rest dep)
+        (cl-second dep)
+      nil)))
 
 (cl-defmethod hoarder:install-dep ((dep string))
   (hoarder:register dep nil))

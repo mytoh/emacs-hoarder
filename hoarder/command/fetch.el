@@ -27,6 +27,7 @@
                 "\n")))
 
 (cl-defun hoarder:fetch (source &optional option)
+  (declare (indent 1))
   (cl-letf* ((package (thread-first source
                         (hoarder:make-package option)
                         (hoarder:fetch-set-options option))))
