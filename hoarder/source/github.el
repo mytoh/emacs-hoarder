@@ -43,7 +43,7 @@
                 :name name
                 :path path
                 :load-path lpath
-                :url (seq-concatenate 'string "https://github.com:" source)
+                :url (seq-concatenate 'string "https://github.com/" source)
                 :compile (glof:get option :compile t)
                 :dependency (glof:get option :dependency nil)
                 :build (glof:get option :build nil)
