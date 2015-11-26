@@ -17,7 +17,7 @@
             (lpath (hoarder:make-package-load-path-git source option))
             (compile (hoarder:make-package-compile-git source option))
             (origin (hoarder:make-package-origin-git source option)))
-    (glof:plist :type 'git
+    (glof:plist :type :git
                 :site ""
                 :name name
                 :path path

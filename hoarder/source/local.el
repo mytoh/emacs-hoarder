@@ -5,7 +5,7 @@
 (cl-defun hoarder:make-package-local (source option)
   (cl-letf ((name (hoarder:make-package-name-local source option))
             (lpath (hoarder:make-package-load-path-local source option)))
-    (glof:plist :type 'local
+    (glof:plist :type :local
                 :name name
                 :path source
                 :load-path lpath

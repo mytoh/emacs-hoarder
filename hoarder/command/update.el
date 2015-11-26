@@ -21,7 +21,7 @@
   (cl-letf ((name (glof:get package :name))
             (path (hoarder:concat-path hoarder-directory
                                        (glof:get package :origin))))
-    (when (and (cl-equalp 'git (glof:get package :type))
+    (when (and (cl-equalp :git (glof:get package :type))
                (not (file-symlink-p path)))
       (cl-letf ((reporter (make-progress-reporter
                            (format  "updating package %s..."

@@ -12,11 +12,11 @@
 ;;;; install
 
 (cl-defun hoarder:install-package (package)
-  (unless (or (cl-equalp 'local (glof:get package :type))
+  (unless (or (cl-equalp :local (glof:get package :type))
               (and (glof:get package :path)
                    (file-exists-p (glof:get package :path))))
     (pcase (glof:get package :type)
-      ('git (hoarder:install-package-git package)))))
+      (:git (hoarder:install-package-git package)))))
 
 (cl-defun hoarder:install-package-git (package)
   (hoarder:message "installing package %s" (glof:get package :name))

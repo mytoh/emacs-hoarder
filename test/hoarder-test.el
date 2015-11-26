@@ -34,7 +34,7 @@
   (hoarder:initialize)
   (hoarder:register "mytoh/fish-mode")
   (should (hoarder:registered-p "fish-mode"))
-  (should (cl-equalp 'git
+  (should (cl-equalp :git
                      (glof:get (hoarder::first (hoarder:search-registered :name "fish-mode" ))
                                :type)))
   (should (cl-equalp "github"

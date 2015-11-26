@@ -14,7 +14,7 @@
 
 ;;;; uninstall
 (cl-defun hoarder:uninstall-package (package)
-  (when (and (not (cl-equalp 'local (glof:get package :type)))
+  (when (and (not (cl-equalp :local (glof:get package :type)))
              (file-exists-p (glof:get package :path)))
     (hoarder:message "unregister package info")
     (setq hoarder:*package*

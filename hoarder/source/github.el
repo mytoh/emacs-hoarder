@@ -38,7 +38,7 @@
             (path (hoarder:make-package-path-github source option))
             (lpath (hoarder:make-package-load-path-github source option))
             (origin (hoarder:make-package-origin-github source option)))
-    (glof:plist :type 'git
+    (glof:plist :type :git
                 :site "github"
                 :name name
                 :path path
