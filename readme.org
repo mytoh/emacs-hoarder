@@ -2,7 +2,7 @@
 * Build Status
   [[https://travis-ci.org/mytoh/emacs-hoarder][file:https://travis-ci.org/mytoh/emacs-hoarder.svg?branch=master]]
 
-* ideas origin
+* Origins of ideas
 [[https://github.com/dimitri/el-get][el-get]]
 [[https://github.com/Shougo/neobundle.vim][neobundle.vim]]
 [[https://github.com/junegunn/vim-plug][vim-plug]]
