@@ -17,7 +17,7 @@
   (when (and (not (cl-equalp :local (glof:get package :type)))
              (file-exists-p (glof:get package :path)))
     (hoarder:message "unregister package info")
-    (setq hoarder:*package*
+    (setq hoarder:*packages*
           (hoarder::remove
            (lambda (p) (hoarder:package-compare-fn p package))
            hoarder:*packages*))
