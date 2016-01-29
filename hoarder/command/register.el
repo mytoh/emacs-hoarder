@@ -41,9 +41,9 @@
                    ;;         (symbol-name s)
                    ;;         (slot-value package s))
                    (format "- %s :: %s"
-                           (glof:stringify key)
+                           (glof:string key)
                            (glof:get package key)))
-                 (glof:keys package))
+                 (glof:names package))
                 "\n")))
 
 (cl-defun hoarder:register-remote (package)
