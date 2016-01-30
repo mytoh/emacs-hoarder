@@ -4,9 +4,11 @@
 
 ;;;; requirements
 (require 'cl-lib)
-(require 'glof)
 (require 'subr-x)
 (require 'seq)
+
+(require 'glof)
+(require 'colle)
 
 (require 'hoarder-source-github "hoarder/source/github")
 (require 'hoarder-source-git "hoarder/source/git")
@@ -51,12 +53,13 @@
 
 (cl-defun hoarder:add-to-package-list (package)
   (setq hoarder:*packages*
-        (hoarder::cons package hoarder:*packages*)))
+        (colle:conj package hoarder:*packages*)))
 
 ;;;; utilily functions
 (cl-defun hoarder:concat-path (&rest parts)
-  (seq-reduce (lambda (a b) (expand-file-name b a)) parts
-              "/"))
+  (colle:foldl (lambda (a b) (expand-file-name b a))
+               "/"
+               parts))
 
 (cl-defun hoarder:message (fmt &rest texts)
   (if noninteractive
