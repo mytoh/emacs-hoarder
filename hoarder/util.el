@@ -19,11 +19,20 @@
 (defconst hoarder:log-buffer-name
   "*hoarder log*")
 
+(cl-defun hoarder:on (g f x y)
+  ;; [[https://hackage.haskell.org/package/base-4.8.2.0/docs/Data-Function.html#v:on]]
+  (funcall g
+           (funcall f x)
+           (funcall f y)))
+
 (cl-defun hoarder:package-compare-fn (p1 p2)
-  (and (cl-equalp (glof:get p1 :name)
-                  (glof:get p2 :name))
-       (cl-equalp (glof:get p1 :origin)
-                  (glof:get p2 :origin))))
+  (cl-labels ((comp (n)
+                (hoarder:on #'cl-equalp
+                            (lambda (p) (glof:get p n))
+                            p1
+                            p2)))
+    (and (comp :name)
+         (comp :origin))))
 
 (cl-defun hoarder:installed? (package)
   (and (file-exists-p (glof:get package :path))
@@ -94,7 +103,7 @@
    (lambda (p)
      (seq-find
       (lambda (v) (cl-equalp (glof:get v :name)
-                        p))
+                             p))
       hoarder:*packages*))
    (seq-map
     (lambda (p) (format "%s" p))
