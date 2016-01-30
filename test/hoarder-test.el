@@ -2,6 +2,7 @@
 
 (require 'ert)
 (require 'cl-lib)
+(require 'colle)
 
 (add-to-list 'load-path default-directory)
 (require 'hoarder)
@@ -35,11 +36,11 @@
   (hoarder:register "mytoh/fish-mode")
   (should (hoarder:registered-p "fish-mode"))
   (should (cl-equalp :git
-                     (glof:get (hoarder::first (hoarder:search-registered :name "fish-mode" ))
+                     (glof:get (colle:first (hoarder:search-registered :name "fish-mode" ))
                                :type)))
   (should (cl-equalp "github"
                      (glof:get 
-                      (hoarder::first (hoarder:search-registered :name "fish-mode" )) :site)))
+                      (colle:first (hoarder:search-registered :name "fish-mode" )) :site)))
   (when (file-exists-p hoarder-directory)
     (delete-directory hoarder-directory 'recursive)))
 

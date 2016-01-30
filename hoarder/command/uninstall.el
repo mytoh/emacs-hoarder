@@ -4,6 +4,7 @@
 
 (require 'cl-lib)
 (require 'glof)
+(require 'colle)
 
 (require 'hoarder-source-github "hoarder/source/github")
 (require 'hoarder-source-git "hoarder/source/git")
@@ -18,7 +19,7 @@
              (file-exists-p (glof:get package :path)))
     (hoarder:message "unregister package info")
     (setq hoarder:*packages*
-          (hoarder::remove
+          (colle:remove
            (lambda (p) (hoarder:package-compare-fn p package))
            hoarder:*packages*))
     (hoarder:message "removing files")
@@ -26,7 +27,7 @@
 
 (cl-defun hoarder:uninstall-package-by-name (name)
   (cl-letf ((target (hoarder:search-registered :name name)))
-    (hoarder:uninstall-package (hoarder::first target))))
+    (hoarder:uninstall-package (colle:first target))))
 
 (provide 'hoarder-uninstall)
 

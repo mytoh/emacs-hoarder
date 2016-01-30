@@ -3,9 +3,11 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'glof)
 (require 'subr-x)
 (require 'seq)
+
+(require 'glof)
+(require 'colle)
 
 (require 'hoarder-source-github "hoarder/source/github")
 (require 'hoarder-source-git "hoarder/source/git")
@@ -14,7 +16,7 @@
 
 ;;;; search
 (cl-defun hoarder:search-registered (key target)
-  (hoarder::filter
+  (colle:filter
    (lambda (p)
      (cl-equalp target (glof:get p key)))
    hoarder:*packages*))
