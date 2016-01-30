@@ -27,10 +27,12 @@
 
 (cl-defun hoarder:installed? (package)
   (and (file-exists-p (glof:get package :path))
-       (if (colle:empty-p (colle:filter
-                           (lambda (p) (hoarder:package-compare-fn p package))
-                           hoarder:*packages*))
-           nil t)))
+       (pcase (colle:filter
+           (lambda (p) (hoarder:package-compare-fn p package))
+           hoarder:*packages*)
+         ((pred colle:empty-p)
+          nil)
+         (_ t))))
 
 (cl-defun hoarder:directory-git-p (p)
   (file-directory-p (expand-file-name ".git" p)))
