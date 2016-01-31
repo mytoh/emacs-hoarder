@@ -1,6 +1,7 @@
 ;;; github.el -*- lexical-binding: t -*-
 
 (require 'seq)
+(require 'colle)
 
 (cl-defun hoarder:source-site-github-p (source)
   (cond
@@ -68,12 +69,10 @@
         (cl-letf ((path (glof:get option :load-path nil)))
           (pcase path
             ((pred vectorp)
-             (seq-into
-              (seq-map
-               (lambda (p)
-                 (hoarder:concat-path hoarder-directory origin p))
-               path)
-              'vector))
+             (colle:map
+              (lambda (p)
+                (hoarder:concat-path hoarder-directory origin p))
+              path))
             ((pred stringp)
              (hoarder:concat-path hoarder-directory origin path))
             ((pred seq-empty-p)
