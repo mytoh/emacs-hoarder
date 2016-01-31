@@ -103,43 +103,11 @@
    (lambda (p)
      (seq-find
       (lambda (v) (cl-equalp (glof:get v :name)
-                             p))
+                        p))
       hoarder:*packages*))
    (seq-map
     (lambda (p) (format "%s" p))
     package-activated-list)))
-
-(cl-defun hoarder::map (f seq)
-  (pcase seq
-    ((pred vectorp)
-     (seq-into (seq-map f seq) 'vector))
-    ((pred seqp)
-     (seq-map f seq))))
-
-(cl-defun hoarder::remove (f seq)
-  (pcase seq
-    ((pred vectorp)
-     (seq-into (seq-remove f seq) 'vector))
-    ((pred seqp)
-     (seq-remove f seq))))
-
-(cl-defun hoarder::filter (f seq)
-  (pcase seq
-    ((pred vectorp)
-     (seq-into (seq-filter f seq) 'vector))
-    ((pred seqp)
-     (seq-filter f seq))))
-
-(cl-defun hoarder::cons (e seq)
-  (pcase seq
-    ((pred vectorp)
-     (seq-concatenate 'vector
-                      (vector e) seq))
-    ((pred seqp)
-     (cons e seq))))
-
-(cl-defun hoarder::first (seq)
-  (seq-elt seq 0))
 
 (provide 'hoarder-util)
 
