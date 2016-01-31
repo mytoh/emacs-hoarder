@@ -2,6 +2,9 @@
 
 ;;; Code:
 
+(require 'seq)
+(require 'colle)
+
 (cl-defun hoarder:make-package-local (source option)
   (cl-letf ((name (hoarder:make-package-name-local source option))
             (lpath (hoarder:make-package-load-path-local source option)))
@@ -30,12 +33,10 @@
       (cl-letf ((path (glof:get option :load-path nil)))
         (pcase path
           ((pred vectorp)
-           (seq-into
-            (seq-map
-             (lambda (p)
-               (expand-file-name p source))
-             path)
-            'vector))
+           (colle:map
+            (lambda (p)
+              (expand-file-name p source))
+            path))
           ((pred seq-empty-p)
            source)))
     source))
