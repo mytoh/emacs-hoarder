@@ -1,7 +1,9 @@
 ;;; git.el -*- lexical-binding: t -*-
 
 (require 'seq)
+
 (require 'glof)
+(require 'colle)
 
 (cl-defun hoarder:source-git-p (source)
   (pcase source
@@ -59,12 +61,10 @@
     (if (not (seq-empty-p path))
         (pcase path
           ((pred vectorp)
-           (seq-into
-            (seq-map
-             (lambda (p)
-               (hoarder:concat-path hoarder-directory origin p))
-             path)
-            'vector))
+           (colle:map
+            (lambda (p)
+              (hoarder:concat-path hoarder-directory origin p))
+            path))
           ((pred stringp)
            (hoarder:concat-path hoarder-directory origin path)))
       (hoarder:concat-path hoarder-directory origin))))
