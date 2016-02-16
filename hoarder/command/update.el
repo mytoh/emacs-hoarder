@@ -20,9 +20,9 @@
 (cl-defun hoarder:update-package (package)
   (cl-letf ((name (glof:get package :name))
             (path (hoarder:concat-path hoarder-directory
-                                       (glof:get package :origin))))
+                                 (glof:get package :origin))))
     (when (and (cl-equalp :git (glof:get package :type))
-               (not (file-symlink-p path)))
+             (not (file-symlink-p path)))
       (cl-letf ((reporter (make-progress-reporter
                            (format  "updating package %s..."
                                     (propertize name 'face 'font-lock-type-face)))))
@@ -30,22 +30,21 @@
                              (seq-concatenate 'string
                                               "git " " -C " path
                                               " pull " " --rebase " " --ff-only ")))
-                   (changedp (hoarder:git-updatedp git-msg)))
-          (when changedp
+                   (already-updatedp (hoarder:git-already-updatedp git-msg)))
+          (unless already-updatedp
             (hoarder:option-compile package path)
             (hoarder:option-build package)))
         (progress-reporter-done reporter)
         (hoarder:message "updated %s" path)))))
 
-(cl-defun hoarder:git-updatedp (msg)
+(cl-defun hoarder:git-already-updatedp (msg)
   (and (not (cl-equalp
-             "Already up-to-date.
+         "fatal: Not a git repository (or any of the parent directories): .git
 "
-             msg))
-       (not (cl-equalp
-             "fatal: Not a git repository (or any of the parent directories): .git
-"
-             msg))))
+         msg))
+     (string-match-p
+      "Already\sup-to-date\." 
+      msg)))
 
 ;; ###autoload
 (cl-defun hoarder:update ()
