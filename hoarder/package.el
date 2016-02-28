@@ -25,12 +25,14 @@
     :branch nil))
 
 (cl-defun hoarder:make-package (source option)
-  (cl-letf ((s (string-trim source)))
+  (cl-letf ((s (string-trim source))
+            (type (glof:get option :type)))
     (pcase s
       ((pred hoarder:source-site-github-p)
        (hoarder:make-package-github
         (hoarder:source-site-format-github s) option))
-      ((pred hoarder:source-git-p)
+      ((or (pred hoarder:source-git-p)
+          (guard (cl-equalp type :git)))
        (hoarder:make-package-git
         s option)))))
 
