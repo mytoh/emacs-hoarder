@@ -28,7 +28,7 @@
                                     (propertize name 'face 'font-lock-type-face)))))
         (cl-letf* ((git-msg (shell-command-to-string
                              (seq-concatenate 'string
-                                              "git " " -C " path
+                                              "git " " --no-pager " " -C " path
                                               " pull " " --rebase " " --ff-only ")))
                    (already-updatedp (hoarder:git-already-updatedp git-msg)))
           (unless already-updatedp

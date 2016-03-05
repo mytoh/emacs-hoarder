@@ -13,8 +13,8 @@
 
 (cl-defun hoarder:install-package (package)
   (unless (or (cl-equalp :local (glof:get package :type))
-              (and (glof:get package :path)
-                   (file-exists-p (glof:get package :path))))
+             (and (glof:get package :path)
+                (file-exists-p (glof:get package :path))))
     (pcase (glof:get package :type)
       (:git (hoarder:install-package-git package)))))
 
@@ -22,7 +22,7 @@
   (hoarder:message "installing package %s" (glof:get package :name))
   (cl-letf ((process-environment process-environment))
     (setenv "GIT_TERMINAL_PROMPT" "0")
-    (shell-command (seq-concatenate 'string  "git clone --quiet "
+    (shell-command (seq-concatenate 'string  "git --no-pager clone --quiet "
                                     (if (glof:get package :recursive)
                                         " --recursive "
                                       "")
@@ -35,7 +35,7 @@
                                     (glof:get package :url)
                                     " "
                                     (hoarder:concat-path hoarder-directory
-                                                         (glof:get package :origin)))
+                                                   (glof:get package :origin)))
                    hoarder-directory))
   (hoarder:message "compiling %s" (glof:get package :name))
   (hoarder:option-compile package (glof:get package :path))
