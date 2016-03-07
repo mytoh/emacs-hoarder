@@ -5,17 +5,17 @@
 
 (cl-defun hoarder:source-site-github-p (source)
   (cond
-    ((string-match (rx "github:" (submatch (+ (not (in "/")))
-                                           "/"
-                                           (+ (not (in "/")))))
-                   source)
+    ((string-match-p (rx "github:" (submatch (+ (not (in "/")))
+                                              "/"
+                                              (+ (not (in "/")))))
+                      source)
      t)
-    ((string-match (rx   line-start
-                         (one-or-more (not (in "/")))
-                         "/"
-                         (one-or-more (not (in "/")))
-                         line-end)
-                   source)
+    ((string-match-p (rx   line-start
+                           (one-or-more (not (in "/")))
+                           "/"
+                           (one-or-more (not (in "/")))
+                           line-end)
+                     source)
      t)
     (t nil)))
 
