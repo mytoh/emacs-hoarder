@@ -5,6 +5,11 @@
 (require 'glof)
 (require 'colle)
 
+(cl-defun hoarder:trim-protocol (s)
+  (if (string-match-p "^[a-z]+://" s)
+      (replace-regexp-in-string  "^[a-z]+://" "" s t t)
+    s))
+
 (cl-defun hoarder:source-git-p (source)
   (pcase source
     ((pred (string-match-p (rx "git://")))
@@ -50,14 +55,16 @@
 
 (cl-defun hoarder:make-package-path-git (source option)
   (cl-letf ((p (glof:get option :path nil))
-            (origin (hoarder:make-package-origin-git source option)))
+            (origin (hoarder:trim-protocol
+                     (hoarder:make-package-origin-git source option))))
     (if p
         (expand-file-name p hoarder-directory)
       (expand-file-name origin hoarder-directory))))
 
 (cl-defun hoarder:make-package-load-path-git (source option)
   (cl-letf ((path (glof:get option :load-path nil))
-            (origin (hoarder:make-package-origin-git source option)))
+            (origin (hoarder:trim-protocol
+                     (hoarder:make-package-origin-git source option))))
     (if (not (seq-empty-p path))
         (pcase path
           ((pred vectorp)
