@@ -35,7 +35,7 @@
                                     (glof:get package :url)
                                     " "
                                     (hoarder:concat-path hoarder-directory
-                                                   (glof:get package :origin)))
+                                                   (glof:get package :path)))
                    hoarder-directory))
   (hoarder:message "compiling %s" (glof:get package :name))
   (hoarder:option-compile package (glof:get package :path))
