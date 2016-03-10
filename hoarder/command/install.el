@@ -22,7 +22,7 @@
   (hoarder:message "installing package %s" (glof:get package :name))
   (cl-letf ((process-environment process-environment))
     (setenv "GIT_TERMINAL_PROMPT" "0")
-    (shell-command (seq-concatenate 'string  "git --no-pager clone --quiet "
+    (shell-command (seq-concatenate 'string  "git --no-pager --no-edit clone --quiet "
                                     (if (glof:get package :recursive)
                                         " --recursive "
                                       "")
