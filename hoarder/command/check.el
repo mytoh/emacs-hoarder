@@ -12,7 +12,7 @@
 
 ;;;; check
 (cl-defun hoarder:check-packages ()
-  (hoarder:foreach-package-list 'hoarder:install-package))
+  (hoarder:foreach-package-list #'hoarder:install-package))
 
 ;;;; commands
 
