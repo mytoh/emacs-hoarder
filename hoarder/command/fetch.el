@@ -14,17 +14,17 @@
 
 (cl-defun hoarder:message-fetch (package)
   (hoarder:log (seq-concatenate 'string "\n* " (glof:get package :name) "\n%s")
-               (string-join
-                (seq-map
-                 (lambda (key)
-                   ;; (format "%s: %s"
-                   ;;         (symbol-name s)
-                   ;;         (slot-value package s))
-                   (format "- %s :: %s"
-                           (glof:string key)
-                           (glof:get package key)))
-                 (glof:names package))
-                "\n")))
+         (string-join
+          (colle:map
+           (lambda (key)
+             ;; (format "%s: %s"
+             ;;         (symbol-name s)
+             ;;         (slot-value package s))
+             (format "- %s :: %s"
+                     (glof:string key)
+                     (glof:get package key)))
+           (glof:names package))
+          "\n")))
 
 (cl-defun hoarder:fetch (source &optional option)
   (declare (indent 1))

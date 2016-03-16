@@ -66,7 +66,7 @@
 
     (add-keywords
      'font-lock-builtin-face
-     (seq-map
+     (colle:map
       (lambda (key)
         (cons 1 key))
       hoarder:font-lock-keywords))))

@@ -22,26 +22,26 @@
 (cl-defun hoarder:on (g f x y)
   ;; [[https://hackage.haskell.org/package/base-4.8.2.0/docs/Data-Function.html#v:on]]
   (funcall g
-           (funcall f x)
-           (funcall f y)))
+     (funcall f x)
+     (funcall f y)))
 
 (cl-defun hoarder:package-compare-fn (p1 p2)
   (cl-labels ((comp (n)
                 (hoarder:on #'cl-equalp
-                            (lambda (p) (glof:get p n))
-                            p1
-                            p2)))
+                      (lambda (p) (glof:get p n))
+                      p1
+                      p2)))
     (and (comp :name)
-         (comp :origin))))
+       (comp :origin))))
 
 (cl-defun hoarder:installed? (package)
   (and (file-exists-p (glof:get package :path))
-       (pcase (colle:filter
-           (lambda (p) (hoarder:package-compare-fn p package))
-           hoarder:*packages*)
-         ((pred colle:empty-p)
-          nil)
-         (_ t))))
+     (pcase (colle:filter
+         (lambda (p) (hoarder:package-compare-fn p package))
+         hoarder:*packages*)
+       ((pred colle:empty-p)
+        nil)
+       (_ t))))
 
 (cl-defun hoarder:directory-git-p (p)
   (file-directory-p (expand-file-name ".git" p)))
@@ -51,7 +51,7 @@
 
 (cl-defun hoarder:add-to-list (var elem)
   (if (vectorp elem)
-      (seq-map
+      (colle:map
        (lambda (e) (add-to-list var e))
        elem)
     (add-to-list var elem)))
@@ -69,8 +69,8 @@
 ;;;; utilily functions
 (cl-defun hoarder:concat-path (&rest parts)
   (colle:foldl (lambda (a b) (expand-file-name b a))
-               "/"
-               parts))
+           "/"
+           parts))
 
 (cl-defun hoarder:message (fmt &rest texts)
   (if noninteractive

@@ -17,7 +17,7 @@
   (declare (indent 1))
   (pcase source
     ((and (pred file-name-absolute-p)
-          (pred file-exists-p))
+        (pred file-exists-p))
      (hoarder:handle-register `[:local ,source ,option]))
     (_
      (hoarder:handle-register `[:remote ,source ,option]))))
@@ -26,25 +26,25 @@
   (pcase variant
     (`[:local ,source ,option]
       (hoarder:register-local
-       (hoarder:make-package-local
-        (expand-file-name source) option)))
+          (hoarder:make-package-local
+           (expand-file-name source) option)))
     (`[:remote ,source ,option]
       (hoarder:register-remote
        (hoarder:make-package source option)))))
 
 (cl-defun hoarder:message-register (package)
   (hoarder:log (seq-concatenate 'string "\n* " (glof:get package :name) "\n%s")
-               (string-join
-                (seq-map
-                 (lambda (key)
-                   ;; (format "%s: %s"
-                   ;;         (symbol-name s)
-                   ;;         (slot-value package s))
-                   (format "- %s :: %s"
-                           (glof:string key)
-                           (glof:get package key)))
-                 (glof:names package))
-                "\n")))
+         (string-join
+          (colle:map
+           (lambda (key)
+             ;; (format "%s: %s"
+             ;;         (symbol-name s)
+             ;;         (slot-value package s))
+             (format "- %s :: %s"
+                     (glof:string key)
+                     (glof:get package key)))
+           (glof:names package))
+          "\n")))
 
 (cl-defun hoarder:register-remote (package)
   (hoarder:resolve-deps package)
@@ -61,7 +61,7 @@
   (hoarder:add-to-package-list package)
   (hoarder:option-info package)
   (hoarder:message "registered %s locally"
-                   (glof:get package :name))
+             (glof:get package :name))
   (hoarder:message-register package))
 
 (cl-defun hoarder:register-theme (source &optional option)
@@ -73,7 +73,7 @@
       (hoarder:add-to-load-path package)
       (hoarder:add-to-package-list package)
       (hoarder:message "registered %s as theme"
-                       (glof:get package :name))
+                 (glof:get package :name))
       (hoarder:message-register package)
       )))
 
@@ -84,7 +84,7 @@
     (hoarder:add-to-theme-path package)
     (hoarder:add-to-package-list package)
     (hoarder:message "registered %s as local theme"
-                     (glof:get package :name))
+               (glof:get package :name))
     (hoarder:message-register package)
     ))
 
