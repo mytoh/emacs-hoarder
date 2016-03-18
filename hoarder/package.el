@@ -3,6 +3,7 @@
 (require 'cl-lib)
 (require 'hoarder-source-github "hoarder/source/github")
 (require 'hoarder-source-git "hoarder/source/git")
+(require 'hoarder-source-hg  "hoarder/source/hg")
 (require 'hoarder-source-local "hoarder/source/local")
 
 ;;;; package
@@ -34,7 +35,9 @@
       ((or (pred hoarder:source-git-p)
           (guard (cl-equalp type :git)))
        (hoarder:make-package-git
-        s option)))))
+        s option))
+      ((guard (cl-equalp type :hg))
+       (hoarder:make-package-hg s option)))))
 
 (provide 'hoarder-package)
 

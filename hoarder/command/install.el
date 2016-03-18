@@ -16,7 +16,8 @@
              (and (glof:get package :path)
                 (file-exists-p (glof:get package :path))))
     (pcase (glof:get package :type)
-      (:git (hoarder:install-package-git package)))))
+      (:git (hoarder:install-package-git package))
+      (:hg (hoarder:install-package-hg package)))))
 
 (cl-defun hoarder:install-package-git (package)
   (hoarder:message "installing package %s" (glof:get package :name))
@@ -32,6 +33,22 @@
                                                          (glof:get package :branch)
                                                          " ")
                                       "")
+                                    (glof:get package :url)
+                                    " "
+                                    (hoarder:concat-path hoarder-directory
+                                                   (glof:get package :path)))
+                   hoarder-directory))
+  (hoarder:message "compiling %s" (glof:get package :name))
+  (hoarder:option-compile package (glof:get package :path))
+  (hoarder:option-build package)
+  (hoarder:option-info package))
+
+
+(cl-defun hoarder:install-package-hg (package)
+  (hoarder:message "installing package %s" (glof:get package :name))
+  (cl-letf ((process-environment process-environment))
+    (setenv "GIT_TERMINAL_PROMPT" "0")
+    (shell-command (seq-concatenate 'string  "hg clone "
                                     (glof:get package :url)
                                     " "
                                     (hoarder:concat-path hoarder-directory
