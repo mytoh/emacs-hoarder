@@ -54,7 +54,7 @@
         (cl-letf* ((result-msg (shell-command-to-string
                                 (seq-concatenate 'string
                                                  "hg " " --cwd " path
-                                                 " pull ")))
+                                                 " pull " " --update ")))
                    (already-updatedp (hoarder:hg-already-updatedp result-msg)))
           (unless already-updatedp
             (hoarder:option-compile package path)
