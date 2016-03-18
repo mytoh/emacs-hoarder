@@ -40,7 +40,7 @@
                 :recursive (glof:get option :recursive)
                 :branch (glof:get option :branch))))
 
-(cl-defun hoarder:make-package-compile-git (source option)
+(cl-defun hoarder:make-package-compile-git (_source option)
   (if (glof:get option :build nil)
       nil
     (glof:get option :compile t)))
