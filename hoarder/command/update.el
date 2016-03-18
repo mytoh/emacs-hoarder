@@ -25,8 +25,7 @@
 
 (cl-defun hoarder:update-package-git (package)
   (cl-letf ((name (glof:get package :name))
-            (path (hoarder:concat-path hoarder-directory
-                                 (glof:get package :origin))))
+            (path (glof:get package :path)))
     (when (and (cl-equalp :git (glof:get package :type))
              (not (file-symlink-p path)))
       (cl-letf ((reporter (make-progress-reporter
