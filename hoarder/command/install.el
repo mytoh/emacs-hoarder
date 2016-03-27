@@ -33,6 +33,12 @@
                                                          (glof:get package :branch)
                                                          " ")
                                       "")
+                                    (if (glof:get package :depth)
+                                        (seq-concatenate 'string
+                                                         " --depth "
+                                                         (number-to-string (glof:get package :depth))
+                                                         " ")
+                                      "")
                                     (glof:get package :url)
                                     " "
                                     (hoarder:concat-path hoarder-directory

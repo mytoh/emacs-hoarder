@@ -39,13 +39,23 @@
 (cl-defun hoarder:fetch-has-option (option key)
   (glof:get option key nil))
 
-(cl-defmethod hoarder:fetch-set-options (package option)
-  (cond ((not (hoarder:fetch-has-option option :compile))
-         (hoarder:fetch-set-option package :compile nil))))
+(cl-defun hoarder:fetch-set-options (package option)
+  (thread-first package
+    (hoarder:fetch-set-option-compile option)
+    (hoarder:fetch-set-option-depth option)))
 
-(cl-defmethod hoarder:fetch-set-option (package key value)
-  (glof:assoc package key value))
+
+(cl-defun hoarder:fetch-set-option-compile (package option)
+  (if (not (hoarder:fetch-has-option option :compile))
+      (glof:assoc package :compile nil)
+    package))
+
+(cl-defun hoarder:fetch-set-option-depth (package option)
+  (if (not (hoarder:fetch-has-option option :depth))
+      (glof:assoc package :depth 1)
+    package))
 
 (provide 'hoarder-fetch)
 
 ;;; fetch.el ends here
+
