@@ -55,16 +55,14 @@
 
 (cl-defun hoarder:make-package-path-git (source option)
   (cl-letf ((p (glof:get option :path nil))
-            (origin (hoarder:trim-protocol
-                     (hoarder:make-package-origin-git source option))))
+            (origin (hoarder:trim-protocol source)))
     (if p
         (expand-file-name p hoarder-directory)
       (expand-file-name origin hoarder-directory))))
 
 (cl-defun hoarder:make-package-load-path-git (source option)
   (cl-letf ((path (glof:get option :load-path nil))
-            (origin (hoarder:trim-protocol
-                     (hoarder:make-package-origin-git source option))))
+            (origin (hoarder:trim-protocol source)))
     (if (not (seq-empty-p path))
         (pcase path
           ((pred vectorp)
@@ -83,11 +81,11 @@
         origin
       (pcase source
         ((or (pred (string-match-p (rx "git://")))
-            (pred (string-match-p (rx ".git" (zero-or-one "/") line-end))))
+             (pred (string-match-p (rx ".git" (zero-or-one "/") line-end))))
          (replace-regexp-in-string (rx (or (seq line-start "git://")
-                                          (seq line-start "http://")
-                                          (seq line-start "https://")
-                                          (seq ".git" line-end)))
+                                           (seq line-start "http://")
+                                           (seq line-start "https://")
+                                           (seq ".git" line-end)))
                                    "" source))
         (_ source)))))
 
