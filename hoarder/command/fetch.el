@@ -17,9 +17,6 @@
          (string-join
           (colle:map
            (lambda (key)
-             ;; (format "%s: %s"
-             ;;         (symbol-name s)
-             ;;         (slot-value package s))
              (format "- %s :: %s"
                      (glof:string key)
                      (glof:get package key)))
