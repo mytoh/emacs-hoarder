@@ -34,7 +34,7 @@
     (hoarder:message-fetch package)))
 
 (cl-defun hoarder:fetch-has-option (option key)
-  (glof:get option key nil))
+  (glof:get option key [:nothing]))
 
 (cl-defun hoarder:fetch-set-options (package option)
   (thread-first package
@@ -43,14 +43,18 @@
 
 
 (cl-defun hoarder:fetch-set-option-compile (package option)
-  (if (not (hoarder:fetch-has-option option :compile))
-      (glof:assoc package :compile nil)
-    package))
+  (pcase (glof:lookup :compile option)
+    (`[:nothing]
+      (glof:assoc package :compile nil))
+    (`[:just ,v]
+      (glof:assoc package :compile v))))
 
 (cl-defun hoarder:fetch-set-option-depth (package option)
-  (if (not (hoarder:fetch-has-option option :depth))
-      (glof:assoc package :depth 1)
-    package))
+  (pcase (glof:lookup :depth option)
+    (`[:nothing]
+      (glof:assoc package :depth 1))
+    (`[:just ,v]
+      (glof:assoc package :depth v))))
 
 (provide 'hoarder-fetch)
 
