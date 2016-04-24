@@ -12,12 +12,24 @@
 ;;;; install
 
 (cl-defun hoarder:install-package (package)
-  (unless (or (cl-equalp :local (glof:get package :type))
-             (and (glof:get package :path)
-                (file-exists-p (glof:get package :path))))
+  (when (hoarder:should-install-package package)
     (pcase (glof:get package :type)
       (:git (hoarder:install-package-git package))
       (:hg (hoarder:install-package-hg package)))))
+
+(cl-defun hoarder:should-install-package (package)
+  (cl-labels ((local-p (p)
+                (cl-equalp :local (glof:get p :type)))
+              (remote-p (p)
+                (not (local-p p)))
+              (download-p (p)
+                (glof:get p :download nil))
+              (installed-p (p)
+                (and (glof:get p :path)
+                   (file-exists-p (glof:get p :path)))))
+    (and (remote-p package)
+       (download-p package)     
+       (not (installed-p package)))))
 
 (cl-defun hoarder:install-package-git (package)
   (hoarder:message "installing package %s" (glof:get package :name))

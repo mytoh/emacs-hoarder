@@ -6,9 +6,9 @@
 (cl-defun hoarder:source-site-github-p (source)
   (cond
     ((string-match-p (rx "github:" (submatch (+ (not (in "/")))
-                                              "/"
-                                              (+ (not (in "/")))))
-                      source)
+                                             "/"
+                                             (+ (not (in "/")))))
+                     source)
      t)
     ((string-match-p (rx   line-start
                            (one-or-more (not (in "/")))
@@ -53,7 +53,9 @@
                 :tag (glof:get option :tag nil)
                 :desc (glof:get option :desc "")
                 :recursive (glof:get option :recursive)
-                :branch (glof:get option :branch))))
+                :branch (glof:get option :branch)
+                :download (glof:get option :download t)
+                )))
 
 (cl-defun hoarder:make-package-name-github (source option)
   (if option

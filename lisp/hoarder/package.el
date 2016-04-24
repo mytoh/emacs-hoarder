@@ -23,7 +23,8 @@
     :tag nil
     :desc ""
     :recursive nil
-    :branch nil))
+    :branch nil
+    :download t))
 
 (cl-defun hoarder:make-package (source option)
   (cl-letf ((s (string-trim source))

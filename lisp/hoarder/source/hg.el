@@ -31,7 +31,8 @@
                 :tag (glof:get option :tag nil)
                 :desc (glof:get option :desc "")
                 :recursive (glof:get option :recursive)
-                :branch (glof:get option :branch))))
+                :branch (glof:get option :branch)
+                :download (glof:get option :download t))))
 
 (cl-defun hoarder:make-package-name-hg (source option)
   (pcase option

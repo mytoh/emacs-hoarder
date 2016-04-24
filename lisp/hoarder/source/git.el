@@ -38,7 +38,8 @@
                 :tag (glof:get option :tag nil)
                 :desc (glof:get option :desc "")
                 :recursive (glof:get option :recursive)
-                :branch (glof:get option :branch))))
+                :branch (glof:get option :branch)
+                :download (glof:get option :download t))))
 
 (cl-defun hoarder:make-package-compile-git (_source option)
   (if (glof:get option :build nil)
@@ -81,11 +82,11 @@
         origin
       (pcase source
         ((or (pred (string-match-p (rx "git://")))
-             (pred (string-match-p (rx ".git" (zero-or-one "/") line-end))))
+            (pred (string-match-p (rx ".git" (zero-or-one "/") line-end))))
          (replace-regexp-in-string (rx (or (seq line-start "git://")
-                                           (seq line-start "http://")
-                                           (seq line-start "https://")
-                                           (seq ".git" line-end)))
+                                          (seq line-start "http://")
+                                          (seq line-start "https://")
+                                          (seq ".git" line-end)))
                                    "" source))
         (_ source)))))
 

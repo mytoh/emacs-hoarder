@@ -18,7 +18,8 @@
                 :info (glof:get option :info nil)
                 :origin source
                 :tag (glof:get option :tag nil)
-                :desc (glof:get option :desc ""))))
+                :desc (glof:get option :desc "")
+                :download nil)))
 
 (cl-defun hoarder:make-package-name-local (source option)
   (if option
