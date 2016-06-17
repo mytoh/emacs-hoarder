@@ -35,32 +35,38 @@
   (hoarder:message "installing package %s" (glof:get package :name))
   (cl-letf ((process-environment process-environment))
     (setenv "GIT_TERMINAL_PROMPT" "0")
-    (shell-command (seq-concatenate 'string  "git --no-pager clone --quiet "
-                                    (if (glof:get package :recursive)
-                                        " --recursive "
-                                      "")
-                                    (if (glof:get package :branch)
-                                        (seq-concatenate 'string
-                                                         " --branch "
-                                                         (glof:get package :branch)
-                                                         " ")
-                                      "")
-                                    (if (glof:get package :depth)
-                                        (seq-concatenate 'string
-                                                         " --depth "
-                                                         (number-to-string (glof:get package :depth))
-                                                         " ")
-                                      "")
-                                    (glof:get package :url)
-                                    " "
-                                    (hoarder:concat-path hoarder-directory
-                                                   (glof:get package :path)))
-                   hoarder-directory))
+    (cl-letf ((proc
+               (make-process :name (format "hoarder-install-%s" (glof:get package :origin))
+                             :buffer (get-buffer-create (format "hoarder-install-%s" (glof:get package :origin)))
+                             :sentinel
+                             (lambda (p s)
+                               (if (equal s "finished\n")
+                                   (kill-buffer (process-buffer p))))
+                             :command
+                             (seq-remove
+                              #'null
+                              `("git" "--no-pager" "clone" "--quiet"
+                                      ,(if (glof:get package :recursive)
+                                           "--recursive"
+                                         nil)
+                                      ,@(if (glof:get package :branch)
+                                            (list "--branch"
+                                                  (glof:get package :branch))
+                                          nil)
+                                      ,@(if (glof:get package :depth)
+                                            (list "--depth"
+                                                  (number-to-string (glof:get package :depth)))
+                                          nil)
+                                      "--"
+                                      ,(glof:get package :url)
+                                      ,(hoarder:concat-path hoarder-directory
+                                                      (glof:get package :path))))
+                             )))
+      (accept-process-output proc)))
   (hoarder:message "compiling %s" (glof:get package :name))
   (hoarder:option-compile package (glof:get package :path))
   (hoarder:option-build package)
   (hoarder:option-info package))
-
 
 (cl-defun hoarder:install-package-hg (package)
   (hoarder:message "installing package %s" (glof:get package :name))
