@@ -10,25 +10,25 @@
 (require 'hoarder-package "hoarder/package")
 
 (cl-defun hoarder:option-info (package)
-  (cl-letf ((info-path (glof:get package :info)))
-    (hoarder:%option-info info-path package)))
+  (cl-letf ((ipath (glof:get package :info)))
+    (hoarder:%option-info ipath package)))
 
-(cl-defmethod hoarder:%option-info ((info-paths list) package)
+(cl-defmethod hoarder:%option-info ((paths list) package)
   (seq-each
    (lambda (path)
      (hoarder:option-info-set-infopath
       (expand-file-name path (glof:get package :path))))
-   info-paths))
+   paths))
 
-(cl-defmethod hoarder:%option-info ((info-path string) package)
-  (cl-letf ((path (expand-file-name info-path (glof:get  package :path))))
+(cl-defmethod hoarder:%option-info ((ipath string) package)
+  (cl-letf ((path (expand-file-name ipath (glof:get  package :path))))
     (hoarder:message "add directory %s to INFOPATH" path)
     (hoarder:option-info-set-infopath
      path)))
 
-(cl-defun hoarder:option-info-set-infopath (path)
+(cl-defun hoarder:option-info-set-infopath (ipath)
   (setenv "INFOPATH"
-          (seq-concatenate 'string path ":"
+          (seq-concatenate 'string ipath ":"
                            (getenv "INFOPATH"))))
 
 (provide 'hoarder-option-info)
