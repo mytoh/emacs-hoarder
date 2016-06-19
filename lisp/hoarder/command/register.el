@@ -18,7 +18,7 @@
   (declare (indent 1))
   (pcase source
     ((and (pred file-name-absolute-p)
-        (pred file-exists-p))
+          (pred file-exists-p))
      (hoarder:handle-register `[:local ,source ,option]))
     (_
      (hoarder:handle-register `[:remote ,source ,option]))))
@@ -67,16 +67,15 @@
 
 (cl-defun hoarder:register-theme (source &optional option)
   (declare (indent 1))
-  (cl-letf* ((mod-option (hoarder:register-theme-default-tag option))
-             (package (hoarder:make-package source mod-option)))
+  (cl-letf* ((moded (hoarder:register-theme-default-tag option))
+             (package (hoarder:make-package source moded)))
     (unless (hoarder:installed? package)
       (hoarder:add-to-theme-path package)
       (hoarder:add-to-load-path package)
       (hoarder:add-to-package-list package)
       (hoarder:message "registered %s as theme"
                  (glof:get package :name))
-      (hoarder:message-register package)
-      )))
+      (hoarder:message-register package))))
 
 (cl-defun hoarder:register-theme-local (source &optional option)
   (declare (indent 1))
