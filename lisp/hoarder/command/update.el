@@ -31,12 +31,12 @@
       (cl-letf ((reporter (make-progress-reporter
                            (format  "updating package %s..."
                                     (propertize name 'face 'font-lock-type-face)))))
-        (cl-letf* ((git-msg (shell-command-to-string
-                             (seq-concatenate 'string
-                                              "git " " --no-pager " " -C " path
-                                              " pull " " --rebase " " --no-edit "  " --ff-only ")))
-                   (already-updatedp (hoarder:git-already-updatedp git-msg)))
-          (unless already-updatedp
+        (cl-letf* ((msg (shell-command-to-string
+                         (seq-concatenate 'string
+                                          "git " " --no-pager " " -C " path
+                                          " pull " " --rebase " " --no-edit "  " --ff-only ")))
+                   (updatedp (hoarder:git-already-updatedp msg)))
+          (unless updatedp
             (hoarder:option-compile package path)
             (hoarder:option-build package)))
         (progress-reporter-done reporter)
@@ -50,12 +50,12 @@
       (cl-letf ((reporter (make-progress-reporter
                            (format  "updating package %s..."
                                     (propertize name 'face 'font-lock-type-face)))))
-        (cl-letf* ((result-msg (shell-command-to-string
-                                (seq-concatenate 'string
-                                                 "hg " " --cwd " path
-                                                 " pull " " --update ")))
-                   (already-updatedp (hoarder:hg-already-updatedp result-msg)))
-          (unless already-updatedp
+        (cl-letf* ((result (shell-command-to-string
+                            (seq-concatenate 'string
+                                             "hg " " --cwd " path
+                                             " pull " " --update ")))
+                   (updatedp (hoarder:hg-already-updatedp result)))
+          (unless updatedp
             (hoarder:option-compile package path)
             (hoarder:option-build package)))
         (progress-reporter-done reporter)
