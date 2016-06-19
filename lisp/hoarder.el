@@ -49,22 +49,22 @@
   "hoarder keywords")
 
 (cl-defun hoarder:turn-on-font-lock ()
-  (cl-flet ((add-keywords (face-name keyword-rules)
-              (cl-letf* ((keyword-list (seq-map (lambda (x)
-                                                  (symbol-name (cl-rest x)))
-                                                keyword-rules))
-                         (keyword-regexp (seq-concatenate 'string "(\\("
-                                                          (regexp-opt keyword-list)
-                                                          "\\)\\>")))
+  (cl-flet ((addkeywords (name rules)
+              (cl-letf* ((keywords (seq-map (lambda (x)
+                                              (symbol-name (cl-rest x)))
+                                            rules))
+                         (kregexp (seq-concatenate 'string "(\\("
+                                                   (regexp-opt keywords)
+                                                   "\\)\\>")))
                 (font-lock-add-keywords  'emacs-lisp-mode
-                                         `((,keyword-regexp 1 ',face-name))))
+                                         `((,kregexp 1 ',name))))
               (seq-each (lambda (x)
                           (put (cl-rest x)
                                'scheme-indent-function
                                (cl-first x)))
-                        keyword-rules)))
+                        rules)))
 
-    (add-keywords
+    (addkeywords
      'font-lock-builtin-face
      (colle:map
       (lambda (key)
