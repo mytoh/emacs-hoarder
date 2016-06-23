@@ -24,7 +24,8 @@
     :desc ""
     :recursive nil
     :branch nil
-    :download t))
+    :download t
+    :memo ""))
 
 (cl-defun hoarder:make-package (source option)
   (cl-letf ((s (string-trim source))
