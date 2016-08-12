@@ -39,23 +39,23 @@
             (path (hoarder:make-package-path-github source option))
             (lpath (hoarder:make-package-load-path-github source option))
             (origin (hoarder:make-package-origin-github source option)))
-    (glof:plist :type :git
-                :site "github"
-                :name name
-                :path path
-                :load-path lpath
-                :url (seq-concatenate 'string "https://github.com/" source)
-                :compile (glof:get option :compile t)
-                :dependency (glof:get option :dependency nil)
-                :build (glof:get option :build nil)
-                :info (glof:get option :info nil)
-                :origin origin
-                :tag (glof:get option :tag nil)
-                :desc (glof:get option :desc "")
-                :recursive (glof:get option :recursive)
-                :branch (glof:get option :branch)
-                :download (glof:get option :download t)
-                )))
+    (glof:plist
+     :branch (glof:get option :branch)
+     :build (glof:get option :build nil)
+     :compile (glof:get option :compile t)
+     :dependency (glof:get option :dependency nil)
+     :desc (glof:get option :desc "")
+     :download (glof:get option :download t)
+     :info (glof:get option :info nil)
+     :load-path lpath
+     :name name
+     :origin origin
+     :path path
+     :recursive (glof:get option :recursive)
+     :site "github"
+     :tag (glof:get option :tag nil)
+     :type :git
+     :url (seq-concatenate 'string "https://github.com/" source))))
 
 (cl-defun hoarder:make-package-name-github (source option)
   (if option

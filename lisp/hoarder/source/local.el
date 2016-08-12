@@ -8,18 +8,19 @@
 (cl-defun hoarder:make-package-local (source option)
   (cl-letf ((name (hoarder:make-package-name-local source option))
             (lpath (hoarder:make-package-load-path-local source option)))
-    (glof:plist :type :local
-                :name name
-                :path source
-                :load-path lpath
-                :url ""
-                :compile nil
-                :build nil
-                :info (glof:get option :info nil)
-                :origin source
-                :tag (glof:get option :tag nil)
-                :desc (glof:get option :desc "")
-                :download nil)))
+    (glof:plist
+     :build nil
+     :compile nil
+     :desc (glof:get option :desc "")
+     :download nil
+     :info (glof:get option :info nil)
+     :load-path lpath
+     :name name
+     :origin source
+     :path source
+     :tag (glof:get option :tag nil)
+     :type :local
+     :url "")))
 
 (cl-defun hoarder:make-package-name-local (source option)
   (if option

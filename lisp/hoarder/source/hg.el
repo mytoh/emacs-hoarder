@@ -17,22 +17,23 @@
             (lpath (hoarder:make-package-load-path-hg source option))
             (origin (hoarder:make-package-origin-git source option))
             (comp (hoarder:make-package-compile-hg source option)))
-    (glof:plist :type :hg
-                :site ""
-                :name name
-                :path path
-                :load-path lpath
-                :url source
-                :compile comp
-                :dependency (glof:get option :dependency nil)
-                :build (glof:get option :build nil)
-                :info (glof:get option :info nil)
-                :origin origin
-                :tag (glof:get option :tag nil)
-                :desc (glof:get option :desc "")
-                :recursive (glof:get option :recursive)
-                :branch (glof:get option :branch)
-                :download (glof:get option :download t))))
+    (glof:plist
+     :branch (glof:get option :branch)
+     :build (glof:get option :build nil)
+     :compile comp
+     :dependency (glof:get option :dependency nil)
+     :desc (glof:get option :desc "")
+     :download (glof:get option :download t)
+     :info (glof:get option :info nil)
+     :load-path lpath
+     :name name
+     :origin origin
+     :path path
+     :recursive (glof:get option :recursive)
+     :site ""
+     :tag (glof:get option :tag nil)
+     :type :hg
+     :url source)))
 
 (cl-defun hoarder:make-package-name-hg (source option)
   (pcase option
