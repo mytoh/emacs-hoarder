@@ -27,10 +27,10 @@
 
 (cl-defun hoarder:package-compare-fn (p1 p2)
   (cl-labels ((comp (n)
-                (hoarder:on #'cl-equalp
-                      (lambda (p) (glof:get p n))
-                      p1
-                      p2)))
+                    (hoarder:on #'cl-equalp
+                          (lambda (p) (glof:get p n))
+                          p1
+                          p2)))
     (and (comp :name)
        (comp :origin))))
 
@@ -52,6 +52,7 @@
 (cl-defun hoarder:add-to-list (var elem)
   (if (vectorp elem)
       (colle:map
+       ;; seq-each
        (lambda (e) (add-to-list var e))
        elem)
     (add-to-list var elem)))
@@ -69,10 +70,10 @@
 ;;;; utilily functions
 (cl-defun hoarder:concat-path (&rest parts)
   (colle:foldl (lambda (a b) (expand-file-name b a))
-           "/"
-           parts))
+            "/"
+            parts))
 
-(cl-defun hoarder:message (fmt &rest texts)
+(cl-defun hoarder:message (fmt . texts)
   (if noninteractive
       (princ (apply #'format (concat fmt "\n") texts))
     (apply #'hoarder:log fmt texts)
@@ -82,7 +83,7 @@
                              fmt)
            texts)))
 
-(cl-defun hoarder:log (fmt &rest texts)
+(cl-defun hoarder:log (fmt . texts)
   (with-current-buffer (get-buffer-create hoarder:log-buffer-name)
     (when (hoarder:empty-buffer-p (current-buffer))
       (goto-char (point-min))
