@@ -18,7 +18,7 @@
   (declare (indent 1))
   (pcase source
     ((and (pred file-name-absolute-p)
-          (pred file-exists-p))
+        (pred file-exists-p))
      (hoarder:handle-register `[:local ,source ,option]))
     (_
      (hoarder:handle-register `[:remote ,source ,option]))))
@@ -26,12 +26,12 @@
 (cl-defun hoarder:handle-register (variant)
   (pcase variant
     (`[:local ,source ,option]
-      (hoarder:register-local
-          (hoarder:make-package-local
-           (expand-file-name source) option)))
+     (hoarder:register-local
+         (hoarder:make-package-local
+          (expand-file-name source) option)))
     (`[:remote ,source ,option]
-      (hoarder:register-remote
-       (hoarder:make-package source option)))))
+     (hoarder:register-remote
+      (hoarder:make-package source option)))))
 
 (cl-defun hoarder:message-register (package)
   (hoarder:log (seq-concatenate 'string "\n* " (glof:get package :name) "\n%s")
@@ -98,9 +98,9 @@
       ((pred stringp)
        (glof:assoc option
                    :tag
-                   (seq-concatenate 'vector
-                                    `[,o]
-                                    ["theme"])))
+         (seq-concatenate 'vector
+                          `[,o]
+                          ["theme"])))
       ((pred (seq-find (lambda (tag) (equal tag "theme"))))
        option)
       (_
@@ -118,14 +118,16 @@
        deps))
     nil))
 
-(cl-defmethod hoarder:install-dep ((dep list))
-  (hoarder:register (cl-first dep)
-    (if (cl-rest dep)
-        (cl-second dep)
-      nil)))
+(cl-defun hoarder:install-dep (dep)
+  (cl-etypecase dep
+    (list
+     (hoarder:register (cl-first dep)
+       (if (cl-rest dep)
+           (cl-second dep)
+         nil)))
+    (string
+     (hoarder:register dep nil))))
 
-(cl-defmethod hoarder:install-dep ((dep string))
-  (hoarder:register dep nil))
 
 (provide 'hoarder-register)
 
