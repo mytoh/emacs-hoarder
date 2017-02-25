@@ -45,8 +45,9 @@
 
 (cl-defun hoarder:make-package-url-local (source option)
   (if option
-      (if-let ((url (glof:get option :url)))
-          url "")
+      (if-let* ((url (glof:get option :url)))
+          url
+        "")
     ""))
 
 (provide 'hoarder-source-local)

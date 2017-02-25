@@ -13,10 +13,10 @@
 
 ;;;; clean
 (cl-defun hoarder:clean-packages ()
-  (if-let ((paths (colle:remove
-                   (lambda (dir)
-                     (hoarder:search-registered :path dir))
-                   (directory-files hoarder-directory 'absolute (rx (not (any ".")))))))
+  (if-let* ((paths (colle:remove
+                    (lambda (dir)
+                      (hoarder:search-registered :path dir))
+                    (directory-files hoarder-directory 'absolute (rx (not (any ".")))))))
       (seq-each
        (lambda (p)
          (hoarder:message "clean %s" p)
