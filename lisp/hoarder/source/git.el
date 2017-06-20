@@ -12,6 +12,9 @@
 
 (cl-defun hoarder:source-git-p (source)
   (pcase source
+    ((pred (string-match-p (rx "http" (? "s")
+                               "://git." )))
+     t)
     ((pred (string-match-p (rx "git://")))
      t)
     ((pred (string-match-p (rx ".git" (zero-or-one "/") line-end)))
