@@ -22,8 +22,8 @@
 (cl-defun hoarder:on (g f x y)
   ;; [[https://hackage.haskell.org/package/base-4.8.2.0/docs/Data-Function.html#v:on]]
   (funcall g
-     (funcall f x)
-     (funcall f y)))
+      (funcall f x)
+      (funcall f y)))
 
 (cl-defun hoarder:package-compare-fn (p1 p2)
   (cl-labels ((comp (n)
@@ -36,7 +36,7 @@
 
 (cl-defun hoarder:installed? (package)
   (and (file-exists-p (glof:get package :path))
-     (pcase (colle:filter
+     (pcase (seq-filter
          (lambda (p) (hoarder:package-compare-fn p package))
          hoarder:*packages*)
        ((pred colle:empty-p)
@@ -65,7 +65,7 @@
 
 (cl-defun hoarder:add-to-package-list (package)
   (setq hoarder:*packages*
-        (colle:conj package hoarder:*packages*)))
+        (colle:conj hoarder:*packages* package)))
 
 ;;;; utilily functions
 (cl-defun hoarder:concat-path (&rest parts)
@@ -104,7 +104,7 @@
    (lambda (p)
      (seq-find
       (lambda (v) (cl-equalp (glof:get v :name)
-                        p))
+                             p))
       hoarder:*packages*))
    (seq-map
     (lambda (p) (format "%s" p))

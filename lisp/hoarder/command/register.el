@@ -3,6 +3,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'colle)
 (require 'seq)
 
 (require 'hoarder-source-github "hoarder/source/github")
@@ -47,14 +48,15 @@
            (glof:names package))
           "\n")))
 
-(cl-defun hoarder:register-remote (package)
-  (hoarder:resolve-deps package)
-  (unless (hoarder:installed? package)
-    (hoarder:add-to-load-path package)
-    (hoarder:add-to-package-list package)
-    (hoarder:option-info package)
-    (hoarder:message "registered %s"  (glof:get package :name))
-    (hoarder:message-register package)))
+(cl-defun hoarder:register-remote (p)
+  (cl-letf ((package (hoarder:append-tag p "emacs")))
+    (hoarder:resolve-deps package)
+    (unless (hoarder:installed? package)
+      (hoarder:add-to-load-path package)
+      (hoarder:add-to-package-list package)
+      (hoarder:option-info package)
+      (hoarder:message "registered %s"  (glof:get package :name))
+      (hoarder:message-register package))))
 
 (cl-defun hoarder:register-local (package)
   (declare (indent 1))
@@ -67,7 +69,9 @@
 
 (cl-defun hoarder:register-theme (source &optional option)
   (declare (indent 1))
-  (cl-letf* ((moded (hoarder:register-theme-default-tag option))
+  (cl-letf* ((moded (thread-first option
+                      hoarder:register-theme-default-tag
+                      (hoarder:append-tag "emacs")))
              (package (hoarder:make-package source moded)))
     (unless (hoarder:installed? package)
       (hoarder:add-to-theme-path package)
@@ -88,12 +92,22 @@
     (hoarder:message-register package)
     ))
 
+(cl-defun hoarder:append-tag (option tag)
+  (glof:update option
+               :tag
+    (lambda (tags)
+      (pcase tags
+        (`()
+         `[,tag])
+        ((pred (seq-find (lambda (tg) (cl-equalp tg tag))))
+         tags)
+        (_ (colle:conj tags tag))))))
 
 (cl-defun hoarder:register-theme-default-tag (option)
   (cl-letf ((o (glof:get option :tag nil)))
     (pcase o
       (`nil (glof:assoc option
-                        :tag "theme"))
+                        :tag ["theme"]))
       ("theme" option)
       ((pred stringp)
        (glof:assoc option

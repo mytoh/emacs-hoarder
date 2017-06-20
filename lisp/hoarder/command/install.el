@@ -19,14 +19,14 @@
 
 (cl-defun hoarder:should-install-package (package)
   (cl-labels ((localp (p)
-                (cl-equalp :local (glof:get p :type)))
+                      (cl-equalp :local (glof:get p :type)))
               (remotep (p)
-                (not (localp p)))
+                       (not (localp p)))
               (downloadp (p)
-                (glof:get p :download nil))
+                         (glof:get p :download nil))
               (installedp (p)
-                (and (glof:get p :path)
-                   (file-exists-p (glof:get p :path)))))
+                          (and (glof:get p :path)
+                             (file-exists-p (glof:get p :path)))))
     (and (remotep package)
        (downloadp package)     
        (not (installedp package)))))
@@ -39,29 +39,30 @@
                (make-process :name (format "hoarder-install-%s" (glof:get package :origin))
                              :buffer (get-buffer-create (format "hoarder-install-%s" (glof:get package :origin)))
                              :sentinel
-                             (lambda (p s)
-                               (if (equal s "finished\n")
-                                   (kill-buffer (process-buffer p))))
-                             :command
-                             (seq-remove
-                              #'null
-                              `("git" "--no-pager" "clone" "--quiet"
-                                      ,(if (glof:get package :recursive)
-                                           "--recursive"
-                                         nil)
-                                      ,@(if (glof:get package :branch)
-                                            (list "--branch"
-                                                  (glof:get package :branch))
-                                          nil)
-                                      ,@(if (glof:get package :depth)
-                                            (list "--depth"
-                                                  (number-to-string (glof:get package :depth)))
-                                          nil)
-                                      "--"
-                                      ,(glof:get package :url)
-                                      ,(hoarder:concat-path hoarder-directory
-                                                      (glof:get package :path))))
-                             )))
+                 (lambda (p s)
+                   (if (equal s "finished\n")
+                       (kill-buffer (process-buffer p))))
+                 :command
+                 (seq-remove
+                  #'null
+                  `("git" "--no-pager" "clone" "--quiet"
+                    ,@(if (glof:get package :recursive)
+                          (list "--recursive"
+                                "--shallow-submodules")
+                        nil)
+                    ,@(if (glof:get package :branch)
+                          (list "--branch"
+                                (glof:get package :branch))
+                        nil)
+                    ,@(if (glof:get package :depth)
+                          (list (concat "--depth="
+                                        (number-to-string (glof:get package :depth))))
+                        nil)
+                    "--"
+                    ,(glof:get package :url)
+                    ,(hoarder:concat-path hoarder-directory
+                                    (glof:get package :path)))))))
+      ;; (hoarder:message "COMMAND: %s" (pp-to-string (process-command proc)))
       (accept-process-output proc)))
   (hoarder:message "compiling %s" (glof:get package :name))
   (hoarder:option-compile package (glof:get package :path))

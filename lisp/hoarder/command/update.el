@@ -27,7 +27,7 @@
   (cl-letf ((name (glof:get package :name))
             (path (glof:get package :path)))
     (when (and (cl-equalp :git (glof:get package :type))
-             (not (file-symlink-p path)))
+               (not (file-symlink-p path)))
       (cl-letf ((reporter (make-progress-reporter
                            (format  "updating package %s..."
                                     (propertize name 'face 'font-lock-type-face)))))
@@ -46,7 +46,7 @@
   (cl-letf ((name (glof:get package :name))
             (path (glof:get package :path)))
     (when (and (cl-equalp :hg (glof:get package :type))
-             (not (file-symlink-p path)))
+               (not (file-symlink-p path)))
       (cl-letf ((reporter (make-progress-reporter
                            (format  "updating package %s..."
                                     (propertize name 'face 'font-lock-type-face)))))
@@ -79,6 +79,18 @@ searching for changes
 no changes found
 "
       msg)))
+
+(cl-defun hoarder:update-by-tag (tag)
+  (colle:each
+   #'hoarder:update-package
+   (hoarder:filter-by-tag tag)))
+
+(cl-defun hoarder:filter-by-tag (tag)
+  (colle:filter
+   (lambda (p)
+     (colle:contains (glof:get p :tag)
+                  tag))
+   hoarder:*packages*))
 
 ;; ###autoload
 (cl-defun hoarder:update ()
