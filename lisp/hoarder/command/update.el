@@ -27,7 +27,7 @@
   (cl-letf ((name (glof:get package :name))
             (path (glof:get package :path)))
     (when (and (cl-equalp :git (glof:get package :type))
-               (not (file-symlink-p path)))
+             (not (file-symlink-p path)))
       (cl-letf ((reporter (make-progress-reporter
                            (format  "updating package %s..."
                                     (propertize name 'face 'font-lock-type-face)))))
@@ -46,7 +46,7 @@
   (cl-letf ((name (glof:get package :name))
             (path (glof:get package :path)))
     (when (and (cl-equalp :hg (glof:get package :type))
-               (not (file-symlink-p path)))
+             (not (file-symlink-p path)))
       (cl-letf ((reporter (make-progress-reporter
                            (format  "updating package %s..."
                                     (propertize name 'face 'font-lock-type-face)))))
@@ -67,7 +67,7 @@
 "
          msg))
      (string-match-p
-      "Already\sup-to-date\." 
+      "Already up to date\."
       msg)))
 
 (cl-defun hoarder:hg-already-updatedp (msg)
