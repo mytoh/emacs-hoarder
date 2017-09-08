@@ -4,35 +4,32 @@
 (require 'colle)
 
 (cl-defun hoarder:source-site-github-p (source)
-  (cond
-    ((string-match-p (rx "github:" (submatch (+ (not (in "/")))
-                                             "/"
-                                             (+ (not (in "/")))))
-                     source)
+  (pcase source
+    ((or (rx "github:" (submatch (+ (not (in "/")))
+                                "/"
+                                (+ (not (in "/")))))
+        (rx   line-start
+              (one-or-more (not (in "/")))
+              "/"
+              (one-or-more (not (in "/")))
+              line-end))
      t)
-    ((string-match-p (rx   line-start
-                           (one-or-more (not (in "/")))
-                           "/"
-                           (one-or-more (not (in "/")))
-                           line-end)
-                     source)
-     t)
-    (t nil)))
+    (_ nil)))
 
 (cl-defun hoarder:source-site-format-github (source)
   (cond
-    ((string-match (rx "github:" (submatch (+ (not (in "/")))
-                                           "/"
-                                           (+ (not (in "/")))))
-                   source)
-     (match-string-no-properties 1 source))
-    ((string-match (rx   line-start
-                         (one-or-more (not (in "/")))
-                         "/"
-                         (one-or-more (not (in "/")))
-                         line-end)
-                   source)
-     (match-string-no-properties 0 source))))
+   ((string-match (rx "github:" (submatch (+ (not (in "/")))
+                                          "/"
+                                          (+ (not (in "/")))))
+                  source)
+    (match-string-no-properties 1 source))
+   ((string-match (rx   line-start
+                        (one-or-more (not (in "/")))
+                        "/"
+                        (one-or-more (not (in "/")))
+                        line-end)
+                  source)
+    (match-string-no-properties 0 source))))
 
 (cl-defun hoarder:make-package-github (source option)
   (cl-letf ((name (hoarder:make-package-name-github source option))
@@ -93,29 +90,29 @@
     (if origin
         origin
       (cond
-        ((string-match (rx line-start
-                           "github:"
-                           (submatch (one-or-more (not (in "/"))))
-                           "/"
-                           (submatch (one-or-more (not (in "/"))))
-                           line-end)
-                       source)
-         (seq-concatenate 'string
-                          "github.com/"
-                          (match-string-no-properties 1 source)
+       ((string-match (rx line-start
+                          "github:"
+                          (submatch (one-or-more (not (in "/"))))
                           "/"
-                          (match-string-no-properties 2 source)))
-        ((string-match (rx   line-start
-                             (submatch (one-or-more (not (in "/"))))
-                             "/"
-                             (submatch (one-or-more (not (in "/"))))
-                             line-end)
-                       source)
-         (seq-concatenate 'string
-                          "github.com/"
-                          (match-string-no-properties 1 source)
-                          "/"
-                          (match-string-no-properties 2 source)))))))
+                          (submatch (one-or-more (not (in "/"))))
+                          line-end)
+                      source)
+        (seq-concatenate 'string
+                         "github.com/"
+                         (match-string-no-properties 1 source)
+                         "/"
+                         (match-string-no-properties 2 source)))
+       ((string-match (rx   line-start
+                            (submatch (one-or-more (not (in "/"))))
+                            "/"
+                            (submatch (one-or-more (not (in "/"))))
+                            line-end)
+                      source)
+        (seq-concatenate 'string
+                         "github.com/"
+                         (match-string-no-properties 1 source)
+                         "/"
+                         (match-string-no-properties 2 source)))))))
 
 (provide 'hoarder-source-github)
 
