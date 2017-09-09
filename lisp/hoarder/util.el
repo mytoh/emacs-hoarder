@@ -22,8 +22,8 @@
 (cl-defun hoarder:on (g f x y)
   ;; [[https://hackage.haskell.org/package/base-4.8.2.0/docs/Data-Function.html#v:on]]
   (funcall g
-      (funcall f x)
-      (funcall f y)))
+     (funcall f x)
+     (funcall f y)))
 
 (cl-defun hoarder:package-compare-fn (p1 p2)
   (cl-labels ((comp (n)
@@ -50,12 +50,14 @@
   (add-to-list var elem))
 
 (cl-defun hoarder:add-to-list (var elem)
-  (if (vectorp elem)
-      (colle:map
-       ;; seq-each
-       (lambda (e) (add-to-list var e))
-       elem)
-    (add-to-list var elem)))
+  (pcase elem
+    ((pred vectorp)
+     (colle:map
+      ;; seq-each
+      (lambda (e) (add-to-list var e))
+      elem))
+    (_
+     (add-to-list var elem))))
 
 (cl-defun hoarder:add-to-load-path (package)
   (hoarder:add-to-list 'load-path (glof:get package :load-path)))
@@ -104,7 +106,7 @@
    (lambda (p)
      (seq-find
       (lambda (v) (cl-equalp (glof:get v :name)
-                             p))
+                        p))
       hoarder:*packages*))
    (seq-map
     (lambda (p) (format "%s" p))

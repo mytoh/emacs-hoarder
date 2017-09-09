@@ -23,12 +23,11 @@
      :url "")))
 
 (cl-defun hoarder:make-package-name-local (source option)
-  (if option
-      (cl-letf ((name (glof:get option :name)))
-        (if name
-            name
-          (file-name-nondirectory source)))
-    (file-name-nondirectory source)))
+  (pcase option
+    (`nil (file-name-nondirectory source))
+    (_ (pcase (glof:get option :name)
+         (`nil (file-name-nondirectory source))
+         (name name)))))
 
 (cl-defun hoarder:make-package-load-path-local (source option)
   (if option
@@ -44,11 +43,11 @@
     source))
 
 (cl-defun hoarder:make-package-url-local (source option)
-  (if option
-      (if-let* ((url (glof:get option :url)))
-          url
-        "")
-    ""))
+  (pcase option
+    (`nil "")
+    (_ (if-let* ((url (glof:get option :url)))
+           url
+         ""))))
 
 (provide 'hoarder-source-local)
 

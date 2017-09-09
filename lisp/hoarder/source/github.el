@@ -6,13 +6,13 @@
 (cl-defun hoarder:source-site-github-p (source)
   (pcase source
     ((or (rx "github:" (submatch (+ (not (in "/")))
-                                "/"
-                                (+ (not (in "/")))))
-        (rx   line-start
-              (one-or-more (not (in "/")))
-              "/"
-              (one-or-more (not (in "/")))
-              line-end))
+                                 "/"
+                                 (+ (not (in "/")))))
+         (rx   line-start
+               (one-or-more (not (in "/")))
+               "/"
+               (one-or-more (not (in "/")))
+               line-end))
      t)
     (_ nil)))
 
@@ -53,27 +53,27 @@
      :url (seq-concatenate 'string "https://github.com/" source))))
 
 (cl-defun hoarder:make-package-name-github (source option)
-  (if option
-      (cl-letf ((name (glof:get option :name)))
-        (if name
-            name
-          (cl-second (split-string source "/"))))
-    (cl-second (split-string source "/"))))
+  (pcase option
+    (`nil (cl-second (split-string source "/")))
+    (_
+     (pcase (glof:get option :name)
+       (`nil (cl-second (split-string source "/")))
+       (name name)))))
 
 (cl-defun hoarder:make-package-load-path-github (source option)
   (cl-letf ((origin (hoarder:make-package-origin-github source option)))
     (if option
         (cl-letf ((path (glof:get option :load-path nil)))
           (pcase path
+            ((pred seq-empty-p)
+             (hoarder:concat-path hoarder-directory origin))
             ((pred vectorp)
              (colle:map
               (lambda (p)
                 (hoarder:concat-path hoarder-directory origin p))
               path))
             ((pred stringp)
-             (hoarder:concat-path hoarder-directory origin path))
-            ((pred seq-empty-p)
-             (hoarder:concat-path hoarder-directory origin))))        
+             (hoarder:concat-path hoarder-directory origin path))))        
       (hoarder:concat-path hoarder-directory origin)))) 
 
 (cl-defun hoarder:make-package-path-github (source option)

@@ -14,8 +14,8 @@
 (cl-defun hoarder:source-git-p (source)
   (pcase source
     ((or (rx "http" (? (any "s")) "://git." )
-        (rx "git://")
-        (rx ".git" (zero-or-one "/") line-end))
+         (rx "git://")
+         (rx ".git" (zero-or-one "/") line-end))
      t)
     (_ nil)))
 
@@ -49,12 +49,13 @@
     (glof:get option :compile t)))
 
 (cl-defun hoarder:make-package-name-git (source option)
-  (if option
-      (cl-letf ((name (glof:get option :name)))
-        (if name
-            name
-          (file-name-base source)))
-    (file-name-base source)))
+  (pcase option
+    (`nil (file-name-base source))
+    (_
+     (cl-letf ((name (glof:get option :name)))
+       (if name
+           name
+         (file-name-base source))))))
 
 (cl-defun hoarder:make-package-path-git (source option)
   (cl-letf ((p (glof:get option :path nil))
@@ -66,16 +67,16 @@
 (cl-defun hoarder:make-package-load-path-git (source option)
   (cl-letf ((path (glof:get option :load-path nil))
             (origin (hoarder:trim-protocol source)))
-    (if (not (seq-empty-p path))
-        (pcase path
-          ((pred vectorp)
-           (colle:map
-            (lambda (p)
-              (hoarder:concat-path hoarder-directory origin p))
-            path))
-          ((pred stringp)
-           (hoarder:concat-path hoarder-directory origin path)))
-      (hoarder:concat-path hoarder-directory origin))))
+    (pcase path
+      ((or `[] `nil)
+       (hoarder:concat-path hoarder-directory origin))
+      ((pred vectorp)
+       (colle:map
+        (lambda (p)
+          (hoarder:concat-path hoarder-directory origin p))
+        path))
+      ((pred stringp)
+       (hoarder:concat-path hoarder-directory origin path)))))
 
 
 (cl-defun hoarder:make-package-origin-git (source option)

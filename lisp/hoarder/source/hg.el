@@ -40,7 +40,7 @@
     (`nil (file-name-base source))
     (_
      (glof:get option :name
-               (file-name-base source)))))
+             (file-name-base source)))))
 
 (cl-defun hoarder:make-package-path-hg (source option)
   (cl-letf ((path (glof:get option :path))
@@ -63,9 +63,10 @@
         path)))))
 
 (cl-defun hoarder:make-package-compile-hg (_source option)
-  (if (glof:get option :build nil)
-      nil
-    (glof:get option :compile t)))
+  (pcase (glof:get option :build nil)
+    (`nil nil)
+    (_
+     (glof:get option :compile t))))
 
 (provide 'hoarder-source-hg)
 

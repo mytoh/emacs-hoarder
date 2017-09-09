@@ -42,9 +42,9 @@
 
 (cl-defun helm-hoarder-action-view-readme-or-src (package)
   (cl-loop for file in (list "README.md" "README.org" "README")
-     for path = (expand-file-name file (glof:get package :path))
-     when (file-exists-p path)
-     return (view-file path)))
+           for path = (expand-file-name file (glof:get package :path))
+           when (file-exists-p path)
+           return (view-file path)))
 
 (cl-defun helm-hoarder-source-name/mark (mark name)
   (cond ((window-system)
@@ -74,18 +74,17 @@
 
 (cl-defun helm-hoarder-propertize-tag (package face)
   (cl-letf ((tag (glof:get package :tag)))
-    (if tag
-        (pcase tag
-          ((pred stringp)
-           (propertize tag 'face face))
-          ((pred seqp)
-           (string-join
-            (seq-into
-             (seq-map
-              (lambda (tg) (propertize tg 'face face))
-              tag) 'list)
-            ",")))
-      nil)))
+    (pcase tag
+      (`nil nil)
+      ((pred stringp)
+       (propertize tag 'face face))
+      ((pred seqp)
+       (string-join
+        (seq-into
+         (seq-map
+          (lambda (tg) (propertize tg 'face face))
+          tag) 'list)
+        ",")))))
 
 (cl-defun helm-hoarder-make-source-name ()
   (helm-hoarder-source-name/mark "📦" "Packages"))
@@ -94,13 +93,13 @@
   ((init :initform #'helm-hoarder-init)
    (candidates :initform 'helm-hoarder-candidates)
    (action :initform
-           (helm-make-actions
-            "Update"  #'helm-hoarder-action-update
-            "Reinstall"  #'helm-hoarder-action-reinstall
-            "Magit log"  #'helm-hoarder-action-magit-log
-            "View README or source"  #'helm-hoarder-action-view-readme-or-src
-            "Open directory" #'helm-hoarder-action-open-dired
-            "Find file"  #'helm-hoarder-action-find-file))
+     (helm-make-actions
+      "Update"  #'helm-hoarder-action-update
+      "Reinstall"  #'helm-hoarder-action-reinstall
+      "Magit log"  #'helm-hoarder-action-magit-log
+      "View README or source"  #'helm-hoarder-action-view-readme-or-src
+      "Open directory" #'helm-hoarder-action-open-dired
+      "Find file"  #'helm-hoarder-action-find-file))
    (candidate-transformer :initform #'helm-hoarder-transformer-format)))
 
 (defvar helm-source-hoarder-list

@@ -39,29 +39,33 @@
                (make-process :name (format "hoarder-install-%s" (glof:get package :origin))
                              :buffer (get-buffer-create (format "hoarder-install-%s" (glof:get package :origin)))
                              :sentinel
-                 (lambda (p s)
-                   (if (equal s "finished\n")
-                       (kill-buffer (process-buffer p))))
-                 :command
-                 (seq-remove
-                  #'null
-                  `("git" "--no-pager" "clone" "--quiet"
-                    ,@(if (glof:get package :recursive)
-                          (list "--recursive"
-                                "--shallow-submodules")
-                        nil)
-                    ,@(if (glof:get package :branch)
-                          (list "--branch"
-                                (glof:get package :branch))
-                        nil)
-                    ,@(if (glof:get package :depth)
-                          (list (concat "--depth="
-                                        (number-to-string (glof:get package :depth))))
-                        nil)
-                    "--"
-                    ,(glof:get package :url)
-                    ,(hoarder:concat-path hoarder-directory
-                                    (glof:get package :path)))))))
+                             (lambda (p s)
+                               (pcase s
+                                 ("finished\n"
+                                  (kill-buffer (process-buffer p)))
+                                 (_ nil)))
+                             :command
+                             (seq-remove
+                              #'null
+                              `("git" "--no-pager" "clone" "--quiet"
+                                ,@(pcase (glof:get package :recursive)
+                                    (`nil nil)
+                                    (`t
+                                     (list "--recursive"
+                                           "--shallow-submodules")))
+                                ,@(pcase (glof:get package :branch)
+                                    (`nil nil)
+                                    (branch
+                                     (list "--branch" branch)))
+                                ,@(pcase (glof:get package :depth)
+                                    (`nil nil)
+                                    (depth
+                                     (list (concat "--depth="
+                                                   (number-to-string depth)))))
+                                "--"
+                                ,(glof:get package :url)
+                                ,(hoarder:concat-path hoarder-directory
+                                                (glof:get package :path)))))))
       ;; (hoarder:message "COMMAND: %s" (pp-to-string (process-command proc)))
       (accept-process-output proc)))
   (hoarder:message "compiling %s" (glof:get package :name))
