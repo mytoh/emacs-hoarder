@@ -6,9 +6,10 @@
 (require 'colle)
 
 (cl-defun hoarder:trim-protocol (s)
-  (if (string-match-p "^[a-z]+://" s)
-      (replace-regexp-in-string  "^[a-z]+://" "" s t t)
-    s))
+  (pcase s
+    ((rx (seq bol (+ alpha) "://"))
+     (replace-regexp-in-string  "^[a-z]+://" "" s t t))
+    (_ s)))
 
 (cl-defun hoarder:source-git-p (source)
   (pcase source
@@ -82,12 +83,12 @@
     (if origin
         origin
       (pcase source
-        ((or (pred (string-match-p (rx "git://")))
-            (pred (string-match-p (rx ".git" (zero-or-one "/") line-end))))
+        ((or (rx "git://")
+            (rx ".git" (zero-or-one "/") line-end))
          (replace-regexp-in-string (rx (or (seq line-start "git://")
-                                           (seq line-start "http://")
-                                           (seq line-start "https://")
-                                           (seq ".git" line-end)))
+                                          (seq line-start "http://")
+                                          (seq line-start "https://")
+                                          (seq ".git" line-end)))
                                    "" source))
         (_ source)))))
 
