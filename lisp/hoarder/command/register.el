@@ -19,7 +19,7 @@
   (declare (indent 1))
   (pcase source
     ((and (pred file-name-absolute-p)
-        (pred file-exists-p))
+          (pred file-exists-p))
      (hoarder:handle-register `[:local ,source ,option]))
     (_
      (hoarder:handle-register `[:remote ,source ,option]))))
@@ -55,7 +55,8 @@
       (hoarder:add-to-load-path package)
       (hoarder:add-to-package-list package)
       (hoarder:option-info package)
-      (hoarder:message "registered %s"  (glof:get package :name))
+      (unless noninteractive
+        (hoarder:message "registered %s"  (glof:get package :name)))
       (hoarder:message-register package))))
 
 (cl-defun hoarder:register-local (package)
@@ -63,8 +64,9 @@
   (hoarder:add-to-load-path package)
   (hoarder:add-to-package-list package)
   (hoarder:option-info package)
-  (hoarder:message "registered %s locally"
-             (glof:get package :name))
+  (unless noninteractive
+    (hoarder:message "registered %s locally"
+               (glof:get package :name)))
   (hoarder:message-register package))
 
 (cl-defun hoarder:register-theme (source &optional option)
@@ -77,8 +79,9 @@
       (hoarder:add-to-theme-path package)
       (hoarder:add-to-load-path package)
       (hoarder:add-to-package-list package)
-      (hoarder:message "registered %s as theme"
-                 (glof:get package :name))
+      (unless noninteractive
+        (hoarder:message "registered %s as theme"
+                   (glof:get package :name)))
       (hoarder:message-register package))))
 
 (cl-defun hoarder:register-theme-local (source &optional option)
@@ -87,42 +90,43 @@
              (package (hoarder:make-package-local path option)))
     (hoarder:add-to-theme-path package)
     (hoarder:add-to-package-list package)
-    (hoarder:message "registered %s as local theme"
-               (glof:get package :name))
+    (unless noninteractive
+      (hoarder:message "registered %s as local theme"
+                 (glof:get package :name)))
     (hoarder:message-register package)
     ))
 
 (cl-defun hoarder:append-tag (option tag)
   (glof:update option
-               :tag
-    (lambda (tags)
-      (pcase tags
-        (`()
-         `[,tag])
-        ((pred (seq-find (lambda (tg) (cl-equalp tg tag))))
-         tags)
-        (_ (colle:conj tags tag))))))
+             :tag
+             (lambda (tags)
+               (pcase tags
+                 (`()
+                  `[,tag])
+                 ((pred (seq-find (lambda (tg) (cl-equalp tg tag))))
+                  tags)
+                 (_ (colle:conj tags tag))))))
 
 (cl-defun hoarder:register-theme-default-tag (option)
   (cl-letf ((o (glof:get option :tag nil)))
     (pcase o
       (`nil (glof:assoc option
-                        :tag ["theme"]))
+                      :tag ["theme"]))
       ("theme" option)
       ((pred stringp)
        (glof:assoc option
-                   :tag
-         (seq-concatenate 'vector
-                          `[,o]
-                          ["theme"])))
+                 :tag
+                 (seq-concatenate 'vector
+                                  `[,o]
+                                  ["theme"])))
       ((pred (seq-find (lambda (tag) (equal tag "theme"))))
        option)
       (_
        (glof:update option :tag
-                    (lambda (tags)
-                      (seq-concatenate 'vector
-                                       tags
-                                       ["theme"])))))))
+                  (lambda (tags)
+                    (seq-concatenate 'vector
+                                     tags
+                                     ["theme"])))))))
 
 (cl-defun hoarder:resolve-deps (package)
   (cl-letf ((deps (glof:get package :dependency)))

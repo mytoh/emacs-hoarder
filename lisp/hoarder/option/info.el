@@ -23,7 +23,8 @@
       ipaths))
     (string
      (cl-letf ((ipath (expand-file-name ipaths (glof:get  package :path))))
-       (hoarder:message "add directory %s to INFOPATH" ipath)
+       (unless noninteractive
+         (hoarder:message "add directory %s to INFOPATH" ipath))
        (hoarder:option-info-set-infopath
         ipath)))))
 

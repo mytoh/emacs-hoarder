@@ -30,7 +30,8 @@
                         (hoarder:fetch-set-options option))))
     (hoarder:add-to-package-list package)
     (hoarder:option-info package)
-    (hoarder:message "registered %s"    (glof:get package :name))
+    (unless noninteractive
+      (hoarder:message "registered %s"    (glof:get package :name)))
     (hoarder:message-fetch package)))
 
 (cl-defun hoarder:fetch-has-option (option key)
@@ -45,16 +46,16 @@
 (cl-defun hoarder:fetch-set-option-compile (package option)
   (pcase (glof:lookup :compile option)
     (`[:nothing]
-      (glof:assoc package :compile nil))
+     (glof:assoc package :compile nil))
     (`[:just ,v]
-      (glof:assoc package :compile v))))
+     (glof:assoc package :compile v))))
 
 (cl-defun hoarder:fetch-set-option-depth (package option)
   (pcase (glof:lookup :depth option)
     (`[:nothing]
-      (glof:assoc package :depth 1))
+     (glof:assoc package :depth 1))
     (`[:just ,v]
-      (glof:assoc package :depth v))))
+     (glof:assoc package :depth v))))
 
 (provide 'hoarder-fetch)
 
