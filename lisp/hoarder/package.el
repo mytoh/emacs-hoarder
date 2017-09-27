@@ -16,12 +16,12 @@
     :load-path ""
     :site ""
     :compile nil
-    :dependency nil
+    :dependencies nil
     :build nil
     :info nil
     :origin ""
-    :tag nil
-    :desc ""
+    :tags nil
+    :description ""
     :recursive nil
     :branch nil
     :download t

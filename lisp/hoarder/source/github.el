@@ -6,13 +6,13 @@
 (cl-defun hoarder:source-site-github-p (source)
   (pcase source
     ((or (rx "github:" (submatch (+ (not (in "/")))
-                                 "/"
-                                 (+ (not (in "/")))))
-         (rx   line-start
-               (one-or-more (not (in "/")))
-               "/"
-               (one-or-more (not (in "/")))
-               line-end))
+                                "/"
+                                (+ (not (in "/")))))
+        (rx   line-start
+              (one-or-more (not (in "/")))
+              "/"
+              (one-or-more (not (in "/")))
+              line-end))
      t)
     (_ nil)))
 
@@ -38,8 +38,8 @@
      :branch (glof:get option :branch)
      :build (glof:get option :build nil)
      :compile (glof:get option :compile t)
-     :dependency (glof:get option :dependency nil)
-     :desc (glof:get option :desc "")
+     :dependencies (glof:get option :dependencies nil)
+     :description (glof:get option :description "")
      :download (glof:get option :download t)
      :info (glof:get option :info nil)
      :load-path lpath
@@ -48,7 +48,7 @@
      :path path
      :recursive (glof:get option :recursive)
      :site "github"
-     :tag (glof:get option :tag nil)
+     :tags (glof:get option :tags nil)
      :type :git
      :url (seq-concatenate 'string "https://github.com/" source))))
 

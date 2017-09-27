@@ -21,8 +21,8 @@
      :branch (glof:get option :branch)
      :build (glof:get option :build nil)
      :compile comp
-     :dependency (glof:get option :dependency nil)
-     :desc (glof:get option :desc "")
+     :dependencies (glof:get option :dependencies nil)
+     :description (glof:get option :description "")
      :download (glof:get option :download t)
      :info (glof:get option :info nil)
      :load-path lpath
@@ -31,7 +31,7 @@
      :path path
      :recursive (glof:get option :recursive)
      :site ""
-     :tag (glof:get option :tag nil)
+     :tags (glof:get option :tags nil)
      :type :hg
      :url source)))
 

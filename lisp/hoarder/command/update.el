@@ -88,7 +88,7 @@ no changes found
 (cl-defun hoarder:filter-by-tag (tag)
   (colle:filter
    (lambda (p)
-     (colle:contains (glof:get p :tag)
+     (colle:contains (glof:get p :tags)
                   tag))
    hoarder:*packages*))
 

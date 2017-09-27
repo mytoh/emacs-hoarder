@@ -73,7 +73,7 @@
           package)))
 
 (cl-defun helm-hoarder-propertize-tag (package face)
-  (cl-letf ((tag (glof:get package :tag)))
+  (cl-letf ((tag (glof:get package :tags)))
     (pcase tag
       (`nil nil)
       ((pred stringp)

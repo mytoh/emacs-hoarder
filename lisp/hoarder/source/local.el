@@ -11,14 +11,14 @@
     (glof:plist
      :build nil
      :compile nil
-     :desc (glof:get option :desc "")
+     :description (glof:get option :description "")
      :download nil
      :info (glof:get option :info nil)
      :load-path lpath
      :name name
      :origin source
      :path source
-     :tag (glof:get option :tag nil)
+     :tags (glof:get option :tags nil)
      :type :local
      :url "")))
 
