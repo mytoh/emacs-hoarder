@@ -44,6 +44,12 @@
       ((guard (cl-equalp type :hg))
        (hoarder:make-package-hg s option)))))
 
+(cl-defun hoarder:delete-package-files (package)
+  (when (and (not (cl-equalp :local (glof:get package :type)))
+           (file-exists-p (glof:get package :path)))
+    (hoarder:message "removing files")
+    (delete-directory (glof:get package :path) 'recursive)))
+
 (provide 'hoarder-package)
 
 
