@@ -11,7 +11,7 @@
 (require 'hoarder-util "hoarder/util")
 
 (cl-defun hoarder:reinstall-package (package)
-  (hoarder:uninstall-package package)
+  (hoarder:delete-package-files package)
   (hoarder:install-package package))
 
 ;;;###autoload
