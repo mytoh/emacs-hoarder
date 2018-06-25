@@ -52,6 +52,12 @@
         (t
          name)))
 
+(cl-defun helm-hoarder-transformer-remove-local-packages (candidates)
+  (seq-filter
+   (lambda (c)
+     (not (cl-equalp :local (glof:get c :type))))
+   candidates))
+
 (cl-defun helm-hoarder-transformer-format (candidates)
   (seq-map
    #'helm-hoarder-transformer-format-1
@@ -100,7 +106,8 @@
       "View README or source"  #'helm-hoarder-action-view-readme-or-src
       "Open directory" #'helm-hoarder-action-open-dired
       "Find file"  #'helm-hoarder-action-find-file))
-   (candidate-transformer :initform #'helm-hoarder-transformer-format)))
+   (candidate-transformer :initform '(helm-hoarder-transformer-remove-local-packages
+                                      helm-hoarder-transformer-format))))
 
 (defvar helm-source-hoarder-list
   (helm-make-source (helm-hoarder-make-source-name)

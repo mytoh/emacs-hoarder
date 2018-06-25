@@ -19,6 +19,7 @@
 (require 'hoarder-check "hoarder/command/check")
 (require 'hoarder-reinstall "hoarder/command/reinstall")
 (require 'hoarder-fetch "hoarder/command/fetch")
+(require 'hoarder-record "hoarder/command/record")
 
 ;;;; initialize
 (defcustom hoarder-directory
@@ -50,19 +51,19 @@
 
 (cl-defun hoarder:turn-on-font-lock ()
   (cl-flet ((addkeywords (name rules)
-              (cl-letf* ((keywords (seq-map (lambda (x)
-                                              (symbol-name (cl-rest x)))
-                                            rules))
-                         (kregexp (seq-concatenate 'string "(\\("
-                                                   (regexp-opt keywords)
-                                                   "\\)\\>")))
-                (font-lock-add-keywords  'emacs-lisp-mode
-                                         `((,kregexp 1 ',name))))
-              (seq-each (lambda (x)
-                          (put (cl-rest x)
-                               'scheme-indent-function
-                               (cl-first x)))
-                        rules)))
+                         (cl-letf* ((keywords (seq-map (lambda (x)
+                                                         (symbol-name (cl-rest x)))
+                                                       rules))
+                                    (kregexp (seq-concatenate 'string "(\\("
+                                                              (regexp-opt keywords)
+                                                              "\\)\\>")))
+                           (font-lock-add-keywords  'emacs-lisp-mode
+                                                    `((,kregexp 1 ',name))))
+                         (seq-each (lambda (x)
+                                     (put (cl-rest x)
+                                          'scheme-indent-function
+                                          (cl-first x)))
+                                   rules)))
 
     (addkeywords
      'font-lock-builtin-face

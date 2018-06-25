@@ -2,6 +2,7 @@
 
 (require 'cl-lib)
 (require 'hoarder-source-github "hoarder/source/github")
+(require 'hoarder-source-gitlab "hoarder/source/gitlab")
 (require 'hoarder-source-git "hoarder/source/git")
 (require 'hoarder-source-hg  "hoarder/source/hg")
 (require 'hoarder-source-local "hoarder/source/local")
@@ -34,6 +35,10 @@
   (cl-letf ((s (string-trim source))
             (type (glof:get option :type)))
     (pcase s
+      ((pred hoarder:source-site-gitlab-p)
+       (hoarder:make-package-gitlab
+        (hoarder:source-site-format-gitlab s) option))
+      ;; github check must be after checking other sites
       ((pred hoarder:source-site-github-p)
        (hoarder:make-package-github
         (hoarder:source-site-format-github s) option))
@@ -42,7 +47,10 @@
        (hoarder:make-package-git
         s option))
       ((guard (cl-equalp type :hg))
-       (hoarder:make-package-hg s option)))))
+       (hoarder:make-package-hg s option))
+      (_
+       (user-error (format "Can't figure out which vcs to use for %s"
+                           source))))))
 
 (cl-defun hoarder:delete-package-files (package)
   (when (and (not (cl-equalp :local (glof:get package :type)))
